@@ -31,6 +31,15 @@ class Category extends ActiveRecord
 	}
 
 	/**
+	 * Properties relation
+	 * @return ActiveQuery
+	 */
+	public function getProperties()
+	{
+		return $this->hasMany(CategoryProperty::className(), ['category_id' => 'id']);
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function attributeLabels()
