@@ -75,8 +75,9 @@ class Module extends \yii\base\Module {
 
 		if (Yii::$app->user->can('Catalog')) {
 			return [
-				['label' => Yii::t('catalog', 'Catalog'), 'options' => ['class' => 'qwer'], 'items' => [
+				['label' => Yii::t('catalog', 'Catalog'), 'items' => [
 					['label' => Yii::t('catalog', 'Categories'), 'url' => ["$base/catalog/category/index"]],
+					['label' => Yii::t('catalog', 'Goods'), 'url' => ["$base/catalog/goods/index"]],
 				]],
 			];
 		}
