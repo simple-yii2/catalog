@@ -172,6 +172,11 @@ class CategoryForm extends Model
 				return false;
 		}
 
+		if ($object->alias === null) {
+			$object->makeAlias();
+			$object->update(false, ['alias']);
+		}
+
 		//update relations
 		$old = [];
 		foreach ($object->properties as $item) {

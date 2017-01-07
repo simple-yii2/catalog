@@ -118,6 +118,8 @@ class CategoryPropertyForm extends Model
 
 		$object->setValues($this->values);
 
+		$object->makeAlias();
+
 		if (!$object->save(false))
 			return false;
 

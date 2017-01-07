@@ -6,6 +6,7 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
+use helpers\Translit;
 use creocoder\nestedsets\NestedSetsBehavior;
 use creocoder\nestedsets\NestedSetsQueryBehavior;
 
@@ -98,6 +99,15 @@ class Category extends ActiveRecord
 	public static function find()
 	{
 		return new CategoryQuery(get_called_class());
+	}
+
+	/**
+	 * Making page alias from title and id
+	 * @return void
+	 */
+	public function makeAlias()
+	{
+		$this->alias = Translit::t($this->title . '-' . $this->id);
 	}
 
 }

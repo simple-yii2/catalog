@@ -5,6 +5,8 @@ namespace cms\catalog\common\models;
 use Yii;
 use yii\db\ActiveRecord;
 
+use helpers\Translit;
+
 class CategoryProperty extends ActiveRecord
 {
 
@@ -90,6 +92,15 @@ class CategoryProperty extends ActiveRecord
 		parent::init();
 
 		$this->type = self::INTEGER;
+	}
+
+	/**
+	 * Making page alias from title and id
+	 * @return void
+	 */
+	public function makeAlias()
+	{
+		$this->alias = Translit::t($this->title);
 	}
 
 }
