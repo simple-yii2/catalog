@@ -21,12 +21,15 @@ $typesWithValues = CategoryProperty::getTypesWithValues();
 
 	<?= $form->field($model, 'title') ?>
 
-	<?= $form->field($model, 'properties')->widget('dkhlystov\grid\ArrayInput', [
+	<?= $form->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
 		'itemClass' => CategoryPropertyForm::className(),
 		'columns' => [
 			'title',
 			['attribute' => 'type', 'items' => CategoryProperty::getTypeNames(), 'inputOptions' => ['class' => 'form-control property-type']],
 			['attribute' => 'values', 'content' => function($model, $key, $index, $column) use ($typesWithValues) {
+				if ($model->getReadOnly())
+					return '';
+
 				$id = Html::hiddenInput($column->getInputName($model, $index, 'id'), $model->getId());
 
 				$name = $column->getInputName($model, $index, 'values');
@@ -44,12 +47,13 @@ $typesWithValues = CategoryProperty::getTypesWithValues();
 		],
 		'addLabel' => Yii::t('catalog', 'Add'),
 		'removeLabel' => Yii::t('catalog', 'Remove'),
+		'readOnlyAttribute' => 'readOnly',
 		'options' => [
 			'class' => 'category-properties',
 			'data-types-with-values' => $typesWithValues,
 			'data-modal-title' => Yii::t('catalog', 'Property values'),
 			'data-modal-add' => Yii::t('catalog', 'Add'),
-			'data-modal-save' => Yii::t('catalog', 'Save'),
+			'data-modal-ok' => Yii::t('catalog', 'OK'),
 			'data-modal-cancel' => Yii::t('catalog', 'Cancel'),
 		],
 	]) ?>

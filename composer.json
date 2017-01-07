@@ -15,7 +15,7 @@
         "creocoder/yii2-nested-sets": "0.9.*",
         "dkhlystov/yii2-treegrid": "*",
         "dkhlystov/yii2-translit": "*",
-        "dkhlystov/yii2-grid": "*"
+        "dkhlystov/yii2-arrayinput": "*"
     },
     "autoload": {
         "psr-4": {

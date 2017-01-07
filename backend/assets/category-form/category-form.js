@@ -12,7 +12,7 @@ $(function() {
 	$(document).on('click', '.category-properties button.property-values', function() {
 		var $this = $(this),
 			$properties = $this.closest('.category-properties'),
-			$modal = $('<div class="modal fade modal-properties" tabindex="-1" role="dialog"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4></div><div class="modal-body"><table class="table table-condensed table-bordered"><colgroup><col></col><col style="width: 25px;"></col></colgroup><tbody></tbody></table></div><div class="modal-footer"><div class="pull-left"><button type="button" class="btn btn-default btn-modal-add"></button></div><button type="button" class="btn btn-primary btn-modal-save"></button><button type="button" class="btn btn-default btn-modal-cancel" data-dismiss="modal"></button></div></div></div></div>'),
+			$modal = $('<div class="modal fade modal-properties" tabindex="-1" role="dialog"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4></div><div class="modal-body"><table class="table table-condensed table-bordered"><colgroup><col></col><col style="width: 25px;"></col></colgroup><tbody></tbody></table></div><div class="modal-footer"><div class="pull-left"><button type="button" class="btn btn-default btn-modal-add"></button></div><button type="button" class="btn btn-primary btn-modal-ok"></button><button type="button" class="btn btn-default btn-modal-cancel" data-dismiss="modal"></button></div></div></div></div>'),
 			$table = $modal.find('table'),
 			$input = $this.prevAll('.property-values');
 
@@ -24,7 +24,7 @@ $(function() {
 
 		$modal.find('.modal-title').text($properties.data('modalTitle'));
 		$modal.find('.btn-modal-add').text($properties.data('modalAdd')).on('click', addClick);
-		$modal.find('.btn-modal-save').text($properties.data('modalSave')).on('click', saveClick);
+		$modal.find('.btn-modal-ok').text($properties.data('modalOk')).on('click', saveClick);
 		$modal.find('.btn-modal-cancel').text($properties.data('modalCancel'));
 
 		$input.nextAll('input').each(function() {

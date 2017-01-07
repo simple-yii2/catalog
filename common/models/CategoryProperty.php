@@ -14,6 +14,14 @@ class CategoryProperty extends ActiveRecord
 	const SELECT = 3;
 	const MULTIPLE = 4;
 
+	/**
+	 * @var boolean properties from parent categories is read-only
+	 */
+	public $readOnly = false;
+
+	/**
+	 * @var string[] type names
+	 */
 	private static $typeNames = [
 		self::BOOLEAN => 'Boolean',
 		self::INTEGER => 'Integer',
@@ -22,6 +30,10 @@ class CategoryProperty extends ActiveRecord
 		self::MULTIPLE => 'Multiple select',
 	];
 
+	/**
+	 * Getter for type names with translation
+	 * @return string[]
+	 */	
 	public static function getTypeNames()
 	{
 		return array_map(function($name) {
@@ -29,6 +41,10 @@ class CategoryProperty extends ActiveRecord
 		}, self::$typeNames);
 	}
 
+	/**
+	 * Getter for types which values needed
+	 * @return integer[]
+	 */
 	public static function getTypesWithValues()
 	{
 		return [self::SELECT, self::MULTIPLE];

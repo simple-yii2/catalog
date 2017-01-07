@@ -64,6 +64,15 @@ class CategoryPropertyForm extends Model
 	}
 
 	/**
+	 * Read-only getter
+	 * @return boolean
+	 */
+	public function getReadOnly()
+	{
+		return $this->_object->readOnly;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function attributeLabels()
@@ -95,6 +104,9 @@ class CategoryPropertyForm extends Model
 	 */
 	public function save(\cms\catalog\common\models\Category $category, $runValidation = true)
 	{
+		if ($this->_object->readOnly)
+			return false;
+
 		if ($runValidation && !$this->validate())
 			return false;
 

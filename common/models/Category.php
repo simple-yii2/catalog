@@ -40,6 +40,24 @@ class Category extends ActiveRecord
 	}
 
 	/**
+	 * Parent properties
+	 * @return CategoryProperty[]
+	 */
+	public function getParentProperties()
+	{
+		$items = [];
+		foreach ($this->parents()->all() as $parent) {
+			$items = array_merge($items, $parent->properties);
+		}
+
+		array_walk($items, function(&$item) {
+			$item->readOnly = true;
+		});
+
+		return $items;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function attributeLabels()

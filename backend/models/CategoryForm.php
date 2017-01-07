@@ -42,7 +42,7 @@ class CategoryForm extends Model
 		$this->active = $object->active == 0 ? '0' : '1';
 		$this->title = $object->title;
 
-		$this->properties = $object->properties;
+		$this->properties = array_merge($object->getParentProperties(), $object->properties);
 
 		parent::__construct($config);
 	}
