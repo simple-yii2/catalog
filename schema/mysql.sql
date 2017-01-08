@@ -6,7 +6,8 @@ create table if not exists `CatalogCategory`
 	`depth` int(10) not null,
 	`active` tinyint(1) default 1,
 	`alias` varchar(100) default null,
-	`title` varchar(100) default null,
+	`title` varchar(100),
+	`path` text,
 	primary key (`id`),
 	key `alias` (`alias`)
 ) engine InnoDB;
@@ -22,3 +23,17 @@ create table if not exists `CatalogCategoryProperty`
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
 	key `alias` (`alias`)
 ) engine InnoDB;
+create table if not exists `CatalogGoods`
+(
+	`id` int(10) not null auto_increment,
+	`category_id` int(10) not null,
+	`category_lft` int(10) not null,
+	`category_rgt` int(10) not null,
+	`active` tinyint(1) default 1,
+	`alias` varchar(100) default null,
+	`title` varchar(100) default null,
+	`description` text,
+	primary key (`id`),
+	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
+	key `alias` (`alias`)
+)

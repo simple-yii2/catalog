@@ -8,8 +8,9 @@ use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
-use cms\catalog\common\models\Category;
 use cms\catalog\backend\models\CategoryForm;
+use cms\catalog\common\models\Category;
+use cms\catalog\common\models\Goods;
 
 class CategoryController extends Controller
 {
@@ -62,6 +63,8 @@ class CategoryController extends Controller
 		$model = new CategoryForm(new Category);
 
 		if ($model->load(Yii::$app->getRequest()->post()) && $model->save($parent)) {
+			$this->updateGoods();
+
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect([
 				'index',
@@ -152,6 +155,24 @@ class CategoryController extends Controller
 			case 2:
 				$object->insertAfter($t);
 				break;
+		}
+
+		$object->refresh();
+		$object->updatePath();
+
+		$this->updateGoods();
+	}
+
+	private function updateGoods()
+	{
+		$query = Category::find()->select(['id', 'lft', 'rgt'])->asArray();
+		foreach ($query->all() as $row) {
+			Goods::updateAll([
+				'category_lft' => $row['lft'],
+				'category_rgt' => $row['rgt'],
+			], [
+				'category_id' => $row['id'],
+			]);
 		}
 	}
 

@@ -177,6 +177,8 @@ class CategoryForm extends Model
 			$object->update(false, ['alias']);
 		}
 
+		$object->updatePath($parent);
+
 		//update relations
 		$old = [];
 		foreach ($object->properties as $item) {

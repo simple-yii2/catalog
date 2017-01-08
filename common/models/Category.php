@@ -13,6 +13,8 @@ use creocoder\nestedsets\NestedSetsQueryBehavior;
 class Category extends ActiveRecord
 {
 
+	const PATH_SEPARATOR = ' » ';
+
 	/**
 	 * @inheritdoc
 	 */
@@ -102,12 +104,50 @@ class Category extends ActiveRecord
 	}
 
 	/**
-	 * Making page alias from title and id
+	 * Making alias from title and id
 	 * @return void
 	 */
 	public function makeAlias()
 	{
 		$this->alias = Translit::t($this->title . '-' . $this->id);
+	}
+
+	/**
+	 * Making path from title and parent path
+	 * @param Category|null $parent 
+	 * @return void
+	 */
+	public function makePath(Category $parent = null)
+	{
+		if ($parent === null)
+			$parent = $this->parents(1)->one();
+
+		$path = '';
+
+		if ($parent !== null)
+			$path = $parent->path;
+
+		if (!empty($path))
+			$path .= self::PATH_SEPARATOR;
+
+		$this->path = $path . $this->title;
+	}
+
+	/**
+	 * Update path with children
+	 * @param Category|null $parent 
+	 * @return void
+	 */
+	public function updatePath(Category $parent = null)
+	{
+		$this->makePath($parent);
+		$this->update(false, ['path']);
+
+		if ($this->isLeaf())
+			return;
+
+		foreach ($this->children(1)->all() as $object)
+			$object->updatePath($this);
 	}
 
 }
