@@ -163,6 +163,14 @@ class Property extends ActiveRecord
 		}
 	}
 
+	private function formatBoolean($value)
+	{
+		if ($value === null || $value === '')
+			return null;
+
+		return $value == 0 ? false : true;
+	}
+
 	private function formatInteger($value)
 	{
 		return (integer) trim($value);
@@ -171,6 +179,11 @@ class Property extends ActiveRecord
 	private function formatFloat($value)
 	{
 		return (float) trim($value);
+	}
+
+	private function formatSelect($value)
+	{
+		return $value;
 	}
 
 }
