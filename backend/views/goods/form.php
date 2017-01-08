@@ -5,13 +5,14 @@ use yii\helpers\Html;
 
 use cms\catalog\common\models\Category;
 
-$items = [];
-
+$categories = ['' => ''];
 $query = Category::find()->orderBy(['lft' => SORT_ASC]);
 foreach ($query->all() as $object) {
 	if ($object->isLeaf() && $object->active)
-		$items[$object->id] = $object->path;
+		$categories[$object->id] = $object->path;
 }
+
+$propertiesName = Html::getInputName($model, 'properties');
 
 ?>
 <?php $form = ActiveForm::begin([
@@ -21,11 +22,17 @@ foreach ($query->all() as $object) {
 
 	<?= $form->field($model, 'active')->checkbox() ?>
 
-	<?= $form->field($model, 'category_id')->dropDownList($items) ?>
+	<?= $form->field($model, 'category_id')->dropDownList($categories) ?>
 
 	<?= $form->field($model, 'title') ?>
 
 	<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
+
+	<?php foreach ($model->properties as $property) {
+		echo $form->field($property, 'value')->label($property->title)->widget('cms\catalog\backend\widgets\Property', [
+			'name' => $propertiesName,
+		]);
+	} ?>
 
 	<div class="form-group">
 		<div class="col-sm-offset-3 col-sm-6">

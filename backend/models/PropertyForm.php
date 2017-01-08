@@ -6,12 +6,12 @@ use Yii;
 use yii\base\Model;
 
 use helpers\Translit;
-use cms\catalog\common\models\CategoryProperty;
+use cms\catalog\common\models\Property;
 
 /**
  * Category property form
  */
-class CategoryPropertyForm extends Model
+class PropertyForm extends Model
 {
 
 	/**
@@ -30,18 +30,18 @@ class CategoryPropertyForm extends Model
 	public $values = [];
 
 	/**
-	 * @var CategoryProperty
+	 * @var Property
 	 */
 	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param CategoryProperty|null $object 
+	 * @param Property|null $object 
 	 */
-	public function __construct(CategoryProperty $object = null, $config = [])
+	public function __construct(Property $object = null, $config = [])
 	{
 		if ($object === null)
-			$object = new CategoryProperty;
+			$object = new Property;
 
 		$this->_object = $object;
 
@@ -91,7 +91,7 @@ class CategoryPropertyForm extends Model
 	{
 		return [
 			['title', 'string', 'max' => 50],
-			['type', 'in', 'range' => array_keys(CategoryProperty::getTypeNames())],
+			['type', 'in', 'range' => array_keys(Property::getTypeNames())],
 			['values', 'each', 'rule' => ['string', 'max' => 30]],
 		];
 	}

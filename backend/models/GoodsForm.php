@@ -7,6 +7,7 @@ use yii\base\Model;
 
 use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Goods;
+use cms\catalog\common\models\GoodsProperty;
 
 /**
  * Editing form
@@ -35,6 +36,11 @@ class GoodsForm extends Model
 	public $description;
 
 	/**
+	 * @var GoodsPropertyForm[] Properties
+	 */
+	private $_properties = [];
+
+	/**
 	 * @var Goods
 	 */
 	private $_object;
@@ -56,7 +62,72 @@ class GoodsForm extends Model
 		$this->title = $object->title;
 		$this->description = $object->description;
 
+		$this->properties = $object->properties;
+
 		parent::__construct($config);
+	}
+
+	/**
+	 * Properties getter
+	 * @return GoodsPropertyForm[]
+	 */
+	public function getProperties()
+	{
+		return $this->_properties;
+	}
+
+	/**
+	 * Properties setter
+	 * @param GoodsProperty[]|array[] $value Properties
+	 * @return void
+	 */
+	public function setProperties($value)
+	{
+		$items = [];
+		if (is_array($value)) {
+			foreach ($value as $property_id => $item) {
+				if ($item instanceof GoodsProperty) {
+					$items[$item->property_id] = $item;
+				} else {
+					$items[$property_id] = ['value' => $item];
+				}
+			}
+		}
+
+		$old = [];
+		foreach ($this->_properties as $item) {
+			$old[$item->getPropertyId()] = $item;
+		}
+
+		$category = $this->_object->category;
+
+		$this->_properties = [];
+		if ($category !== null) {
+			foreach (array_merge($category->getParentProperties(), $category->properties) as $item) {
+				if (isset($old[$item->id])) {
+					$model = $old[$item->id];
+				} else {
+					$object = null;
+					if (isset($items[$item->id]) && ($items[$item->id] instanceof GoodsProperty))
+						$object = $items[$item->id];
+
+					$model = new GoodsPropertyForm($item, $object);
+				}
+				
+				if (isset($items[$item->id]) && is_array($items[$item->id]))
+					$model->setAttributes($items[$item->id]);
+
+				$this->_properties[] = $model;
+			}
+		}
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributes()
+	{
+		return array_merge(parent::attributes(), ['properties']);
 	}
 
 	/**
@@ -83,6 +154,16 @@ class GoodsForm extends Model
 			['title', 'string', 'max' => 100],
 			['description', 'string', 'max' => 1000],
 			[['category_id', 'title'], 'required'],
+			['properties', function($attribute, $params) {
+				$hasError = false;
+				foreach ($this->_properties as $model) {
+					if (!$model->validate())
+						$hasError = true;
+				}
+
+				if ($hasError)
+					$this->addError($attribute . '[]', 'Properties validation error.');
+			}],
 		];
 	}
 
@@ -114,6 +195,23 @@ class GoodsForm extends Model
 		if ($object->alias === null) {
 			$object->makeAlias();
 			$object->update(false, ['alias']);
+		}
+
+		//update relations
+		$old = [];
+		foreach ($object->properties as $item) {
+			$old[$item->property_id] = $item;
+		};
+		//insert/update
+		foreach ($this->_properties as $item) {
+			if (!empty($item->value)) {
+				$item->save($object, false);
+				unset($old[$item->getPropertyId()]);
+			}
+		}
+		//delete
+		foreach ($old as $item) {
+			$item->delete();
 		}
 
 		return true;

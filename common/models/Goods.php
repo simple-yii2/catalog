@@ -28,6 +28,24 @@ class Goods extends ActiveRecord
 	}
 
 	/**
+	 * Category relation
+	 * @return ActiveQuery;
+	 */
+	public function getCategory()
+	{
+		return $this->hasOne(Category::className(), ['id' => 'category_id']);
+	}
+
+	/**
+	 * Properties relation
+	 * @return ActiveQuery
+	 */
+	public function getProperties()
+	{
+		return $this->hasMany(GoodsProperty::className(), ['goods_id' => 'id']);
+	}
+
+	/**
 	 * Find by alias
 	 * @param sring $alias alias or id
 	 * @return static

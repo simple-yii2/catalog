@@ -4,12 +4,12 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 use cms\catalog\backend\assets\CategoryFormAsset;
-use cms\catalog\backend\models\CategoryPropertyForm;
-use cms\catalog\common\models\CategoryProperty;
+use cms\catalog\backend\models\PropertyForm;
+use cms\catalog\common\models\Property;
 
 CategoryFormAsset::register($this);
 
-$typesWithValues = CategoryProperty::getTypesWithValues();
+$typesWithValues = Property::getTypesWithValues();
 
 ?>
 <?php $form = ActiveForm::begin([
@@ -22,10 +22,10 @@ $typesWithValues = CategoryProperty::getTypesWithValues();
 	<?= $form->field($model, 'title') ?>
 
 	<?= $form->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
-		'itemClass' => CategoryPropertyForm::className(),
+		'itemClass' => PropertyForm::className(),
 		'columns' => [
 			'title',
-			['attribute' => 'type', 'items' => CategoryProperty::getTypeNames(), 'inputOptions' => ['class' => 'form-control property-type']],
+			['attribute' => 'type', 'items' => Property::getTypeNames(), 'inputOptions' => ['class' => 'form-control property-type']],
 			['attribute' => 'values', 'content' => function($model, $key, $index, $column) use ($typesWithValues) {
 				if ($model->getReadOnly())
 					return '';

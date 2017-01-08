@@ -11,7 +11,7 @@ create table if not exists `CatalogCategory`
 	primary key (`id`),
 	key `alias` (`alias`)
 ) engine InnoDB;
-create table if not exists `CatalogCategoryProperty`
+create table if not exists `CatalogProperty`
 (
 	`id` int(10) not null auto_increment,
 	`category_id` int(10) not null,
@@ -36,4 +36,14 @@ create table if not exists `CatalogGoods`
 	primary key (`id`),
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
 	key `alias` (`alias`)
-)
+) engine InnoDB;
+create table if not exists `CatalogGoodsProperty`
+(
+	`id` int(10) not null auto_increment,
+	`goods_id` int(10) not null,
+	`property_id` int(10) not null,
+	`value` varchar(30) not null,
+	primary key (`id`),
+	foreign key (`goods_id`) references `CatalogGoods` (`id`) on delete cascade on update cascade,
+	foreign key (`property_id`) references `CatalogProperty` (`id`) on delete cascade on update cascade
+) engine InnoDB;

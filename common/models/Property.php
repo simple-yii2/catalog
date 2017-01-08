@@ -7,14 +7,13 @@ use yii\db\ActiveRecord;
 
 use helpers\Translit;
 
-class CategoryProperty extends ActiveRecord
+class Property extends ActiveRecord
 {
 
 	const BOOLEAN = 0;
 	const INTEGER = 1;
 	const FLOAT = 2;
 	const SELECT = 3;
-	const MULTIPLE = 4;
 
 	/**
 	 * @var boolean properties from parent categories is read-only
@@ -27,9 +26,8 @@ class CategoryProperty extends ActiveRecord
 	private static $typeNames = [
 		self::BOOLEAN => 'Boolean',
 		self::INTEGER => 'Integer',
-		self::FLOAT => 'Fractional',
+		self::FLOAT => 'Decimal',
 		self::SELECT => 'Select',
-		self::MULTIPLE => 'Multiple select',
 	];
 
 	/**
@@ -49,7 +47,7 @@ class CategoryProperty extends ActiveRecord
 	 */
 	public static function getTypesWithValues()
 	{
-		return [self::SELECT, self::MULTIPLE];
+		return [self::SELECT];
 	}
 
 	/**
@@ -57,7 +55,7 @@ class CategoryProperty extends ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'CatalogCategoryProperty';
+		return 'CatalogProperty';
 	}
 
 	/**
@@ -101,6 +99,78 @@ class CategoryProperty extends ActiveRecord
 	public function makeAlias()
 	{
 		$this->alias = Translit::t($this->title);
+	}
+
+	public function validateValue($value)
+	{
+		switch ($this->type) {
+			case self::BOOLEAN:
+				return $this->validateBoolean($value);
+				break;
+
+			case self::INTEGER:
+				return $this->validateInteger($value);
+				break;
+
+			case self::FLOAT:
+				return $this->validateFloat($value);
+				break;
+
+			case self::SELECT:
+				return $this->validateSelect($value);
+				break;
+		}
+	}
+
+	private function validateBoolean($value)
+	{
+		return $value == '0' || $value == '1';
+	}
+
+	private function validateInteger($value)
+	{
+		return preg_match('/^\s*[+-]?\d+\s*$/', "$value");
+	}
+
+	private function validateFloat($value)
+	{
+		return preg_match('/^\s*[+-]?\d+(?:\.\d+)?\s*$/', "$value");
+	}
+
+	private function validateSelect($value)
+	{
+		return in_array($value, $this->getValues());
+	}
+
+	public function formatValue($value)
+	{
+		switch ($this->type) {
+			case self::BOOLEAN:
+				return $this->formatBoolean($value);
+				break;
+
+			case self::INTEGER:
+				return $this->formatInteger($value);
+				break;
+
+			case self::FLOAT:
+				return $this->formatFloat($value);
+				break;
+
+			case self::SELECT:
+				return $this->formatSelect($value);
+				break;
+		}
+	}
+
+	private function formatInteger($value)
+	{
+		return (integer) trim($value);
+	}
+
+	private function formatFloat($value)
+	{
+		return (float) trim($value);
 	}
 
 }

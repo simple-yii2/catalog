@@ -5,7 +5,7 @@ namespace cms\catalog\backend\models;
 use Yii;
 use yii\base\Model;
 
-use cms\catalog\common\models\CategoryProperty;
+use cms\catalog\common\models\Property;
 
 class CategoryForm extends Model
 {
@@ -58,7 +58,7 @@ class CategoryForm extends Model
 
 	/**
 	 * Properies setter
-	 * @param CategoryProperty[]|array[] $value Properies
+	 * @param Property[]|array[] $value Properies
 	 * @return void
 	 */
 	public function setProperties($value)
@@ -75,13 +75,13 @@ class CategoryForm extends Model
 			return;
 
 		foreach ($value as $item) {
-			if ($item instanceof CategoryProperty) {
-				$this->_properties[] = new CategoryPropertyForm($item);
+			if ($item instanceof Property) {
+				$this->_properties[] = new PropertyForm($item);
 			} else {
 				if (isset($item['id']) && isset($old[$item['id']])) {
 					$model = $old[$item['id']];
 				} else {
-					$model = new CategoryPropertyForm;
+					$model = new PropertyForm;
 				}
 				$model->setAttributes($item);
 				$this->_properties[] = $model;
