@@ -7,6 +7,7 @@ use yii\widgets\InputWidget;
 use yii\helpers\Html;
 
 use cms\catalog\common\models;
+use cms\catalog\backend\widgets\assets\PropertyAsset;
 
 class Property extends InputWidget
 {
@@ -14,6 +15,13 @@ class Property extends InputWidget
 	public $options = ['class' => 'form-control'];
 
 	public $booleanButtonOptions = ['class' => 'btn btn-default'];
+
+	public function init()
+	{
+		parent::init();
+
+		PropertyAsset::register($this->view);
+	}
 
 	public function run()
 	{
@@ -45,21 +53,24 @@ class Property extends InputWidget
 			$value = $value == 0 ? false : true;
 		}
 
+		$name = $this->getInputName();
 		$formatter = Yii::$app->formatter;
 
-		$checkboxTrue = Html::checkbox($this->getInputName(), $value === true, ['value' => '1']);
+		$input = Html::hiddenInput($name, '');
+
+		$checkboxTrue = Html::checkbox($name, $value === true, ['value' => '1']);
 		$options = $this->booleanButtonOptions;
 		if ($value === true)
 			Html::addCssClass($options, 'active');
 		$checkboxTrue = Html::tag('label', $checkboxTrue . $formatter->booleanFormat[1], $options);
 
-		$checkboxFalse = Html::checkbox($this->getInputName(), $value === false, ['value' => '0']);
+		$checkboxFalse = Html::checkbox($name, $value === false, ['value' => '0']);
 		$options = $this->booleanButtonOptions;
 		if ($value === false)
 			Html::addCssClass($options, 'active');
 		$checkboxFalse = Html::tag('label', $checkboxFalse . $formatter->booleanFormat[0], $options);
 
-		echo Html::tag('div', $checkboxTrue . $checkboxFalse, ['class' => 'btn-group', 'data-toggle' => 'buttons']);
+		echo $input . Html::tag('div', $checkboxTrue . $checkboxFalse, ['class' => 'btn-group property-boolean', 'data-toggle' => 'buttons']);
 	}
 
 	private function renderInteger()

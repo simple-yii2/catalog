@@ -204,7 +204,7 @@ class GoodsForm extends Model
 		};
 		//insert/update
 		foreach ($this->_properties as $item) {
-			if (!empty($item->value)) {
+			if ($item->value !== '' && $item->value !== null) {
 				$item->save($object, false);
 				unset($old[$item->getPropertyId()]);
 			}

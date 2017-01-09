@@ -168,17 +168,21 @@ class Property extends ActiveRecord
 		if ($value === null || $value === '')
 			return null;
 
-		return $value == 0 ? false : true;
+		return $value == 0 ? '0' : '1';
 	}
 
 	private function formatInteger($value)
 	{
-		return (integer) trim($value);
+		$value = (integer) trim($value);
+
+		return (string) $value;
 	}
 
 	private function formatFloat($value)
 	{
-		return (float) trim($value);
+		$value = (float) trim($value);
+
+		return (string) $value;
 	}
 
 	private function formatSelect($value)
