@@ -11,6 +11,7 @@ create table if not exists `CatalogCategory`
 	primary key (`id`),
 	key `alias` (`alias`)
 ) engine InnoDB;
+
 create table if not exists `CatalogProperty`
 (
 	`id` int(10) not null auto_increment,
@@ -23,6 +24,7 @@ create table if not exists `CatalogProperty`
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
 	key `alias` (`alias`)
 ) engine InnoDB;
+
 create table if not exists `CatalogGoods`
 (
 	`id` int(10) not null auto_increment,
@@ -38,6 +40,7 @@ create table if not exists `CatalogGoods`
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
 	key `alias` (`alias`)
 ) engine InnoDB;
+
 create table if not exists `CatalogGoodsProperty`
 (
 	`id` int(10) not null auto_increment,
@@ -47,4 +50,16 @@ create table if not exists `CatalogGoodsProperty`
 	primary key (`id`),
 	foreign key (`goods_id`) references `CatalogGoods` (`id`) on delete cascade on update cascade,
 	foreign key (`property_id`) references `CatalogProperty` (`id`) on delete cascade on update cascade
+) engine InnoDB;
+
+create table if not exists `CatalogGoodsImage`
+(
+	`id` int(10) not null auto_increment,
+	`goods_id` int(10) not null,
+	`file` varchar(200) default null,
+	`thumb` varchar(200) default null,
+	`title` varchar(100) default null,
+	`description` varchar(200) default null,
+	primary key (`id`),
+	foreign key (`goods_id`) references `CatalogGoods` (`id`) on delete cascade on update cascade
 ) engine InnoDB;
