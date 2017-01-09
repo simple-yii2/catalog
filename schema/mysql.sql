@@ -33,6 +33,7 @@ create table if not exists `CatalogGoods`
 	`alias` varchar(100) default null,
 	`title` varchar(100) default null,
 	`description` text,
+	`price` float default null,
 	primary key (`id`),
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
 	key `alias` (`alias`)

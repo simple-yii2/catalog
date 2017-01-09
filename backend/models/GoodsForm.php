@@ -36,6 +36,11 @@ class GoodsForm extends Model
 	public $description;
 
 	/**
+	 * @var float Price
+	 */
+	public $price;
+
+	/**
 	 * @var GoodsPropertyForm[] Properties
 	 */
 	private $_properties = [];
@@ -61,6 +66,7 @@ class GoodsForm extends Model
 		$this->active = $object->active == 0 ? '0' : '1';
 		$this->title = $object->title;
 		$this->description = $object->description;
+		$this->price = $object->price;
 
 		$this->properties = $object->properties;
 
@@ -158,6 +164,7 @@ class GoodsForm extends Model
 			'active' => Yii::t('catalog', 'Active'),
 			'title' => Yii::t('catalog', 'Title'),
 			'description' => Yii::t('catalog', 'Description'),
+			'price' => Yii::t('catalog', 'Price'),
 		];
 	}
 
@@ -171,6 +178,7 @@ class GoodsForm extends Model
 			['active', 'boolean'],
 			['title', 'string', 'max' => 100],
 			['description', 'string', 'max' => 1000],
+			['price', 'double'],
 			[['category_id', 'title'], 'required'],
 			['properties', function($attribute, $params) {
 				$hasError = false;
@@ -203,9 +211,10 @@ class GoodsForm extends Model
 		$object->category_id = $category->id;
 		$object->category_lft = $category->lft;
 		$object->category_rgt = $category->rgt;
-		$object->active = $this->active == 1;
+		$object->active = $this->active == 0 ? false : true;
 		$object->title = $this->title;
 		$object->description = $this->description;
+		$object->price = empty($this->price) ? null : (float) $this->price;
 
 		if (!$object->save(false))
 			return false;

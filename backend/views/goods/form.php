@@ -35,6 +35,8 @@ $propertiesName = Html::getInputName($model, 'properties');
 
 	<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
 
+	<?= $form->field($model, 'price') ?>
+
 	<div class="properties">
 		<?= Html::hiddenInput($propertiesName, '') ?>
 		<?php foreach ($model->properties as $property) {
