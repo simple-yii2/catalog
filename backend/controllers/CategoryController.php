@@ -61,6 +61,7 @@ class CategoryController extends Controller
 			$parent = Category::find()->roots()->one();
 
 		$model = new CategoryForm(new Category);
+		$model->properties = array_merge($parent->getParentProperties(), $parent->properties);
 
 		if ($model->load(Yii::$app->getRequest()->post()) && $model->save($parent)) {
 			$this->updateGoods();
