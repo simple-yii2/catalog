@@ -34,6 +34,15 @@ $(function() {
 		$modal.modal();
 	});
 
+	$(document).on('keydown', '.modal-properties table input:last', function(e) {
+		if (e.which == 9) {
+			var $table = $(this).closest('table');
+			addTableRow($table, '');
+			$table.find('input:last').focus();
+			e.preventDefault();
+		}
+	});
+
 	function addClick() {
 		var $table = $(this).closest('.modal').find('table');
 		addTableRow($table, '');
