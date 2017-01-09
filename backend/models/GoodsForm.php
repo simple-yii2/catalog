@@ -77,6 +77,15 @@ class GoodsForm extends Model
 	}
 
 	/**
+	 * Object title getter
+	 * @return string
+	 */
+	public function getObjectTitle()
+	{
+		return $this->_object->title;
+	}
+
+	/**
 	 * Properties getter
 	 * @return GoodsPropertyForm[]
 	 */
