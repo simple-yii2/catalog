@@ -101,4 +101,20 @@ class GoodsController extends Controller
 		return $this->redirect(['index']);
 	}
 
+	/**
+	 * Properties update needed when category is changed
+	 * @param integer $id
+	 * @return string
+	 */
+	public function actionProperties($id)
+	{
+		$model = new GoodsForm(Goods::findOne($id));
+
+		$model->load(Yii::$app->getRequest()->post());
+
+		return $this->renderAjax('form', [
+			'model' => $model,
+		]);
+	}
+
 }

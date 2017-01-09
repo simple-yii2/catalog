@@ -68,6 +68,15 @@ class GoodsForm extends Model
 	}
 
 	/**
+	 * Object id getter
+	 * @return integer
+	 */
+	public function getId()
+	{
+		return $this->_object->id;
+	}
+
+	/**
 	 * Properties getter
 	 * @return GoodsPropertyForm[]
 	 */
@@ -99,7 +108,7 @@ class GoodsForm extends Model
 			$old[$item->getPropertyId()] = $item;
 		}
 
-		$category = $this->_object->category;
+		$category = Category::findOne($this->category_id);
 
 		$this->_properties = [];
 		if ($category !== null) {

@@ -101,6 +101,11 @@ class Property extends ActiveRecord
 		$this->alias = Translit::t($this->title);
 	}
 
+	/**
+	 * Value validation
+	 * @param string $value 
+	 * @return boolean
+	 */
 	public function validateValue($value)
 	{
 		switch ($this->type) {
@@ -122,26 +127,51 @@ class Property extends ActiveRecord
 		}
 	}
 
+	/**
+	 * Boolean validation
+	 * @param string $value 
+	 * @return boolean
+	 */
 	private function validateBoolean($value)
 	{
 		return $value == '0' || $value == '1';
 	}
 
+	/**
+	 * Integer validation
+	 * @param string $value 
+	 * @return boolean
+	 */
 	private function validateInteger($value)
 	{
 		return preg_match('/^\s*[+-]?\d+\s*$/', "$value");
 	}
 
+	/**
+	 * Decimal validation
+	 * @param string $value 
+	 * @return boolean
+	 */
 	private function validateFloat($value)
 	{
 		return preg_match('/^\s*[+-]?\d+(?:\.\d+)?\s*$/', "$value");
 	}
 
+	/**
+	 * Select validation
+	 * @param string $value 
+	 * @return boolean
+	 */
 	private function validateSelect($value)
 	{
 		return in_array($value, $this->getValues());
 	}
 
+	/**
+	 * Value formatting for save
+	 * @param string $value 
+	 * @return string
+	 */
 	public function formatValue($value)
 	{
 		switch ($this->type) {
@@ -163,6 +193,11 @@ class Property extends ActiveRecord
 		}
 	}
 
+	/**
+	 * Boolean formatting
+	 * @param mixed $value 
+	 * @return string
+	 */
 	private function formatBoolean($value)
 	{
 		if ($value === null || $value === '')
@@ -171,6 +206,11 @@ class Property extends ActiveRecord
 		return $value == 0 ? '0' : '1';
 	}
 
+	/**
+	 * Integer formatting
+	 * @param mixed $value 
+	 * @return string
+	 */
 	private function formatInteger($value)
 	{
 		$value = (integer) trim($value);
@@ -178,6 +218,11 @@ class Property extends ActiveRecord
 		return (string) $value;
 	}
 
+	/**
+	 * Decimal formatting
+	 * @param mixed $value 
+	 * @return string
+	 */
 	private function formatFloat($value)
 	{
 		$value = (float) trim($value);
@@ -185,6 +230,11 @@ class Property extends ActiveRecord
 		return (string) $value;
 	}
 
+	/**
+	 * Select formatting
+	 * @param mixed $value 
+	 * @return string
+	 */
 	private function formatSelect($value)
 	{
 		return $value;

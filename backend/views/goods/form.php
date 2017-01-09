@@ -2,8 +2,12 @@
 
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
+use cms\catalog\backend\assets\GoodsFormAsset;
 use cms\catalog\common\models\Category;
+
+GoodsFormAsset::register($this);
 
 $categories = ['' => ''];
 $query = Category::find()->orderBy(['lft' => SORT_ASC]);
@@ -18,6 +22,9 @@ $propertiesName = Html::getInputName($model, 'properties');
 <?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
+	'options' => [
+		'data-properties-url' => Url::toRoute(['properties', 'id' => $model->getId()]),
+	],
 ]); ?>
 
 	<?= $form->field($model, 'active')->checkbox() ?>
@@ -28,11 +35,14 @@ $propertiesName = Html::getInputName($model, 'properties');
 
 	<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
 
-	<?php foreach ($model->properties as $property) {
-		echo $form->field($property, 'value')->label($property->title)->widget('cms\catalog\backend\widgets\Property', [
-			'name' => $propertiesName,
-		]);
-	} ?>
+	<div class="properties">
+		<?= Html::hiddenInput($propertiesName, '') ?>
+		<?php foreach ($model->properties as $property) {
+			echo $form->field($property, 'value')->label($property->title)->widget('cms\catalog\backend\widgets\Property', [
+				'name' => $propertiesName,
+			]);
+		} ?>
+	</div>
 
 	<div class="form-group">
 		<div class="col-sm-offset-3 col-sm-6">
