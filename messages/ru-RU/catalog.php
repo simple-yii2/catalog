@@ -11,6 +11,7 @@ return [
 	'Item not found.' => 'Элемент не найден.',
 	'Item deleted successfully.' => 'Элемент успешно удален.',
 	'The value is incorrect.' => 'Значение указано неверно.',
+	'Operation not permitted.' => 'Операция недопустима.',
 
 	'Active' => 'Активный',
 	'Title' => 'Заголовок',

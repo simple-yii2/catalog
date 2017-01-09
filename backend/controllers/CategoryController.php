@@ -60,6 +60,9 @@ class CategoryController extends Controller
 		if ($parent === null)
 			$parent = Category::find()->roots()->one();
 
+		if ($parent->goodsCount > 0)
+			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
+
 		$model = new CategoryForm(new Category);
 		$model->properties = array_merge($parent->getParentProperties(), $parent->properties);
 
@@ -119,6 +122,9 @@ class CategoryController extends Controller
 		if ($object === null || $object->isRoot())
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
+		if ($object->goodsCount > 0)
+			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
+
 		$sibling = $object->prev()->one();
 		if ($sibling === null)
 			$sibling = $object->next()->one();
@@ -145,6 +151,9 @@ class CategoryController extends Controller
 		$t = Category::findOne($target);
 		if ($t === null || $t->isRoot())
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
+
+		if ($t->goodsCount > 0)
+			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
 		switch ($position) {
 			case 0:

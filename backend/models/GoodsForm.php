@@ -276,7 +276,8 @@ class GoodsForm extends Model
 		$object->title = $this->title;
 		$object->description = $this->description;
 		$object->price = empty($this->price) ? null : (float) $this->price;
-		$object->imageCount = sizeof($this->images);
+		$object->thumb = null;
+		$object->imageCount = sizeof($this->_images);
 
 		if (!$object->save(false))
 			return false;
@@ -301,6 +302,12 @@ class GoodsForm extends Model
 		foreach ($old as $item) {
 			Yii::$app->storage->removeObject($item);
 			$item->delete();
+		}
+
+
+		if (!empty($this->_images)) {
+			$object->thumb = $this->_images[0]->getObject()->thumb;
+			$object->update(false, ['thumb']);
 		}
 
 

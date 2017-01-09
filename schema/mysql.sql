@@ -8,6 +8,7 @@ create table if not exists `CatalogCategory`
 	`alias` varchar(100) default null,
 	`title` varchar(100),
 	`path` text,
+	`goodsCount` int(10) not null,
 	primary key (`id`),
 	key `alias` (`alias`)
 ) engine InnoDB;
@@ -36,6 +37,7 @@ create table if not exists `CatalogGoods`
 	`title` varchar(100) default null,
 	`description` text,
 	`price` float default null,
+	`thumb` varchar(200) default null,
 	`imageCount` int(10) not null,
 	primary key (`id`),
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,

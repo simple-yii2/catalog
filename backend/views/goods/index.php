@@ -27,7 +27,23 @@ $this->params['breadcrumbs'] = [
 		return !$model->active ? ['class' => 'warning'] : [];
 	},
 	'columns' => [
-		'title',
+		[
+			'attribute' => 'title',
+			'format' => 'html',
+			'content' => function($model, $key, $index, $column) {
+				$result = '';
+
+				if (!empty($model->thumb))
+					$result .= Html::img($model->thumb, ['style' => 'height: 20px;']) . '&nbsp;';
+
+				$result .= Html::encode($model->title);
+
+				if ($model->imageCount > 0)
+					$result .= '&nbsp;' . Html::tag('span', $model->imageCount, ['class' => 'badge']);
+
+				return $result;
+			},
+		],
 		[
 			'class' => 'yii\grid\ActionColumn',
 			'options' => ['style' => 'width: 50px;'],

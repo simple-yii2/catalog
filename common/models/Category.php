@@ -31,6 +31,7 @@ class Category extends ActiveRecord
 		parent::init();
 
 		$this->active = true;
+		$this->goodsCount = 0;
 	}
 
 	/**
@@ -40,6 +41,15 @@ class Category extends ActiveRecord
 	public function getProperties()
 	{
 		return $this->hasMany(Property::className(), ['category_id' => 'id']);
+	}
+
+	/**
+	 * Goods relation
+	 * @return ActiveQuery
+	 */
+	public function getGoods()
+	{
+		return $this->hasMany(Goods::className(), ['category_id' => 'id'])->inverseOf('category');
 	}
 
 	/**
@@ -148,6 +158,19 @@ class Category extends ActiveRecord
 
 		foreach ($this->children(1)->all() as $object)
 			$object->updatePath($this);
+	}
+
+	/**
+	 * Update goods count
+	 * @return void
+	 */
+	public function updateGoodsCount()
+	{
+		$count = $this->getGoods()->count();
+		if ($count != $this->goodsCount) {
+			$this->goodsCount = $count;
+			$this->update(false, ['goodsCount']);
+		}
 	}
 
 }

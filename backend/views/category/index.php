@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\web\JsExpression;
 
 use dkhlystov\widgets\NestedTreeGrid;
 
@@ -25,11 +26,33 @@ $this->params['breadcrumbs'] = [
 	'moveAction' => ['move'],
 	'tableOptions' => ['class' => 'table table-condensed'],
 	'rowOptions' => function ($model, $key, $index, $grid) {
-		return !$model->active ? ['class' => 'warning'] : [];
+		$options = ['data-goods-count' => $model->goodsCount];
+
+		if (!$model->active)
+			Html::addCssClass($options, 'warning');
+
+		return $options;
 	},
+	'pluginOptions' => [
+		'onMoveOver' => new JsExpression('function (item, helper, target, position) {
+			if (position == 1)
+				return target.data("goodsCount") == 0;
+
+			return true;
+		}'),
+	],
 	'columns' => [
 		[
 			'attribute' => 'title',
+			'format' => 'html',
+			'content' => function($model, $key, $index, $column) {
+				$result = Html::encode($model->title);
+
+				if ($model->goodsCount > 0)
+					$result .= '&nbsp;' . Html::tag('span', $model->goodsCount, ['class' => 'badge']);
+
+				return $result;
+			},
 		],
 		[
 			'class' => 'yii\grid\ActionColumn',
@@ -44,6 +67,14 @@ $this->params['breadcrumbs'] = [
 						'aria-label' => $title,
 						'data-pjax' => 0,
 					]);
+				},
+			],
+			'visibleButtons' => [
+				'delete' => function($model, $key, $index) {
+					return $model->goodsCount == 0;
+				},
+				'create' => function($model, $key, $index) {
+					return $model->goodsCount == 0;
 				},
 			],
 		],

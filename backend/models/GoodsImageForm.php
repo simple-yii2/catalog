@@ -55,6 +55,15 @@ class GoodsImageForm extends Model
 	}
 
 	/**
+	 * Object getter
+	 * @return GoodsImage
+	 */
+	public function getObject()
+	{
+		return $this->_object;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function rules()

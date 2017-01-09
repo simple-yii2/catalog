@@ -48,9 +48,13 @@ class GoodsController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new GoodsForm;
+		$object = new Goods;
+
+		$model = new GoodsForm($object);
 
 		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+			$object->category->updateGoodsCount();
+
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect(['index']);
 		}
@@ -71,9 +75,16 @@ class GoodsController extends Controller
 		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
+		$category = $object->category;
+
 		$model = new GoodsForm($object);
 
 		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+			$object->category->updateGoodsCount();
+
+			if ($category->id != $object->category->id)
+				$category->updateGoodsCount();
+
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect(['index']);
 		}
@@ -94,6 +105,8 @@ class GoodsController extends Controller
 		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
+		$category = $object->category;
+
 		foreach ($object->images as $item) {
 			Yii::$app->storage->removeObject($item);
 			$item->delete();
@@ -104,6 +117,8 @@ class GoodsController extends Controller
 		}
 
 		if ($object->delete()) {
+			$category->updateGoodsCount();
+
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Item deleted successfully.'));
 		}
 
