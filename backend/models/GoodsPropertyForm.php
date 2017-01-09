@@ -61,6 +61,11 @@ class GoodsPropertyForm extends Model
 		return $this->_template->type;
 	}
 
+	public function formName()
+	{
+		return parent::formName() . '[' . $this->_template->id . ']';
+	}
+
 	/**
 	 * @inheritdoc
 	 */
