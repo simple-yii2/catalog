@@ -75,6 +75,7 @@ class CategoryController extends Controller
 		return $this->render('create', [
 			'model' => $model,
 			'id' => $id,
+			'parents' => array_merge($parent->parents()->all(), [$parent]),
 		]);
 	}
 
@@ -102,6 +103,7 @@ class CategoryController extends Controller
 		return $this->render('update', [
 			'model' => $model,
 			'id' => $object->id,
+			'parents' => $object->parents()->all(),
 		]);
 	}
 

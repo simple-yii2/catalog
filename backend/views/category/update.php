@@ -6,10 +6,15 @@ $title = $model->getObjectTitle();
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
-$this->params['breadcrumbs'] = [
+$breadcrumbs = [
 	['label' => Yii::t('catalog', 'Categories'), 'url' => ['index']],
-	$title,
 ];
+foreach ($parents as $object) {
+	if (!$object->isRoot())
+		$breadcrumbs[] = $object->title;
+}
+$breadcrumbs[] = $title;
+$this->params['breadcrumbs'] = $breadcrumbs;
 
 ?>
 <h1><?= Html::encode($title) ?></h1>
