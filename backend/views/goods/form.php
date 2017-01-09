@@ -6,8 +6,14 @@ use yii\helpers\Url;
 
 use cms\catalog\backend\assets\GoodsFormAsset;
 use cms\catalog\common\models\Category;
+use dkhlystov\uploadimage\widgets\UploadImages;
 
 GoodsFormAsset::register($this);
+
+$width = 360;
+$height = 270;
+
+$imageSize = '<br><span class="label label-default">' . $width . '&times' . $height . '</span>';
 
 $categories = ['' => ''];
 $query = Category::find()->orderBy(['lft' => SORT_ASC]);
@@ -28,6 +34,19 @@ $propertiesName = Html::getInputName($model, 'properties');
 ]); ?>
 
 	<?= $form->field($model, 'active')->checkbox() ?>
+
+	<?= $form->field($model, 'images')->label($model->getAttributeLabel('images') . $imageSize)->widget(UploadImages::className(), [
+		'id' => 'goods-images',
+		'fileKey' => 'file',
+		'thumbKey' => 'thumb',
+		'thumbWidth' => $width,
+		'thumbHeight' => $height,
+		'data' => function($item) {
+			return [
+				'id' => $item['id'],
+			];
+		},
+	]) ?>
 
 	<?= $form->field($model, 'category_id')->dropDownList($categories) ?>
 

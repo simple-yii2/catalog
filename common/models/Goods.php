@@ -25,6 +25,7 @@ class Goods extends ActiveRecord
 		parent::init();
 
 		$this->active = true;
+		$this->imageCount = 0;
 	}
 
 	/**
@@ -34,6 +35,15 @@ class Goods extends ActiveRecord
 	public function getCategory()
 	{
 		return $this->hasOne(Category::className(), ['id' => 'category_id']);
+	}
+
+	/**
+	 * Images relation
+	 * @return ActiveQuery
+	 */
+	public function getImages()
+	{
+		return $this->hasMany(GoodsImage::className(), ['goods_id' => 'id']);
 	}
 
 	/**

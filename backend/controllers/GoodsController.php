@@ -94,6 +94,15 @@ class GoodsController extends Controller
 		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
+		foreach ($object->images as $item) {
+			Yii::$app->storage->removeObject($item);
+			$item->delete();
+		}
+
+		foreach ($object->properties as $item) {
+			$item->delete();
+		}
+
 		if ($object->delete()) {
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Item deleted successfully.'));
 		}
@@ -103,10 +112,10 @@ class GoodsController extends Controller
 
 	/**
 	 * Properties update needed when category is changed
-	 * @param integer $id
+	 * @param integer|null $id
 	 * @return string
 	 */
-	public function actionProperties($id)
+	public function actionProperties($id = null)
 	{
 		$model = new GoodsForm(Goods::findOne($id));
 

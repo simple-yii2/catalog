@@ -19,11 +19,13 @@ return [
 	'Description' => 'Описание',
 	'Type' => 'Тип',
 	'Values' => 'Значения',
+	'Price' => 'Цена',
+	'Images' => 'Фото',
+
 	'Boolean' => 'Логический',
 	'Integer' => 'Целый',
 	'Decimal' => 'Дробный',
 	'Select' => 'Выбор',
-	'Price' => 'Цена',
 
 	'Add' => 'Добавтиь',
 	'Remove' => 'Удалить',

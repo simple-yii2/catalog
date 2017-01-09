@@ -7,6 +7,7 @@ use yii\base\Model;
 
 use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Goods;
+use cms\catalog\common\models\GoodsImage;
 use cms\catalog\common\models\GoodsProperty;
 
 /**
@@ -41,6 +42,11 @@ class GoodsForm extends Model
 	public $price;
 
 	/**
+	 * @var GoodsImageForm[] Images
+	 */
+	private $_images = [];
+
+	/**
 	 * @var GoodsPropertyForm[] Properties
 	 */
 	private $_properties = [];
@@ -67,7 +73,7 @@ class GoodsForm extends Model
 		$this->title = $object->title;
 		$this->description = $object->description;
 		$this->price = $object->price;
-
+		$this->images = $object->images;
 		$this->properties = $object->properties;
 
 		parent::__construct($config);
@@ -89,6 +95,50 @@ class GoodsForm extends Model
 	public function getObjectTitle()
 	{
 		return $this->_object->title;
+	}
+
+	/**
+	 * Images getter
+	 * @return GoodsImageForm[]
+	 */
+	public function getImages()
+	{
+		return $this->_images;
+	}
+
+	/**
+	 * Images setter
+	 * @param GoodsImage[]|array[] $value 
+	 * @return void
+	 */
+	public function setImages($value)
+	{
+		$old = [];
+		foreach ($this->_images as $item) {
+			$old[$item->getId()] = $item;
+		}
+
+		$this->_images = [];
+		if (is_array($value)) {
+			foreach ($value as $item) {
+				if ($item instanceof GoodsImage) {
+					$object = $item;
+					$id = $item->id;
+					$attributes = $item->getAttributes();
+				} else {
+					$object = new GoodsImage;
+					$id = isset($item['id']) ? $item['id'] : null;
+					$attributes = $item;
+				}
+				if (isset($old[$id])) {
+					$model = $old[$id];
+				} else {
+					$model = new GoodsImageForm($object);
+				}
+				$model->setAttributes($attributes);
+				$this->_images[] = $model;
+			}
+		}
 	}
 
 	/**
@@ -165,6 +215,7 @@ class GoodsForm extends Model
 			'title' => Yii::t('catalog', 'Title'),
 			'description' => Yii::t('catalog', 'Description'),
 			'price' => Yii::t('catalog', 'Price'),
+			'images' => Yii::t('catalog', 'Images'),
 		];
 	}
 
@@ -180,6 +231,16 @@ class GoodsForm extends Model
 			['description', 'string', 'max' => 1000],
 			['price', 'double'],
 			[['category_id', 'title'], 'required'],
+			['images', function($attribute, $params) {
+				$hasError = false;
+				foreach ($this->_images as $model) {
+					if (!$model->validate())
+						$hasError = true;
+				}
+
+				if ($hasError)
+					$this->addError($attribute . '[]', 'Images validation error.');
+			}],
 			['properties', function($attribute, $params) {
 				$hasError = false;
 				foreach ($this->_properties as $model) {
@@ -215,6 +276,7 @@ class GoodsForm extends Model
 		$object->title = $this->title;
 		$object->description = $this->description;
 		$object->price = empty($this->price) ? null : (float) $this->price;
+		$object->imageCount = sizeof($this->images);
 
 		if (!$object->save(false))
 			return false;
@@ -224,7 +286,25 @@ class GoodsForm extends Model
 			$object->update(false, ['alias']);
 		}
 
-		//update relations
+
+		//update images
+		$old = [];
+		foreach ($object->images as $item) {
+			$old[$item->id] = $item;
+		};
+		//insert/update
+		foreach ($this->_images as $item) {
+			$item->save($object, false);
+			unset($old[$item->getId()]);
+		}
+		//delete
+		foreach ($old as $item) {
+			Yii::$app->storage->removeObject($item);
+			$item->delete();
+		}
+
+
+		//update properties
 		$old = [];
 		foreach ($object->properties as $item) {
 			$old[$item->property_id] = $item;
@@ -240,6 +320,7 @@ class GoodsForm extends Model
 		foreach ($old as $item) {
 			$item->delete();
 		}
+
 
 		return true;
 	}
