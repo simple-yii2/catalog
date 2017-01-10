@@ -34,7 +34,7 @@ $this->params['breadcrumbs'] = [
 				$result = '';
 
 				if (!empty($model->thumb))
-					$result .= Html::img($model->thumb, ['style' => 'height: 20px;']) . '&nbsp;';
+					$result .= Html::img($model->thumb, ['height' => 20]) . '&nbsp;';
 
 				$result .= Html::encode($model->title);
 
