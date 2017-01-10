@@ -37,6 +37,7 @@ create table if not exists `CatalogGoods`
 	`title` varchar(100) default null,
 	`description` text,
 	`price` float default null,
+	`modifyDate` datetime,
 	`thumb` varchar(200) default null,
 	`imageCount` int(10) not null,
 	primary key (`id`),

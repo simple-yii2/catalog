@@ -276,6 +276,7 @@ class GoodsForm extends Model
 		$object->title = $this->title;
 		$object->description = $this->description;
 		$object->price = empty($this->price) ? null : (float) $this->price;
+		$object->modifyDate = gmdate('Y-m-d H:i:s');
 		$object->thumb = null;
 		$object->imageCount = sizeof($this->_images);
 

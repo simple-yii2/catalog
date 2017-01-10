@@ -38,7 +38,7 @@ class GoodsSearch extends Goods {
 	 */
 	public function search($params) {
 		//ActiveQuery
-		$query = static::find();
+		$query = static::find()->orderBy(['modifyDate' => SORT_DESC]);
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
