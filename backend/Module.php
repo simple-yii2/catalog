@@ -76,8 +76,9 @@ class Module extends \yii\base\Module {
 		if (Yii::$app->user->can('Catalog')) {
 			return [
 				['label' => Yii::t('catalog', 'Catalog'), 'items' => [
+					['label' => Yii::t('catalog', 'Settings'), 'url' => ["$base/catalog/settings/index"]],
 					['label' => Yii::t('catalog', 'Currencies'), 'url' => ["$base/catalog/currency/index"]],
-					['label' => Yii::t('catalog', 'Vendors'), 'url' => ["$base/catalog/vendors/index"]],
+					['label' => Yii::t('catalog', 'Vendors'), 'url' => ["$base/catalog/vendor/index"]],
 					['label' => Yii::t('catalog', 'Stores'), 'url' => ["$base/catalog/store/index"]],
 					['label' => Yii::t('catalog', 'Delivery'), 'url' => ["$base/catalog/delivery/index"]],
 					['label' => Yii::t('catalog', 'Categories'), 'url' => ["$base/catalog/category/index"]],

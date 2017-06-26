@@ -1,4 +1,12 @@
--- defaultCurrency_id
+create table if not exists `CatalogSettings`
+(
+	`id` int(10) not null auto_increment,
+	`defaultCurrency_id` int(10) default null,
+	`vendorImageWidth` int(10) default '100',
+	`vendorImageHeight` int(10) default '100',
+	primary key (`id`)
+) engine InnoDB;
+
 -- offerImageWidth
 -- offerImageHeight
 
@@ -14,6 +22,9 @@ create table if not exists `CatalogVendor`
 (
 	`id` int(10) not null auto_increment,
 	`name` varchar(100) not null,
+	`description` text,
+	`url` varchar(200) default null,
+	`image` varchar(200) default null,
 	primary key (`id`)
 ) engine InnoDB;
 
