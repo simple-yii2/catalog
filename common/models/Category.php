@@ -25,13 +25,14 @@ class Category extends ActiveRecord
 
 	/**
 	 * @inheritdoc
+	 * Default values
 	 */
-	public function init()
+	public function __construct($config = [])
 	{
-		parent::init();
-
-		$this->active = true;
-		$this->goodsCount = 0;
+		parent::__construct(array_merge([
+			'active' => true,
+			'offerCount' => 0,
+		], $config));
 	}
 
 	/**
@@ -44,12 +45,12 @@ class Category extends ActiveRecord
 	}
 
 	/**
-	 * Goods relation
+	 * Offers relation
 	 * @return ActiveQuery
 	 */
-	public function getGoods()
+	public function getOffers()
 	{
-		return $this->hasMany(Goods::className(), ['category_id' => 'id'])->inverseOf('category');
+		return $this->hasMany(Offer::className(), ['category_id' => 'id'])->inverseOf('category');
 	}
 
 	/**
@@ -161,15 +162,15 @@ class Category extends ActiveRecord
 	}
 
 	/**
-	 * Update goods count
+	 * Update offer count
 	 * @return void
 	 */
-	public function updateGoodsCount()
+	public function updateOfferCount()
 	{
-		$count = $this->getGoods()->count();
-		if ($count != $this->goodsCount) {
-			$this->goodsCount = $count;
-			$this->update(false, ['goodsCount']);
+		$count = $this->getOffers()->count();
+		if ($count != $this->offerCount) {
+			$this->offerCount = $count;
+			$this->update(false, ['offerCount']);
 		}
 	}
 

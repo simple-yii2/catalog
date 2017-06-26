@@ -69,15 +69,19 @@ class Module extends \yii\base\Module {
 	 * @param string $base route base
 	 * @return array
 	 */
-	public static function getMenu($base)
+	public static function cmsMenu($base)
 	{
 		self::addTranslation();
 
 		if (Yii::$app->user->can('Catalog')) {
 			return [
 				['label' => Yii::t('catalog', 'Catalog'), 'items' => [
+					['label' => Yii::t('catalog', 'Currencies'), 'url' => ["$base/catalog/currency/index"]],
+					['label' => Yii::t('catalog', 'Vendors'), 'url' => ["$base/catalog/vendors/index"]],
+					['label' => Yii::t('catalog', 'Stores'), 'url' => ["$base/catalog/store/index"]],
+					['label' => Yii::t('catalog', 'Delivery'), 'url' => ["$base/catalog/delivery/index"]],
 					['label' => Yii::t('catalog', 'Categories'), 'url' => ["$base/catalog/category/index"]],
-					['label' => Yii::t('catalog', 'Goods'), 'url' => ["$base/catalog/goods/index"]],
+					['label' => Yii::t('catalog', 'Offers'), 'url' => ["$base/catalog/offers/index"]],
 				]],
 			];
 		}
