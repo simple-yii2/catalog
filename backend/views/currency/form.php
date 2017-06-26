@@ -2,12 +2,6 @@
 
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\Url;
-
-use cms\catalog\backend\assets\GoodsFormAsset;
-use cms\catalog\common\models\Category;
-use dkhlystov\uploadimage\widgets\UploadImages;
-
 
 ?>
 <?php $f = ActiveForm::begin([

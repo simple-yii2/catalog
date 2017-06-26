@@ -20,29 +20,11 @@ $this->params['breadcrumbs'] = [
 
 <?= GridView::widget([
 	'dataProvider' => $search->getDataProvider(),
-	// 'filterModel' => $model,
 	'summary' => '',
 	'tableOptions' => ['class' => 'table table-condensed'],
 	'columns' => [
 		'code',
 		'rate',
-		// [
-		// 	'attribute' => 'rate',
-		// 	'format' => 'html',
-		// 	'content' => function($model, $key, $index, $column) {
-		// 		$result = '';
-
-		// 		if (!empty($model->thumb))
-		// 			$result .= Html::img($model->thumb, ['height' => 20]) . '&nbsp;';
-
-		// 		$result .= Html::encode($model->code);
-
-		// 		if ($model->imageCount > 0)
-		// 			$result .= '&nbsp;' . Html::tag('span', $model->imageCount, ['class' => 'badge']);
-
-		// 		return $result;
-		// 	},
-		// ],
 		[
 			'class' => 'yii\grid\ActionColumn',
 			'options' => ['style' => 'width: 50px;'],
