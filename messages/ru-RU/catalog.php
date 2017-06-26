@@ -2,13 +2,16 @@
 
 return [
 	'Catalog' => 'Каталог',
+	'Settings' => 'Настройки',
 	'Currencies' => 'Валюты',
 	'Vendors' => 'Производители',
 	'Stores' => 'Магазины (склады)',
 	'Delivery' => 'Доставка',
 	'Categories' => 'Категории',
 	'Offers' => 'Товары (услуги)',
+	'Catalog settings' => 'Настройки каталога',
 	'Create currency' => 'Добавить валюту',
+	'Create vendor' => 'Добавить производителя',
 	'Create category' => 'Добавить категорию',
 	'Create goods' => 'Добавить товар',
 
@@ -18,8 +21,14 @@ return [
 	'The value is incorrect.' => 'Значение указано неверно.',
 	'Operation not permitted.' => 'Операция недопустима.',
 
+	'Default currency' => 'Валюта по-умолчанию',
+	'Vendor image width' => 'Ширина изображения производиталя',
+	'Vendor image height' => 'Высота изображения производиталя',
 	'Code' => 'Код',
 	'Rate' => 'Курс',
+	'Name' => 'Наименование',
+	'Url' => 'Ссылка',
+	'Image' => 'Изображение',
 	'Active' => 'Активный',
 	'Title' => 'Заголовок',
 	'Properties' => 'Характеристики',
