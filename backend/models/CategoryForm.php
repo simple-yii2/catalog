@@ -4,7 +4,9 @@ namespace cms\catalog\backend\models;
 
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
+use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Property;
 
 class CategoryForm extends Model
@@ -26,23 +28,26 @@ class CategoryForm extends Model
 	private $_properties = [];
 
 	/**
-	 * @var cms\catalog\common\models\Category
+	 * @var Category
 	 */
-	private $_object;
+	private $_model;
 
 	/**
 	 * @inheritdoc
-	 * @param cms\catalog\common\models\Category $object 
+	 * @param Category $model 
 	 */
-	public function __construct(\cms\catalog\common\models\Category $object, $config = [])
+	public function __construct(Category $model = null, $config = [])
 	{
-		$this->_object = $object;
+		if ($model === null)
+			$model = new Category;
+
+		$this->_model = $model;
 
 		//attributes
-		$this->active = $object->active == 0 ? '0' : '1';
-		$this->title = $object->title;
+		$this->active = $model->active == 0 ? '0' : '1';
+		$this->title = $model->title;
 
-		$this->properties = array_merge($object->getParentProperties(), $object->properties);
+		$this->properties = array_merge($model->getParentProperties(), $model->properties);
 
 		parent::__construct($config);
 	}
@@ -65,7 +70,7 @@ class CategoryForm extends Model
 	{
 		$old = [];
 		foreach ($this->_properties as $item) {
-			if ($id = $item->getId())
+			if ($id = $item->id)
 				$old[$id] = $item;
 		}
 
@@ -78,8 +83,9 @@ class CategoryForm extends Model
 			if ($item instanceof Property) {
 				$this->_properties[] = new PropertyForm($item);
 			} else {
-				if (isset($item['id']) && isset($old[$item['id']])) {
-					$model = $old[$item['id']];
+				$id = ArrayHelper::getValue($item, 'id');
+				if (array_key_exists($id, $old)) {
+					$model = $old[$id];
 				} else {
 					$model = new PropertyForm;
 				}
@@ -132,62 +138,53 @@ class CategoryForm extends Model
 	}
 
 	/**
-	 * Object id getter
-	 * @return integer
+	 * Model getter
+	 * @return Category
 	 */
-	public function getObjectId()
+	public function getModel()
 	{
-		return $this->_object->id;
+		return $this->_model;
 	}
 
 	/**
-	 * Object title getter
-	 * @return integer
-	 */
-	public function getObjectTitle()
-	{
-		return $this->_object->title;
-	}
-
-	/**
-	 * Save object using model attributes
-	 * @param cms\catalog\common\models\Category|null $parent 
+	 * Save
+	 * @param Category|null $parent 
 	 * @return boolean
 	 */
-	public function save(\cms\catalog\common\models\Category $parent = null)
+	public function save(Category $parent = null)
 	{
 		if (!$this->validate())
 			return false;
 
-		$object = $this->_object;
+		$model = $this->_model;
 
-		$object->active = $this->active == 1;
-		$object->title = $this->title;
+		$model->active = $this->active == 1;
+		$model->title = $this->title;
 
-		if ($object->getIsNewRecord()) {
-			if (!$object->appendTo($parent, false))
+		if ($model->getIsNewRecord()) {
+			if (!$model->appendTo($parent, false))
 				return false;
 		} else {
-			if (!$object->save(false))
+			if (!$model->save(false))
 				return false;
 		}
 
-		if ($object->alias === null) {
-			$object->makeAlias();
-			$object->update(false, ['alias']);
+		if (empty($model->alias)) {
+			$model->makeAlias();
+			$model->update(false, ['alias']);
 		}
 
-		$object->updatePath($parent);
+		$model->updatePath($parent);
 
 		//update relations
 		$old = [];
-		foreach ($object->properties as $item) {
+		foreach ($model->properties as $item) {
 			$old[$item->id] = $item;
 		};
 		//insert/update
 		foreach ($this->_properties as $item) {
-			$item->save($object, false);
-			unset($old[$item->getId()]);
+			$item->save($model, false);
+			unset($old[$item->id]);
 		}
 		//delete
 		foreach ($old as $item) {

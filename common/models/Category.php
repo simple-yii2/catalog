@@ -72,16 +72,6 @@ class Category extends ActiveRecord
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'title' => Yii::t('catalog', 'Title'),
-		];
-	}
-
-	/**
 	 * Find by alias
 	 * @param sring $alias Alias or id
 	 * @return static

@@ -6,7 +6,7 @@ use yii\db\ActiveRecord;
 
 use helpers\Translit;
 
-class Goods extends ActiveRecord
+class Offer extends ActiveRecord
 {
 
 	/**
@@ -14,7 +14,7 @@ class Goods extends ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'CatalogGoods';
+		return 'CatalogOffer';
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Goods extends ActiveRecord
 	 */
 	public function getImages()
 	{
-		return $this->hasMany(GoodsImage::className(), ['goods_id' => 'id']);
+		return $this->hasMany(OfferImage::className(), ['offer_id' => 'id']);
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Goods extends ActiveRecord
 	 */
 	public function getProperties()
 	{
-		return $this->hasMany(GoodsProperty::className(), ['goods_id' => 'id']);
+		return $this->hasMany(OfferProperty::className(), ['offer_id' => 'id']);
 	}
 
 	/**

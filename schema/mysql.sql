@@ -60,7 +60,7 @@ create table if not exists `CatalogCategory`
 	key `alias` (`alias`)
 ) engine InnoDB;
 
-create table if not exists `CatalogParam`
+create table if not exists `CatalogProperty`
 (
 	`id` int(10) not null auto_increment,
 	`category_id` int(10) not null,
@@ -130,15 +130,15 @@ create table if not exists `CatalogOfferDelivery`
 	foreign key (`delivery_id`) references `CatalogDelivery` (`id`) on delete cascade on update cascade
 ) engine InnoDB;
 
-create table if not exists `CatalogOfferParam`
+create table if not exists `CatalogOfferProperty`
 (
 	`id` int(10) not null auto_increment,
 	`offer_id` int(10) not null,
-	`param_id` int(10) not null,
+	`property_id` int(10) not null,
 	`value` varchar(30) not null,
 	primary key (`id`),
 	foreign key (`offer_id`) references `CatalogOffer` (`id`) on delete cascade on update cascade,
-	foreign key (`param_id`) references `CatalogParam` (`id`) on delete cascade on update cascade
+	foreign key (`property_id`) references `CatalogProperty` (`id`) on delete cascade on update cascade
 ) engine InnoDB;
 
 create table if not exists `CatalogOfferImage`

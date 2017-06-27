@@ -12,25 +12,25 @@ CategoryFormAsset::register($this);
 $typesWithValues = Property::getTypesWithValues();
 
 ?>
-<?php $form = ActiveForm::begin([
+<?php $f = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 ]); ?>
 
-	<?= $form->field($model, 'active')->checkbox() ?>
+	<?= $f->field($form, 'active')->checkbox() ?>
 
-	<?= $form->field($model, 'title') ?>
+	<?= $f->field($form, 'title') ?>
 
-	<?= $form->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
+	<?= $f->field($form, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
 		'itemClass' => PropertyForm::className(),
 		'columns' => [
-			'title',
+			'name',
 			['attribute' => 'type', 'items' => Property::getTypeNames(), 'inputOptions' => ['class' => 'form-control property-type']],
 			['attribute' => 'values', 'content' => function($model, $key, $index, $column) use ($typesWithValues) {
 				if ($model->getReadOnly())
 					return '';
 
-				$id = Html::hiddenInput($column->getInputName($model, $index, 'id'), $model->getId());
+				$id = Html::hiddenInput($column->getInputName($model, $index, 'id'), $model->id);
 
 				$name = $column->getInputName($model, $index, 'values');
 				$values = Html::hiddenInput($name, '', ['class' => 'property-values']);

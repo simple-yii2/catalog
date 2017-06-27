@@ -8,9 +8,10 @@ use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
+use cms\catalog\backend\models\CategorySearch;
 use cms\catalog\backend\models\CategoryForm;
 use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Goods;
+use cms\catalog\common\models\Offer;
 
 class CategoryController extends Controller
 {
@@ -37,15 +38,9 @@ class CategoryController extends Controller
 	 */
 	public function actionIndex($id = null)
 	{
-		$initial = Category::findOne($id);
-
-		$dataProvider = new ActiveDataProvider([
-			'query' => Category::find(),
-		]);
-
 		return $this->render('index', [
-			'dataProvider' => $dataProvider,
-			'initial' => $initial,
+			'search' => new CategorySearch,
+			'initial' => Category::findOne($id),
 		]);
 	}
 
@@ -60,24 +55,24 @@ class CategoryController extends Controller
 		if ($parent === null)
 			$parent = Category::find()->roots()->one();
 
-		if ($parent->goodsCount > 0)
+		if ($parent->offerCount > 0)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
-		$model = new CategoryForm(new Category);
-		$model->properties = array_merge($parent->getParentProperties(), $parent->properties);
+		$form = new CategoryForm;
+		$form->properties = array_merge($parent->getParentProperties(), $parent->properties);
 
-		if ($model->load(Yii::$app->getRequest()->post()) && $model->save($parent)) {
-			$this->updateGoods();
+		if ($form->load(Yii::$app->getRequest()->post()) && $form->save($parent)) {
+			$this->updateOffers();
 
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect([
 				'index',
-				'id' => $model->getObjectId(),
+				'id' => $form->getModel()->id,
 			]);
 		}
 
 		return $this->render('create', [
-			'model' => $model,
+			'form' => $form,
 			'id' => $id,
 			'parents' => array_merge($parent->parents()->all(), [$parent]),
 		]);
@@ -90,24 +85,24 @@ class CategoryController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$object = Category::findOne($id);
-		if ($object === null || $object->isRoot())
+		$model = Category::findOne($id);
+		if ($model === null || $model->isRoot())
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		$model = new CategoryForm($object);
+		$form = new CategoryForm($model);
 
-		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+		if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect([
 				'index',
-				'id' => $model->getObjectId(),
+				'id' => $form->getModel()->id,
 			]);
 		}
 
 		return $this->render('update', [
-			'model' => $model,
-			'id' => $object->id,
-			'parents' => $object->parents()->all(),
+			'form' => $form,
+			'id' => $model->id,
+			'parents' => $model->parents()->all(),
 		]);
 	}
 
@@ -118,18 +113,18 @@ class CategoryController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$object = Category::findOne($id);
-		if ($object === null || $object->isRoot())
+		$model = Category::findOne($id);
+		if ($model === null || $model->isRoot())
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		if ($object->goodsCount > 0)
+		if ($model->offerCount > 0)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
-		$sibling = $object->prev()->one();
+		$sibling = $model->prev()->one();
 		if ($sibling === null)
-			$sibling = $object->next()->one();
+			$sibling = $model->next()->one();
 
-		if ($object->deleteWithChildren())
+		if ($model->deleteWithChildren())
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Item deleted successfully.'));
 
 		return $this->redirect(['index', 'id' => $sibling ? $sibling->id : null]);
@@ -152,7 +147,7 @@ class CategoryController extends Controller
 		if ($t === null || $t->isRoot())
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		if ($t->goodsCount > 0)
+		if ($position == 1 && $t->offerCount > 0)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
 		switch ($position) {
@@ -172,14 +167,14 @@ class CategoryController extends Controller
 		$object->refresh();
 		$object->updatePath();
 
-		$this->updateGoods();
+		$this->updateOffers();
 	}
 
-	private function updateGoods()
+	private function updateOffers()
 	{
 		$query = Category::find()->select(['id', 'lft', 'rgt'])->asArray();
 		foreach ($query->all() as $row) {
-			Goods::updateAll([
+			Offer::updateAll([
 				'category_lft' => $row['lft'],
 				'category_rgt' => $row['rgt'],
 			], [

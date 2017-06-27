@@ -21,12 +21,12 @@ $this->params['breadcrumbs'] = [
 </div>
 
 <?= NestedTreeGrid::widget([
-	'dataProvider' => $dataProvider,
+	'dataProvider' => $search->getDataProvider(),
 	'initialNode' => $initial,
 	'moveAction' => ['move'],
 	'tableOptions' => ['class' => 'table table-condensed'],
 	'rowOptions' => function ($model, $key, $index, $grid) {
-		$options = ['data-goods-count' => $model->goodsCount];
+		$options = ['data-offer-count' => $model->offerCount];
 
 		if (!$model->active)
 			Html::addCssClass($options, 'warning');
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'] = [
 	'pluginOptions' => [
 		'onMoveOver' => new JsExpression('function (item, helper, target, position) {
 			if (position == 1)
-				return target.data("goodsCount") == 0;
+				return target.data("offerCount") == 0;
 
 			return true;
 		}'),
@@ -48,8 +48,8 @@ $this->params['breadcrumbs'] = [
 			'content' => function($model, $key, $index, $column) {
 				$result = Html::encode($model->title);
 
-				if ($model->goodsCount > 0)
-					$result .= '&nbsp;' . Html::tag('span', $model->goodsCount, ['class' => 'badge']);
+				if ($model->offerCount > 0)
+					$result .= '&nbsp;' . Html::tag('span', $model->offerCount, ['class' => 'badge']);
 
 				return $result;
 			},
@@ -71,10 +71,10 @@ $this->params['breadcrumbs'] = [
 			],
 			'visibleButtons' => [
 				'delete' => function($model, $key, $index) {
-					return $model->goodsCount == 0;
+					return $model->offerCount == 0;
 				},
 				'create' => function($model, $key, $index) {
-					return $model->goodsCount == 0;
+					return $model->offerCount == 0;
 				},
 			],
 		],

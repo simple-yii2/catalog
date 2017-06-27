@@ -31,6 +31,15 @@ class Property extends ActiveRecord
 	];
 
 	/**
+	 * Getter for types
+	 * @return integer[]
+	 */
+	public static function getTypes()
+	{
+		return array_keys(self::$typeNames);
+	}
+
+	/**
 	 * Getter for type names with translation
 	 * @return string[]
 	 */	
@@ -93,12 +102,12 @@ class Property extends ActiveRecord
 	}
 
 	/**
-	 * Making page alias from title and id
+	 * Making page alias from name
 	 * @return void
 	 */
 	public function makeAlias()
 	{
-		$this->alias = Translit::t($this->title);
+		$this->alias = Translit::t($this->name);
 	}
 
 	/**

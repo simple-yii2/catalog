@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 
 use helpers\Translit;
+use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Property;
 
 /**
@@ -17,7 +18,7 @@ class PropertyForm extends Model
 	/**
 	 * @var string Title
 	 */
-	public $title;
+	public $name;
 
 	/**
 	 * @var integer Type
@@ -32,24 +33,24 @@ class PropertyForm extends Model
 	/**
 	 * @var Property
 	 */
-	private $_object;
+	private $_model;
 
 	/**
 	 * @inheritdoc
-	 * @param Property|null $object 
+	 * @param Property|null $model 
 	 */
-	public function __construct(Property $object = null, $config = [])
+	public function __construct(Property $model = null, $config = [])
 	{
-		if ($object === null)
-			$object = new Property;
+		if ($model === null)
+			$model = new Property;
 
-		$this->_object = $object;
+		$this->_model = $model;
 
 		//attributes
-		$this->title = $object->title;
-		$this->type = $object->type;
+		$this->name = $model->name;
+		$this->type = $model->type;
 
-		$this->values = $object->getValues();
+		$this->values = $model->getValues();
 
 		parent::__construct($config);
 	}
@@ -60,7 +61,7 @@ class PropertyForm extends Model
 	 */
 	public function getId()
 	{
-		return $this->_object->id;
+		return $this->_model->id;
 	}
 
 	/**
@@ -69,7 +70,7 @@ class PropertyForm extends Model
 	 */
 	public function getReadOnly()
 	{
-		return $this->_object->readOnly;
+		return $this->_model->readOnly;
 	}
 
 	/**
@@ -78,7 +79,7 @@ class PropertyForm extends Model
 	public function attributeLabels()
 	{
 		return [
-			'title' => Yii::t('catalog', 'Title'),
+			'name' => Yii::t('catalog', 'Title'),
 			'type' => Yii::t('catalog', 'Type'),
 			'values' => Yii::t('catalog', 'Values'),
 		];
@@ -90,37 +91,37 @@ class PropertyForm extends Model
 	public function rules()
 	{
 		return [
-			['title', 'string', 'max' => 50],
-			['type', 'in', 'range' => array_keys(Property::getTypeNames())],
+			['name', 'string', 'max' => 50],
+			['type', 'in', 'range' => Property::getTypes()],
 			['values', 'each', 'rule' => ['string', 'max' => 30]],
 		];
 	}
 
 	/**
-	 * Save object using model attributes
-	 * @param cms\catalog\common\models\Category $category 
+	 * Save
+	 * @param Category $category 
 	 * @param boolean $runValidation 
 	 * @return boolean
 	 */
-	public function save(\cms\catalog\common\models\Category $category, $runValidation = true)
+	public function save(Category $category, $runValidation = true)
 	{
-		if ($this->_object->readOnly)
+		if ($this->_model->readOnly)
 			return false;
 
 		if ($runValidation && !$this->validate())
 			return false;
 
-		$object = $this->_object;
+		$model = $this->_model;
 
-		$object->category_id = $category->id;
-		$object->title = $this->title;
-		$object->type = $this->type;
+		$model->category_id = $category->id;
+		$model->name = $this->name;
+		$model->type = $this->type;
 
-		$object->setValues($this->values);
+		$model->setValues($this->values);
 
-		$object->makeAlias();
+		$model->makeAlias();
 
-		if (!$object->save(false))
+		if (!$model->save(false))
 			return false;
 
 		return true;
