@@ -58,8 +58,13 @@ class VendorForm extends Model
 		$this->name = $model->name;
 		$this->description = $model->description;
 		$this->url = $model->url;
-		$this->file = $model->image;
 		$this->thumb = $model->image;
+
+		if (!empty($this->thumb)) {
+			$this->file = Yii::$app->storage->tmpPath . '/' . basename($this->thumb);
+			$base = Yii::getAlias('@webroot');
+			@copy($base . $this->thumb, $base . $this->file);
+		}
 
 		//file caching
 		Yii::$app->storage->cacheObject($model);
@@ -119,6 +124,8 @@ class VendorForm extends Model
 		$model->url = $this->url;
 		$model->image = $this->thumb;
 
+		@unlink(Yii::getAlias('@webroot') . $this->file);
+		
 		//files
 		Yii::$app->storage->storeObject($model);
 
