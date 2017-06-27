@@ -12,6 +12,7 @@ return [
 	'Catalog settings' => 'Настройки каталога',
 	'Create currency' => 'Добавить валюту',
 	'Create vendor' => 'Добавить производителя',
+	'Create store' => 'Добавить магазин (склад)',
 	'Create category' => 'Добавить категорию',
 	'Create goods' => 'Добавить товар',
 
@@ -38,6 +39,11 @@ return [
 	'Values' => 'Значения',
 	'Price' => 'Цена',
 	'Images' => 'Фото',
+
+	'Sales area' => 'Торговый зал',
+	'Pickup point' => 'Пункт выдачи заказов',
+	'Sales area and pickup point' => 'Торговый зал и пункт выдачи заказов',
+	'Store' => 'Склад',
 
 	'Boolean' => 'Логический',
 	'Integer' => 'Целый',
