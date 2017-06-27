@@ -40,7 +40,7 @@ create table if not exists `CatalogDelivery`
 (
 	`id` int(10) not null auto_increment,
 	`name` varchar(100) not null,
-	`cost` int(10) not null,
+	`cost` decimal(10,2) not null,
 	`days` int(10) not null,
 	primary key (`id`)
 ) engine InnoDB;
