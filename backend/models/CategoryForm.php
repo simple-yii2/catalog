@@ -81,17 +81,19 @@ class CategoryForm extends Model
 
 		foreach ($value as $item) {
 			if ($item instanceof Property) {
-				$this->_properties[] = new PropertyForm($item);
+				$model = $item;
+				$id = $item->id;
+				$attributes = $item->getAttributes();
 			} else {
+				$model = null;
 				$id = ArrayHelper::getValue($item, 'id');
-				if (array_key_exists($id, $old)) {
-					$model = $old[$id];
-				} else {
-					$model = new PropertyForm;
-				}
-				$model->setAttributes($item);
-				$this->_properties[] = $model;
+				$attributes = $item;
 			}
+
+			$form = array_key_exists($id, $old) ? $old[$id] : new PropertyForm($model);
+
+			$form->setAttributes($attributes);
+			$this->_properties[] = $form;
 		}
 	}
 

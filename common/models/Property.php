@@ -69,11 +69,11 @@ class Property extends ActiveRecord
 
 	/**
 	 * Values getter
-	 * @return array
+	 * @return string[]
 	 */
 	public function getValues()
 	{
-		$result = unserialize($this->values);
+		$result = @unserialize($this->svalues);
 		
 		if (!is_array($result))
 			$result = [];
@@ -83,12 +83,12 @@ class Property extends ActiveRecord
 
 	/**
 	 * Values setter
-	 * @param array $value 
+	 * @param string[] $value 
 	 * @return void
 	 */
 	public function setValues($value)
 	{
-		$this->values = serialize($value);
+		$this->svalues = serialize($value);
 	}
 
 	/**

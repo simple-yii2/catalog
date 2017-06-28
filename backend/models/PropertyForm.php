@@ -49,8 +49,7 @@ class PropertyForm extends Model
 		//attributes
 		$this->name = $model->name;
 		$this->type = $model->type;
-
-		$this->values = $model->getValues();
+		$this->values = $model->values;
 
 		parent::__construct($config);
 	}
@@ -116,8 +115,7 @@ class PropertyForm extends Model
 		$model->category_id = $category->id;
 		$model->name = $this->name;
 		$model->type = $this->type;
-
-		$model->setValues($this->values);
+		$model->values = $this->values;
 
 		$model->makeAlias();
 
