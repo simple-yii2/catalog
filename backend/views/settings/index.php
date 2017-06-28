@@ -29,6 +29,8 @@ foreach (Currency::find()->all() as $currency)
 		<?= $f->field($form, 'defaultCurrency_id')->dropDownList($currencies) ?>
 		<?= $f->field($form, 'vendorImageWidth') ?>
 		<?= $f->field($form, 'vendorImageHeight') ?>
+		<?= $f->field($form, 'offerImageWidth') ?>
+		<?= $f->field($form, 'offerImageHeight') ?>
 	</fieldset>
 
 	<div class="form-group">

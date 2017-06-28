@@ -29,6 +29,16 @@ class SettingsForm extends Model
 	public $vendorImageHeight;
 
 	/**
+	 * @var integer Rate
+	 */
+	public $offerImageWidth;
+
+	/**
+	 * @var integer Rate
+	 */
+	public $offerImageHeight;
+
+	/**
 	 * @var Settings
 	 */
 	private $_model;
@@ -48,6 +58,8 @@ class SettingsForm extends Model
 		$this->defaultCurrency_id = $model->defaultCurrency_id;
 		$this->vendorImageWidth = $model->vendorImageWidth;
 		$this->vendorImageHeight = $model->vendorImageHeight;
+		$this->offerImageWidth = $model->offerImageWidth;
+		$this->offerImageHeight = $model->offerImageHeight;
 
 		parent::__construct($config);
 	}
@@ -61,6 +73,8 @@ class SettingsForm extends Model
 			'defaultCurrency_id' => Yii::t('catalog', 'Default currency'),
 			'vendorImageWidth' => Yii::t('catalog', 'Vendor image width'),
 			'vendorImageHeight' => Yii::t('catalog', 'Vendor image height'),
+			'offerImageWidth' => Yii::t('catalog', 'Offer image width'),
+			'offerImageHeight' => Yii::t('catalog', 'Offer image height'),
 		];
 	}
 
@@ -71,8 +85,8 @@ class SettingsForm extends Model
 	{
 		return [
 			['defaultCurrency_id', 'integer'],
-			[['vendorImageWidth', 'vendorImageHeight'], 'integer', 'min' => 10],
-			[['vendorImageWidth', 'vendorImageHeight'], 'required'],
+			[['vendorImageWidth', 'vendorImageHeight', 'offerImageWidth', 'offerImageHeight'], 'integer', 'min' => 20],
+			[['vendorImageWidth', 'vendorImageHeight', 'offerImageWidth', 'offerImageHeight'], 'required'],
 		];
 	}
 
@@ -90,6 +104,8 @@ class SettingsForm extends Model
 		$model->defaultCurrency_id = empty($this->defaultCurrency_id) ? null : (integer) $this->defaultCurrency_id;
 		$model->vendorImageWidth = (integer) $this->vendorImageWidth;
 		$model->vendorImageHeight = (integer) $this->vendorImageHeight;
+		$model->offerImageWidth = (integer) $this->offerImageWidth;
+		$model->offerImageHeight = (integer) $this->offerImageHeight;
 
 		if (!$model->save(false))
 			return false;

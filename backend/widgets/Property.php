@@ -12,10 +12,19 @@ use cms\catalog\backend\widgets\assets\PropertyAsset;
 class Property extends InputWidget
 {
 
+	/**
+	 * @inheritdoc
+	 */
 	public $options = ['class' => 'form-control'];
 
+	/**
+	 * @var array The HTML attributes for the boolean button tag.
+	 */
 	public $booleanButtonOptions = ['class' => 'btn btn-default'];
 
+	/**
+	 * @inheritdoc
+	 */
 	public function init()
 	{
 		parent::init();
@@ -23,27 +32,34 @@ class Property extends InputWidget
 		PropertyAsset::register($this->view);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function run()
 	{
-		switch ($this->model->getType()) {
-			case models\Property::BOOLEAN:
-				$this->renderBoolean();
+		switch ($this->model->type) {
+			case models\Property::TYPE_BOOLEAN:
+				echo $this->renderBoolean();
 				break;
 
-			case models\Property::INTEGER:
-				$this->renderInteger();
+			case models\Property::TYPE_INTEGER:
+				echo $this->renderInteger();
 				break;
 
-			case models\Property::FLOAT:
-				$this->renderFloat();
+			case models\Property::TYPE_FLOAT:
+				echo $this->renderFloat();
 				break;
 
-			case models\Property::SELECT:
-				$this->renderSelect();
+			case models\Property::TYPE_SELECT:
+				echo $this->renderSelect();
 				break;
 		}
 	}
 
+	/**
+	 * Render boolean property
+	 * @return string
+	 */
 	private function renderBoolean()
 	{
 		$value = $this->model->value;
@@ -70,19 +86,31 @@ class Property extends InputWidget
 			Html::addCssClass($options, 'active');
 		$checkboxFalse = Html::tag('label', $checkboxFalse . $formatter->booleanFormat[0], $options);
 
-		echo $input . Html::tag('div', $checkboxTrue . $checkboxFalse, ['class' => 'btn-group property-boolean', 'data-toggle' => 'buttons']);
+		return $input . Html::tag('div', $checkboxTrue . $checkboxFalse, ['class' => 'btn-group property-boolean', 'data-toggle' => 'buttons']);
 	}
 
+	/**
+	 * Render integer property
+	 * @return string
+	 */
 	private function renderInteger()
 	{
-		echo Html::textInput($this->getInputName(), $this->model->value, $this->options);
+		return Html::textInput($this->getInputName(), $this->model->value, $this->options);
 	}
 
+	/**
+	 * Render float property
+	 * @return string
+	 */
 	private function renderFloat()
 	{
-		echo Html::textInput($this->getInputName(), $this->model->value, $this->options);
+		return Html::textInput($this->getInputName(), $this->model->value, $this->options);
 	}
 
+	/**
+	 * Render select property
+	 * @return string
+	 */
 	private function renderSelect()
 	{
 		$model = $this->model;
@@ -92,12 +120,16 @@ class Property extends InputWidget
 			$items[$value] = $value;
 		}
 
-		echo Html::dropDownList($this->getInputName(), $model->value, $items, $this->options);
+		return Html::dropDownList($this->getInputName(), $model->value, $items, $this->options);
 	}
 
+	/**
+	 * Generate name for property input
+	 * @return string
+	 */
 	private function getInputName()
 	{
-		return $this->name . '[' . $this->model->getPropertyId() . ']';
+		return $this->name . '[' . $this->model->property_id . ']';
 	}
 
 }

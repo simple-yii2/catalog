@@ -3,7 +3,7 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-$title = Yii::t('catalog', 'Goods');
+$title = Yii::t('catalog', 'Offers');
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
@@ -19,8 +19,8 @@ $this->params['breadcrumbs'] = [
 </div>
 
 <?= GridView::widget([
-	'dataProvider' => $dataProvider,
-	'filterModel' => $model,
+	'dataProvider' => $searchModel->getDataProvider(),
+	'filterModel' => $searchModel,
 	'summary' => '',
 	'tableOptions' => ['class' => 'table table-condensed'],
 	'rowOptions' => function ($model, $key, $index, $grid) {
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'] = [
 	},
 	'columns' => [
 		[
-			'attribute' => 'title',
+			'attribute' => 'name',
 			'format' => 'html',
 			'content' => function($model, $key, $index, $column) {
 				$result = '';
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'] = [
 				if (!empty($model->thumb))
 					$result .= Html::img($model->thumb, ['height' => 20]) . '&nbsp;';
 
-				$result .= Html::encode($model->title);
+				$result .= Html::encode($model->name);
 
 				if ($model->imageCount > 0)
 					$result .= '&nbsp;' . Html::tag('span', $model->imageCount, ['class' => 'badge']);

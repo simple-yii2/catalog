@@ -7,9 +7,9 @@ use yii\db\ActiveRecord;
 use dkhlystov\storage\components\StoredInterface;
 
 /**
- * Goods image active record
+ * Offer image active record
  */
-class GoodsImage extends ActiveRecord implements StoredInterface
+class OfferImage extends ActiveRecord implements StoredInterface
 {
 
 	/**
@@ -17,7 +17,7 @@ class GoodsImage extends ActiveRecord implements StoredInterface
 	 */
 	public static function tableName()
 	{
-		return 'CatalogGoodsImage';
+		return 'CatalogOfferImage';
 	}
 
 	/**

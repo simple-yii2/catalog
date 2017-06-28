@@ -30,7 +30,7 @@ class Offer extends ActiveRecord
 
 	/**
 	 * Category relation
-	 * @return ActiveQuery;
+	 * @return yii\db\ActiveQueryInterface;
 	 */
 	public function getCategory()
 	{
@@ -38,8 +38,35 @@ class Offer extends ActiveRecord
 	}
 
 	/**
+	 * Barcodes relation
+	 * @return yii\db\ActiveQueryInterface
+	 */
+	public function getBarcodes()
+	{
+		return $this->hasMany(OfferBarcode::className(), ['offer_id' => 'id']);
+	}
+
+	/**
+	 * Delivery relation
+	 * @return yii\db\ActiveQueryInterface
+	 */
+	public function getDelivery()
+	{
+		return $this->hasMany(OfferDelivery::className(), ['offer_id' => 'id']);
+	}
+
+	/**
+	 * Properties relation
+	 * @return yii\db\ActiveQueryInterface
+	 */
+	public function getProperties()
+	{
+		return $this->hasMany(OfferProperty::className(), ['offer_id' => 'id']);
+	}
+
+	/**
 	 * Images relation
-	 * @return ActiveQuery
+	 * @return yii\db\ActiveQueryInterface
 	 */
 	public function getImages()
 	{
@@ -47,12 +74,21 @@ class Offer extends ActiveRecord
 	}
 
 	/**
-	 * Properties relation
-	 * @return ActiveQuery
+	 * Recommended relation
+	 * @return yii\db\ActiveQueryInterface
 	 */
-	public function getProperties()
+	public function getRecommended()
 	{
-		return $this->hasMany(OfferProperty::className(), ['offer_id' => 'id']);
+		return $this->hasMany(OfferRecommended::className(), ['offer_id' => 'id']);
+	}
+
+	/**
+	 * Stores quantity relation
+	 * @return yii\db\ActiveQueryInterface
+	 */
+	public function getStores()
+	{
+		return $this->hasMany(StoreOffer::className(), ['offer_id' => 'id']);
 	}
 
 	/**
@@ -70,12 +106,12 @@ class Offer extends ActiveRecord
 	}
 
 	/**
-	 * Making alias from title and id
+	 * Making alias from name and id
 	 * @return void
 	 */
 	public function makeAlias()
 	{
-		$this->alias = Translit::t($this->title . '-' . $this->id);
+		$this->alias = Translit::t($this->name . '-' . $this->id);
 	}
 
 }

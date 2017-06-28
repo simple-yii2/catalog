@@ -4,11 +4,11 @@ namespace cms\catalog\backend\assets;
 
 use yii\web\AssetBundle;
 
-class GoodsFormAsset extends AssetBundle
+class OfferFormAsset extends AssetBundle
 {
 
 	public $js = [
-		'goods-form.js',
+		'offer-form.js',
 	];
 	
 	public $depends = [
@@ -17,7 +17,7 @@ class GoodsFormAsset extends AssetBundle
 
 	public function init()
 	{
-		$this->sourcePath = __DIR__ . '/goods-form';
+		$this->sourcePath = __DIR__ . '/offer-form';
 	}
 
 }

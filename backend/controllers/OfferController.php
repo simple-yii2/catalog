@@ -6,11 +6,11 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
-use cms\catalog\backend\models\GoodsForm;
-use cms\catalog\backend\models\GoodsSearch;
-use cms\catalog\common\models\Goods;
+use cms\catalog\backend\models\OfferForm;
+use cms\catalog\backend\models\OfferSearch;
+use cms\catalog\common\models\Offer;
 
-class GoodsController extends Controller
+class OfferController extends Controller
 {
 
 	/**
@@ -34,90 +34,103 @@ class GoodsController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$model = new GoodsSearch;
-
 		return $this->render('index', [
-			'dataProvider' => $model->search(Yii::$app->getRequest()->get()),
-			'model' => $model,
+			'searchModel' => new OfferSearch,
 		]);
 	}
 
 	/**
-	 * Creating
+	 * Create
 	 * @return string
 	 */
 	public function actionCreate()
 	{
-		$object = new Goods;
+		$formModel = new OfferForm;
 
-		$model = new GoodsForm($object);
-
-		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
-			$object->category->updateGoodsCount();
+		if ($formModel->load(Yii::$app->getRequest()->post()) && $formModel->save()) {
+			$formModel->getObject()->category->updateOfferCount();
 
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect(['index']);
 		}
 
 		return $this->render('create', [
-			'model' => $model,
+			'formModel' => $formModel,
 		]);
 	}
 
 	/**
-	 * Updating
+	 * Update
 	 * @param integer $id
 	 * @return string
 	 */
 	public function actionUpdate($id)
 	{
-		$object = Goods::findOne($id);
+		$object = Offer::findOne($id);
 		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
 		$category = $object->category;
 
-		$model = new GoodsForm($object);
+		$formModel = new OfferForm($object);
 
-		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
-			$object->category->updateGoodsCount();
+		if ($formModel->load(Yii::$app->getRequest()->post()) && $formModel->save()) {
+			$object->category->updateOfferCount();
 
 			if ($category->id != $object->category->id)
-				$category->updateGoodsCount();
+				$category->updateOfferCount();
 
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect(['index']);
 		}
 
 		return $this->render('update', [
-			'model' => $model,
+			'formModel' => $formModel,
 		]);
 	}
 
 	/**
-	 * Deleting
+	 * Delete
 	 * @param integer $id
 	 * @return string
 	 */
 	public function actionDelete($id)
 	{
-		$object = Goods::findOne($id);
+		$object = Offer::findOne($id);
 		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		$category = $object->category;
+		//barcodes
+		foreach ($object->barcodes as $item)
+			$item->delete();
 
+		//delivery
+		foreach ($object->delivery as $item)
+			$item->delete();
+
+		//properties
+		foreach ($object->properties as $item)
+			$item->delete();
+
+		//images
 		foreach ($object->images as $item) {
 			Yii::$app->storage->removeObject($item);
 			$item->delete();
 		}
 
-		foreach ($object->properties as $item) {
+		//recommended
+		foreach ($object->recommended as $item)
 			$item->delete();
-		}
 
+		//store quantity
+		foreach ($object->stores as $item)
+			$item->delete();
+
+
+		//offer
+		$category = $object->category;
 		if ($object->delete()) {
-			$category->updateGoodsCount();
+			$category->updateOfferCount();
 
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Item deleted successfully.'));
 		}
@@ -132,12 +145,12 @@ class GoodsController extends Controller
 	 */
 	public function actionProperties($id = null)
 	{
-		$model = new GoodsForm(Goods::findOne($id));
+		$formModel = new OfferForm(Offer::findOne($id));
 
-		$model->load(Yii::$app->getRequest()->post());
+		$formModel->load(Yii::$app->getRequest()->post());
 
 		return $this->renderAjax('form', [
-			'model' => $model,
+			'formModel' => $formModel,
 		]);
 	}
 

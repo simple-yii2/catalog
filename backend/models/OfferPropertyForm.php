@@ -5,38 +5,54 @@ namespace cms\catalog\backend\models;
 use Yii;
 use yii\base\Model;
 
+use cms\catalog\common\models\Offer;
+use cms\catalog\common\models\OfferProperty;
 use cms\catalog\common\models\Property;
-use cms\catalog\common\models\GoodsProperty;
 
-class GoodsPropertyForm extends Model
+class OfferPropertyForm extends Model
 {
 
-	public $title;
+	/**
+	 * @var string Name
+	 */
+	public $name;
 
+	/**
+	 * @var string[] Enum values
+	 */
 	public $values;
 
+	/**
+	 * @var string Value
+	 */
 	public $value;
 
+	/**
+	 * @var Property
+	 */
 	private $_template;
 
+	/**
+	 * @var OfferProperty
+	 */
 	private $_object;
 
 	/**
 	 * @inheritdoc
 	 * @param Property $template 
-	 * @param GoodsProperty|null $object 
+	 * @param OfferProperty|null $object 
 	 */
-	public function __construct(Property $template, GoodsProperty $object = null, $config = [])
+	public function __construct(Property $template, OfferProperty $object = null, $config = [])
 	{
 		$this->_template = $template;
 
 		if ($object === null)
-			$object = new GoodsProperty;
+			$object = new OfferProperty;
 
 		$this->_object = $object;
 
 		//attributes
-		$this->title = $template->title;
+		$this->name = $template->name;
 		$this->values = $template->getValues();
 		$this->value = $object->value;
 
@@ -47,7 +63,7 @@ class GoodsPropertyForm extends Model
 	 * Property id getter
 	 * @return integer
 	 */
-	public function getPropertyId()
+	public function getProperty_id()
 	{
 		return $this->_template->id;
 	}
@@ -61,6 +77,9 @@ class GoodsPropertyForm extends Model
 		return $this->_template->type;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function formName()
 	{
 		return parent::formName() . '[' . $this->_template->id . ']';
@@ -82,18 +101,18 @@ class GoodsPropertyForm extends Model
 
 	/**
 	 * Save object using model attributes
-	 * @param cms\catalog\common\models\Goods $goods 
+	 * @param Offer $offer 
 	 * @param boolean $runValidation 
 	 * @return boolean
 	 */
-	public function save(\cms\catalog\common\models\Goods $goods, $runValidation = true)
+	public function save(Offer $offer, $runValidation = true)
 	{
 		if ($runValidation && !$this->validate())
 			return false;
 
 		$object = $this->_object;
 
-		$object->goods_id = $goods->id;
+		$object->offer_id = $offer->id;
 		$object->property_id = $this->_template->id;
 		$object->value = $this->_template->formatValue($this->value);
 

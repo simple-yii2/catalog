@@ -23,6 +23,8 @@ class Settings extends ActiveRecord
 		parent::__construct(array_merge([
 			'vendorImageWidth' => 100,
 			'vendorImageHeight' => 100,
+			'offerImageWidth' => 360,
+			'offerImageHeight' => 270,
 		], $config));
 	}
 

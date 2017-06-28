@@ -82,7 +82,7 @@ class Module extends \yii\base\Module {
 					['label' => Yii::t('catalog', 'Stores'), 'url' => ["$base/catalog/store/index"]],
 					['label' => Yii::t('catalog', 'Delivery'), 'url' => ["$base/catalog/delivery/index"]],
 					['label' => Yii::t('catalog', 'Categories'), 'url' => ["$base/catalog/category/index"]],
-					['label' => Yii::t('catalog', 'Offers'), 'url' => ["$base/catalog/offers/index"]],
+					['label' => Yii::t('catalog', 'Offers'), 'url' => ["$base/catalog/offer/index"]],
 				]],
 			];
 		}

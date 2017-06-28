@@ -5,21 +5,12 @@ namespace cms\catalog\backend\models;
 use Yii;
 use yii\data\ActiveDataProvider;
 
-use cms\catalog\common\models\Goods;
+use cms\catalog\common\models\Offer;
 
 /**
  * Search model
  */
-class GoodsSearch extends Goods {
-
-	/**
-	 * @inheritdoc
-	 */
-	public function rules() {
-		return [
-			['title', 'string'],
-		];
-	}
+class OfferSearch extends Offer {
 
 	/**
 	 * @inheritdoc
@@ -27,16 +18,28 @@ class GoodsSearch extends Goods {
 	public function attributeLabels()
 	{
 		return [
-			'title' => Yii::t('catalog', 'Title'),
+			'name' => Yii::t('catalog', 'Name'),
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
+		return [
+			['name', 'string'],
 		];
 	}
 
 	/**
 	 * Search function
-	 * @param array $params Attributes array
-	 * @return yii\data\ActiveDataProvider
+	 * @param array|null $params Attributes array
+	 * @return ActiveDataProvider
 	 */
-	public function search($params) {
+	public function getDataProvider($params = null) {
+		if ($params === null)
+			$params = Yii::$app->getRequest()->get();
+
 		//ActiveQuery
 		$query = static::find()->orderBy(['modifyDate' => SORT_DESC]);
 
@@ -49,7 +52,7 @@ class GoodsSearch extends Goods {
 			return $dataProvider;
 
 		//search
-		$query->andFilterWhere(['like', 'title', $this->title]);
+		$query->andFilterWhere(['like', 'name', $this->name]);
 
 		return $dataProvider;
 	}

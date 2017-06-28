@@ -4,7 +4,7 @@ namespace cms\catalog\common\models;
 
 use yii\db\ActiveRecord;
 
-class GoodsProperty extends ActiveRecord
+class StoreOffer extends ActiveRecord
 {
 
 	/**
@@ -12,7 +12,7 @@ class GoodsProperty extends ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'CatalogGoodsProperty';
+		return 'CatalogStoreOffer';
 	}
 
 }

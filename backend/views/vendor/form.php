@@ -3,8 +3,8 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
-use dkhlystov\uploadimage\widgets\UploadImage;
 use cms\catalog\common\models\Settings;
+use dkhlystov\uploadimage\widgets\UploadImage;
 
 $settings = Settings::find()->one();
 if ($settings === null)

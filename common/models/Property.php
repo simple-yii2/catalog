@@ -10,10 +10,10 @@ use helpers\Translit;
 class Property extends ActiveRecord
 {
 
-	const BOOLEAN = 0;
-	const INTEGER = 1;
-	const FLOAT = 2;
-	const SELECT = 3;
+	const TYPE_BOOLEAN = 0;
+	const TYPE_INTEGER = 1;
+	const TYPE_FLOAT = 2;
+	const TYPE_SELECT = 3;
 
 	/**
 	 * @var boolean properties from parent categories is read-only
@@ -24,10 +24,10 @@ class Property extends ActiveRecord
 	 * @var string[] type names
 	 */
 	private static $typeNames = [
-		self::BOOLEAN => 'Boolean',
-		self::INTEGER => 'Integer',
-		self::FLOAT => 'Decimal',
-		self::SELECT => 'Select',
+		self::TYPE_BOOLEAN => 'Boolean',
+		self::TYPE_INTEGER => 'Integer',
+		self::TYPE_FLOAT => 'Decimal',
+		self::TYPE_SELECT => 'Select',
 	];
 
 	/**
@@ -56,7 +56,7 @@ class Property extends ActiveRecord
 	 */
 	public static function getTypesWithValues()
 	{
-		return [self::SELECT];
+		return [self::TYPE_SELECT];
 	}
 
 	/**
@@ -98,7 +98,7 @@ class Property extends ActiveRecord
 	{
 		parent::init();
 
-		$this->type = self::INTEGER;
+		$this->type = self::TYPE_INTEGER;
 	}
 
 	/**
@@ -118,19 +118,19 @@ class Property extends ActiveRecord
 	public function validateValue($value)
 	{
 		switch ($this->type) {
-			case self::BOOLEAN:
+			case self::TYPE_BOOLEAN:
 				return $this->validateBoolean($value);
 				break;
 
-			case self::INTEGER:
+			case self::TYPE_INTEGER:
 				return $this->validateInteger($value);
 				break;
 
-			case self::FLOAT:
+			case self::TYPE_FLOAT:
 				return $this->validateFloat($value);
 				break;
 
-			case self::SELECT:
+			case self::TYPE_SELECT:
 				return $this->validateSelect($value);
 				break;
 		}
@@ -184,19 +184,19 @@ class Property extends ActiveRecord
 	public function formatValue($value)
 	{
 		switch ($this->type) {
-			case self::BOOLEAN:
+			case self::TYPE_BOOLEAN:
 				return $this->formatBoolean($value);
 				break;
 
-			case self::INTEGER:
+			case self::TYPE_INTEGER:
 				return $this->formatInteger($value);
 				break;
 
-			case self::FLOAT:
+			case self::TYPE_FLOAT:
 				return $this->formatFloat($value);
 				break;
 
-			case self::SELECT:
+			case self::TYPE_SELECT:
 				return $this->formatSelect($value);
 				break;
 		}

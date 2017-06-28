@@ -16,7 +16,11 @@ class PropertyAsset extends AssetBundle
 
 		$this->js = ['property.js'];
 
+		$this->css = ['property.css'];
+
 		$this->depends = ['yii\web\JqueryAsset'];
+
+		parent::init();
 	}
 
 }
