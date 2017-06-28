@@ -101,7 +101,7 @@ class OfferForm extends Model
 	public $height;
 
 	/**
-	 * @var integer Weight in g
+	 * @var integer Weight in kg
 	 */
 	public $weight;
 
@@ -363,7 +363,8 @@ class OfferForm extends Model
 			[['name', 'model', 'countryOfOrigin'], 'string', 'max' => 100],
 			['description', 'string', 'max' => 1000],
 			[['price', 'oldPrice'], 'double'],
-			[['length', 'width', 'height', 'weight'], 'integer', 'min' => 1],
+			[['length', 'width', 'height'], 'integer', 'min' => 1],
+			['weight', 'double', 'min' => 0.001],
 			[['category_id', 'name'], 'required'],
 			[['barcodes', 'images', 'properties'], function($attribute, $params) {
 				$hasError = false;

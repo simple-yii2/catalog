@@ -96,7 +96,7 @@ create table if not exists `CatalogOffer`
 	`length` int(10) default null,
 	`width` int(10) default null,
 	`height` int(10) default null,
-	`weight` int(10) default null,
+	`weight` decimal(10,3) default null,
 	`modifyDate` datetime,
 	`thumb` varchar(200) default null,
 	`imageCount` int(10) not null,

@@ -37,7 +37,7 @@ return [
 	'Days' => 'Дней',
 	'General' => 'Основные',
 	'Purchase' => 'Покупка',
-	'Dimensions' => 'Габаритные размеры',
+	'Dimensions' => 'Габариты',
 	'Active' => 'Активный',
 	'Title' => 'Заголовок',
 	'Model' => 'Модель',

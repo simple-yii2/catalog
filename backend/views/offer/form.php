@@ -30,13 +30,13 @@ OfferFormAsset::register($this);
 			'active' => false,
 		],
 		[
-			'label' => Yii::t('catalog', 'Purchase'),
-			'content' => $this->render('form/purchase', ['activeForm' => $activeForm, 'formModel' => $formModel]),
+			'label' => Yii::t('catalog', 'Dimensions'),
+			'content' => $this->render('form/dimensions', ['activeForm' => $activeForm, 'formModel' => $formModel]),
 			'active' => false,
 		],
 		[
-			'label' => Yii::t('catalog', 'Dimensions'),
-			'content' => $this->render('form/dimensions', ['activeForm' => $activeForm, 'formModel' => $formModel]),
+			'label' => Yii::t('catalog', 'Purchase'),
+			'content' => $this->render('form/purchase', ['activeForm' => $activeForm, 'formModel' => $formModel]),
 			'active' => false,
 		],
 	]]) ?>
