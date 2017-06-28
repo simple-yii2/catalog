@@ -1,22 +1,20 @@
 <?php
 
 use cms\catalog\common\models\Vendor;
-use cms\catalog\common\models\Settings;
 use dkhlystov\uploadimage\widgets\UploadImages;
 
-$settings = Settings::find()->one();
-if ($settings === null)
-	$settings = new Settings;
+$settings = Yii::$app->params['catalogSettings'];
 
 //images
-$imageSize = '<br><span class="label label-default">' . $settings->offerImageWidth . '&times' . $settings->offerImageHeight . '</span>';
+$width = $settings->offerImageWidth;
+$height = $settings->offerImageHeight;
+$imageSize = '<br><span class="label label-default">' . $width . '&times' . $height . '</span>';
 
 //vendors
 $vendors = ['' => ''];
 $query = Vendor::find();
 foreach ($query->all() as $model)
 	$vendors[$model->id] = $model->name;
-
 
 ?>
 <fieldset>
@@ -25,8 +23,8 @@ foreach ($query->all() as $model)
 		'id' => 'goods-images',
 		'fileKey' => 'file',
 		'thumbKey' => 'thumb',
-		'thumbWidth' => $settings->offerImageWidth,
-		'thumbHeight' => $settings->offerImageHeight,
+		'thumbWidth' => $width,
+		'thumbHeight' => $height,
 		'data' => function($item) {
 			return [
 				'id' => $item['id'],

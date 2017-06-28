@@ -9,6 +9,7 @@ use yii\web\Controller;
 use cms\catalog\backend\models\OfferForm;
 use cms\catalog\backend\models\OfferSearch;
 use cms\catalog\common\models\Offer;
+use cms\catalog\common\models\Settings;
 
 class OfferController extends Controller
 {
@@ -45,6 +46,8 @@ class OfferController extends Controller
 	 */
 	public function actionCreate()
 	{
+		$this->loadSettings();
+
 		$formModel = new OfferForm;
 
 		if ($formModel->load(Yii::$app->getRequest()->post()) && $formModel->save()) {
@@ -66,6 +69,8 @@ class OfferController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
+		$this->loadSettings();
+
 		$object = Offer::findOne($id);
 		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
@@ -152,6 +157,19 @@ class OfferController extends Controller
 		return $this->renderAjax('form', [
 			'formModel' => $formModel,
 		]);
+	}
+
+	/**
+	 * Load catalog settings
+	 * @return void
+	 */
+	private function loadSettings()
+	{
+		$settings = Settings::find()->one();
+		if ($settings === null)
+			$settings = new Settings;
+
+		Yii::$app->params['catalogSettings'] = $settings;
 	}
 
 }

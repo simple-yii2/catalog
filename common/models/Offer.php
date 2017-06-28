@@ -2,7 +2,9 @@
 
 namespace cms\catalog\common\models;
 
+use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 use helpers\Translit;
 
@@ -19,13 +21,15 @@ class Offer extends ActiveRecord
 
 	/**
 	 * @inheritdoc
+	 * Default values
 	 */
-	public function init()
+	public function __construct($config = [])
 	{
-		parent::init();
-
-		$this->active = true;
-		$this->imageCount = 0;
+		parent::__construct(array_merge([
+			'active' => true,
+			'imageCount' => 0,
+			'currency_id' => ArrayHelper::getValue(Yii::$app->params, ['catalogSettings', 'defaultCurrency_id']),
+		], $config));
 	}
 
 	/**
