@@ -6,4 +6,8 @@ $(function() {
 			$form.find('.properties').replaceWith($(data).find('.properties'));
 		});
 	});
+
+	$(document).on('change', '#offerform-currency_id', function() {
+		$('#offerform-price, #offerform-oldprice').prop('disabled', $(this).val() == '');
+	});
 });

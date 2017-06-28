@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
+use cms\catalog\common\models\Currency;
 use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Offer;
 use cms\catalog\common\models\OfferImage;
@@ -27,6 +28,11 @@ class OfferForm extends Model
 	 * @var integer Vendor id
 	 */
 	public $vendor_id;
+
+	/**
+	 * @var integer Currency id
+	 */
+	public $currency_id;
 
 	/**
 	 * @var boolean Active
@@ -130,6 +136,7 @@ class OfferForm extends Model
 		$this->name = $object->name;
 		$this->model = $object->model;
 		$this->description = $object->description;
+		$this->currency_id = $object->currency_id;
 		$this->price = $object->price;
 		$this->oldPrice = $object->oldPrice;
 		$this->storeAvailable = $object->storeAvailable == 0 ? '0' : '1';
@@ -277,6 +284,7 @@ class OfferForm extends Model
 			'name' => Yii::t('catalog', 'Name'),
 			'model' => Yii::t('catalog', 'Model'),
 			'description' => Yii::t('catalog', 'Description'),
+			'currency_id' => Yii::t('catalog', 'Currency'),
 			'price' => Yii::t('catalog', 'Price'),
 			'oldPrice' => Yii::t('catalog', 'Old price'),
 			'storeAvailable' => Yii::t('catalog', 'Can buy in the sales area'),
@@ -298,7 +306,7 @@ class OfferForm extends Model
 	public function rules()
 	{
 		return [
-			[['category_id', 'vendor_id'], 'integer'],
+			[['category_id', 'vendor_id', 'currency_id'], 'integer'],
 			[['active', 'storeAvailable', 'pickupAvailable', 'deliveryAvailable'], 'boolean'],
 			[['name', 'model', 'countryOfOrigin'], 'string', 'max' => 100],
 			['description', 'string', 'max' => 1000],
@@ -341,6 +349,8 @@ class OfferForm extends Model
 		if ($category === null)
 			return false;
 
+		$currency = Currency::findOne($this->currency_id);
+
 		$vendor = Vendor::findOne($this->vendor_id);
 
 		$object = $this->_object;
@@ -351,6 +361,7 @@ class OfferForm extends Model
 		$object->active = $this->active == 0 ? false : true;
 		$object->name = $this->name;
 		$object->model = $this->model;
+		$object->currency_id = $currency === null ? null : $currency->id;
 		$object->description = $this->description;
 		$object->price = empty($this->price) ? null : (float) $this->price;
 		$object->oldPrice = empty($this->oldPrice) ? null : (float) $this->oldPrice;

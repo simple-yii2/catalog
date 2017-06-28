@@ -48,6 +48,7 @@ return [
 	'Country of origin' => 'Страна происхождения',
 	'Type' => 'Тип',
 	'Values' => 'Значения',
+	'Currency' => 'Валюта',
 	'Price' => 'Цена',
 	'Old price' => 'Старая цена',
 	'Can buy in the sales area' => 'Можно купить в торговом зале',
