@@ -23,7 +23,7 @@ class CategoryForm extends Model
 	public $title;
 
 	/**
-	 * @var CategoryPropertyForm[] Properties
+	 * @var PropertyForm[] Properties
 	 */
 	private $_properties = [];
 

@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use cms\catalog\common\models\Currency;
 use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Offer;
+use cms\catalog\common\models\OfferBarcode;
 use cms\catalog\common\models\OfferImage;
 use cms\catalog\common\models\OfferProperty;
 use cms\catalog\common\models\Vendor;
@@ -105,6 +106,11 @@ class OfferForm extends Model
 	public $weight;
 
 	/**
+	 * @var OfferBarcodeForm[] Barcodes
+	 */
+	private $_barcodes = [];
+
+	/**
 	 * @var OfferImageForm[] Images
 	 */
 	private $_images = [];
@@ -148,6 +154,7 @@ class OfferForm extends Model
 		$this->width = $object->width;
 		$this->height = $object->height;
 		$this->weight = $object->weight;
+		$this->barcodes = $object->barcodes;
 		$this->images = $object->images;
 		$this->properties = $object->properties;
 
@@ -161,6 +168,51 @@ class OfferForm extends Model
 	public function getObject()
 	{
 		return $this->_object;
+	}
+
+	/**
+	 * Barcodes getter
+	 * @return OfferBarcodeForm[]
+	 */
+	public function getBarcodes()
+	{
+		return $this->_barcodes;
+	}
+
+	/**
+	 * Barcodes setter
+	 * @param OfferBarcode[]|array[] $value 
+	 * @return void
+	 */
+	public function setBarcodes($value)
+	{
+		$old = [];
+		foreach ($this->_barcodes as $item) {
+			if ($id = $item->id)
+				$old[$id] = $item;
+		}
+
+		$this->_barcodes = [];
+
+		if (!is_array($value))
+			return;
+
+		foreach ($value as $item) {
+			if ($item instanceof OfferBarcode) {
+				$model = $item;
+				$id = $item->id;
+				$attributes = $item->getAttributes();
+			} else {
+				$model = null;
+				$id = ArrayHelper::getValue($item, 'id');
+				$attributes = $item;
+			}
+
+			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferBarcodeForm($model);
+
+			$formModel->setAttributes($attributes);
+			$this->_barcodes[] = $formModel;
+		}
 	}
 
 	/**
@@ -201,12 +253,11 @@ class OfferForm extends Model
 				$attributes = $item;
 			}
 
-			$form = array_key_exists($id, $old) ? $old[$id] : new OfferImageForm($model);
+			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferImageForm($model);
 
-			$form->setAttributes($attributes);
-			$this->_images[] = $form;
+			$formModel->setAttributes($attributes);
+			$this->_images[] = $formModel;
 		}
-
 	}
 
 	/**
@@ -296,6 +347,7 @@ class OfferForm extends Model
 			'width' => Yii::t('catalog', 'Width'),
 			'height' => Yii::t('catalog', 'Height'),
 			'weight' => Yii::t('catalog', 'Weight'),
+			'barcodes' => Yii::t('catalog', 'Barcodes'),
 			'images' => Yii::t('catalog', 'Images'),
 		];
 	}
@@ -313,25 +365,15 @@ class OfferForm extends Model
 			[['price', 'oldPrice'], 'double'],
 			[['length', 'width', 'height', 'weight'], 'integer', 'min' => 1],
 			[['category_id', 'name'], 'required'],
-			['images', function($attribute, $params) {
+			[['barcodes', 'images', 'properties'], function($attribute, $params) {
 				$hasError = false;
-				foreach ($this->_images as $formModel) {
+				foreach ($this->$attribute as $formModel) {
 					if (!$formModel->validate())
 						$hasError = true;
 				}
 
 				if ($hasError)
-					$this->addError($attribute . '[]', 'Images validation error.');
-			}],
-			['properties', function($attribute, $params) {
-				$hasError = false;
-				foreach ($this->_properties as $formModel) {
-					if (!$formModel->validate())
-						$hasError = true;
-				}
-
-				if ($hasError)
-					$this->addError($attribute . '[]', 'Properties validation error.');
+					$this->addError($attribute . '[]', 'Items validation error.');
 			}],
 		];
 	}
@@ -387,35 +429,80 @@ class OfferForm extends Model
 			$object->update(false, ['alias']);
 		}
 
+		//relations
+		$this->saveBarcodes();
+		$this->saveImages();
+		$this->saveProperties();
 
-		//update images
+		return true;
+	}
+
+	/**
+	 * Save barcodes
+	 * @return void
+	 */
+	private function saveBarcodes()
+	{
+		$object = $this->_object;
+
 		$old = [];
-		foreach ($object->images as $item) {
+		foreach ($object->barcodes as $item)
 			$old[$item->id] = $item;
-		};
+
+		//insert/update
+		foreach ($this->_barcodes as $item) {
+			$item->save($object, false);
+			unset($old[$item->id]);
+		}
+
+		//delete
+		foreach ($old as $item)
+			$item->delete();
+	}
+
+	/**
+	 * Save images
+	 * @return void
+	 */
+	private function saveImages()
+	{
+		$object = $this->_object;
+
+		$old = [];
+		foreach ($object->images as $item)
+			$old[$item->id] = $item;
+
 		//insert/update
 		foreach ($this->_images as $item) {
 			$item->save($object, false);
 			unset($old[$item->id]);
 		}
+
 		//delete
 		foreach ($old as $item) {
 			Yii::$app->storage->removeObject($item);
 			$item->delete();
 		}
 
-
+		//object thumb
 		if (!empty($this->_images)) {
 			$object->thumb = $this->_images[0]->getModel()->thumb;
 			$object->update(false, ['thumb']);
 		}
+	}
 
+	/**
+	 * Save properties
+	 * @return void
+	 */
+	private function saveProperties()
+	{
+		$object = $this->_object;
 
-		//update properties
 		$old = [];
-		foreach ($object->properties as $item) {
+		foreach ($object->properties as $item)
 			$old[$item->property_id] = $item;
-		};
+
 		//insert/update
 		foreach ($this->_properties as $item) {
 			if ($item->value !== '' && $item->value !== null) {
@@ -423,13 +510,10 @@ class OfferForm extends Model
 				unset($old[$item->property_id]);
 			}
 		}
+
 		//delete
-		foreach ($old as $item) {
+		foreach ($old as $item)
 			$item->delete();
-		}
-
-
-		return true;
 	}
 
 }

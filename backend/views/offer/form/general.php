@@ -1,5 +1,6 @@
 <?php
 
+use cms\catalog\backend\models\OfferBarcodeForm;
 use cms\catalog\common\models\Vendor;
 use dkhlystov\uploadimage\widgets\UploadImages;
 
@@ -36,4 +37,12 @@ foreach ($query->all() as $model)
 	<?= $activeForm->field($formModel, 'description')->textarea(['rows' => 5]) ?>
 	<?= $activeForm->field($formModel, 'vendor_id')->dropDownList($vendors) ?>
 	<?= $activeForm->field($formModel, 'countryOfOrigin') ?>
+	<?= $activeForm->field($formModel, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
+		'itemClass' => OfferBarcodeForm::className(),
+		'columns' => [
+			'barcode',
+		],
+		'addLabel' => Yii::t('catalog', 'Add'),
+		'removeLabel' => Yii::t('catalog', 'Remove'),
+	]) ?>
 </fieldset>

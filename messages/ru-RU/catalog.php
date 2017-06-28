@@ -44,6 +44,8 @@ return [
 	'Properties' => 'Характеристики',
 	'Category' => 'Категория',
 	'Description' => 'Описание',
+	'Barcodes' => 'Штрих-коды',
+	'Value' => 'Значение',
 	'Vendor' => 'Производитель',
 	'Country of origin' => 'Страна происхождения',
 	'Type' => 'Тип',
