@@ -43,6 +43,7 @@ $typesWithValues = Property::getTypesWithValues();
 
 					return $id . $values . $button;
 				}],
+				'unit',
 			],
 			'addLabel' => Yii::t('catalog', 'Add'),
 			'removeLabel' => Yii::t('catalog', 'Remove'),

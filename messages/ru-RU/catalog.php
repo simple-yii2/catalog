@@ -50,6 +50,7 @@ return [
 	'Country of origin' => 'Страна происхождения',
 	'Type' => 'Тип',
 	'Values' => 'Значения',
+	'Unit' => 'Ед. изм',
 	'Currency' => 'Валюта',
 	'Price' => 'Цена',
 	'Old price' => 'Старая цена',

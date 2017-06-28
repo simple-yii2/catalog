@@ -67,6 +67,7 @@ create table if not exists `CatalogProperty`
 	`name` varchar(50) default null,
 	`type` int(10) not null,
 	`svalues` text,
+	`unit` varchar(10) default null,
 	primary key (`id`),
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
 	key `alias` (`alias`)

@@ -31,25 +31,31 @@ class PropertyForm extends Model
 	public $values = [];
 
 	/**
+	 * @var string Measure unit
+	 */
+	public $unit;
+
+	/**
 	 * @var Property
 	 */
-	private $_model;
+	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param Property|null $model 
+	 * @param Property|null $object 
 	 */
-	public function __construct(Property $model = null, $config = [])
+	public function __construct(Property $object = null, $config = [])
 	{
-		if ($model === null)
-			$model = new Property;
+		if ($object === null)
+			$object = new Property;
 
-		$this->_model = $model;
+		$this->_object = $object;
 
 		//attributes
-		$this->name = $model->name;
-		$this->type = $model->type;
-		$this->values = $model->values;
+		$this->name = $object->name;
+		$this->type = $object->type;
+		$this->values = $object->values;
+		$this->unit = $object->unit;
 
 		parent::__construct($config);
 	}
@@ -60,7 +66,7 @@ class PropertyForm extends Model
 	 */
 	public function getId()
 	{
-		return $this->_model->id;
+		return $this->_object->id;
 	}
 
 	/**
@@ -69,7 +75,7 @@ class PropertyForm extends Model
 	 */
 	public function getReadOnly()
 	{
-		return $this->_model->readOnly;
+		return $this->_object->readOnly;
 	}
 
 	/**
@@ -81,6 +87,7 @@ class PropertyForm extends Model
 			'name' => Yii::t('catalog', 'Title'),
 			'type' => Yii::t('catalog', 'Type'),
 			'values' => Yii::t('catalog', 'Values'),
+			'unit' => Yii::t('catalog', 'Unit'),
 		];
 	}
 
@@ -93,6 +100,7 @@ class PropertyForm extends Model
 			['name', 'string', 'max' => 50],
 			['type', 'in', 'range' => Property::getTypes()],
 			['values', 'each', 'rule' => ['string', 'max' => 30]],
+			['unit', 'string', 'max' => 10],
 		];
 	}
 
@@ -104,22 +112,23 @@ class PropertyForm extends Model
 	 */
 	public function save(Category $category, $runValidation = true)
 	{
-		if ($this->_model->readOnly)
+		if ($this->_object->readOnly)
 			return false;
 
 		if ($runValidation && !$this->validate())
 			return false;
 
-		$model = $this->_model;
+		$object = $this->_object;
 
-		$model->category_id = $category->id;
-		$model->name = $this->name;
-		$model->type = $this->type;
-		$model->values = $this->values;
+		$object->category_id = $category->id;
+		$object->name = $this->name;
+		$object->type = $this->type;
+		$object->values = $this->values;
+		$object->unit = $this->unit;
 
-		$model->makeAlias();
+		$object->makeAlias();
 
-		if (!$model->save(false))
+		if (!$object->save(false))
 			return false;
 
 		return true;
