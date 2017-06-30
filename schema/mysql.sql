@@ -93,7 +93,7 @@ create table if not exists `CatalogOffer`
 	`pickupAvailable` tinyint(1) default 0,
 	`deliveryAvailable` tinyint(1) default 0,
 	`defaultDelivery` tinyint(1) default 1,
-	`instock` int(10) default null,
+	`quantity` int(10) default 0,
 	`countryOfOrigin` varchar(100) default null,
 	`length` int(10) default null,
 	`width` int(10) default null,

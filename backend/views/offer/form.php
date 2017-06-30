@@ -39,6 +39,11 @@ OfferFormAsset::register($this);
 			'content' => $this->render('form/delivery', ['activeForm' => $activeForm, 'formModel' => $formModel]),
 			'active' => false,
 		],
+		[
+			'label' => Yii::t('catalog', 'Quantity'),
+			'content' => $this->render('form/quantity', ['activeForm' => $activeForm, 'formModel' => $formModel]),
+			'active' => false,
+		],
 	]]) ?>
 
 	<div class="form-group">

@@ -14,6 +14,8 @@ use cms\catalog\common\models\OfferBarcode;
 use cms\catalog\common\models\OfferImage;
 use cms\catalog\common\models\OfferProperty;
 use cms\catalog\common\models\OfferDelivery;
+use cms\catalog\common\models\Store;
+use cms\catalog\common\models\StoreOffer;
 use cms\catalog\common\models\Vendor;
 
 /**
@@ -133,6 +135,11 @@ class OfferForm extends Model
 	private $_delivery = [];
 
 	/**
+	 * @var OfferStoreForm[] Stores
+	 */
+	private $_stores = [];
+
+	/**
 	 * @var Offer
 	 */
 	private $_object;
@@ -171,6 +178,7 @@ class OfferForm extends Model
 		$this->images = $object->images;
 		$this->properties = $object->properties;
 		$this->delivery = $object->delivery;
+		$this->stores = $object->stores;
 
 		parent::__construct($config);
 	}
@@ -320,21 +328,24 @@ class OfferForm extends Model
 			return;
 
 		//assign items
-		foreach (array_merge($category->getParentProperties(), $category->properties) as $item) {
-			if (isset($old[$item->id])) {
-				$model = $old[$item->id];
-			} else {
-				$model = null;
-				if (isset($items[$item->id]) && ($items[$item->id] instanceof OfferProperty))
-					$model = $items[$item->id];
+		foreach (array_merge($category->getParentProperties(), $category->properties) as $template) {
+			$id = $template->id;
 
-				$model = new OfferPropertyForm($item, $model);
+			$model = null;
+			$attributes = [];
+
+			$item = ArrayHelper::getValue($items, $id);
+			if ($item instanceof OfferProperty) {
+				$model = $item;
+				$attributes = $item->getAttributes();
+			} elseif (is_array($item)) {
+				$attributes = $item;
 			}
-			
-			if (isset($items[$item->id]) && is_array($items[$item->id]))
-				$model->setAttributes($items[$item->id]);
 
-			$this->_properties[] = $model;
+			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferPropertyForm($template, $model);
+
+			$formModel->setAttributes($attributes);
+			$this->_properties[] = $formModel;
 		}
 	}
 
@@ -403,6 +414,66 @@ class OfferForm extends Model
 	}
 
 	/**
+	 * Stores getter
+	 * @return OfferStoreForm[]
+	 */
+	public function getStores()
+	{
+		return $this->_stores;
+	}
+
+	/**
+	 * Stores setter
+	 * @param StoreOffer[]|array[] $value 
+	 * @return void
+	 */
+	public function setStores($value)
+	{
+		//check value and make $id=>$item array
+		$items = [];
+		if (is_array($value)) {
+			foreach ($value as $store_id => $item) {
+				if ($item instanceof StoreOffer) {
+					$items[$item->store_id] = $item;
+				} elseif (is_array($item)) {
+					$items[$store_id] = $item;
+				}
+			}
+		}
+
+		//old items
+		$old = [];
+		foreach ($this->_stores as $item) {
+			if ($store_id = $item->store_id)
+				$old[$store_id] = $item;
+		}
+
+		//default
+		$this->_stores = [];
+
+		//assign items
+		foreach (Store::find()->all() as $template) {
+			$id = $template->id;
+
+			$model = null;
+			$attributes = [];
+
+			$item = ArrayHelper::getValue($items, $id);
+			if ($item instanceof StoreOffer) {
+				$model = $item;
+				$attributes = $item->getAttributes();
+			} elseif (is_array($item)) {
+				$attributes = $item;
+			}
+
+			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferStoreForm($template, $model);
+
+			$formModel->setAttributes($attributes);
+			$this->_stores[] = $formModel;
+		}
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function attributes()
@@ -453,7 +524,7 @@ class OfferForm extends Model
 			[['length', 'width', 'height'], 'integer', 'min' => 1],
 			['weight', 'double', 'min' => 0.001],
 			[['category_id', 'name'], 'required'],
-			[['barcodes', 'images', 'properties', 'delivery'], function($attribute, $params) {
+			[['barcodes', 'images', 'properties', 'delivery', 'stores'], function($attribute, $params) {
 				$hasError = false;
 				foreach ($this->$attribute as $formModel) {
 					if (!$formModel->validate())
@@ -509,6 +580,9 @@ class OfferForm extends Model
 		$object->modifyDate = gmdate('Y-m-d H:i:s');
 		$object->thumb = null;
 		$object->imageCount = sizeof($this->_images);
+		$object->quantity = array_sum(array_map(function($v) {
+			return (integer) $v->quantity;
+		}, $this->getStores()));
 
 		if (!$object->save(false))
 			return false;
@@ -523,6 +597,7 @@ class OfferForm extends Model
 		$this->saveImages();
 		$this->saveProperties();
 		$this->saveDelivery();
+		$this->saveStores();
 
 		return true;
 	}
@@ -625,6 +700,31 @@ class OfferForm extends Model
 					$item->save($object, false);
 					unset($old[$item->delivery_id]);
 				}
+			}
+		}
+
+		//delete
+		foreach ($old as $item)
+			$item->delete();
+	}
+
+	/**
+	 * Save stores
+	 * @return void
+	 */
+	private function saveStores()
+	{
+		$object = $this->_object;
+
+		$old = [];
+		foreach ($object->stores as $item)
+			$old[$item->store_id] = $item;
+
+		//insert/update
+		foreach ($this->_stores as $item) {
+			if (!empty($item->quantity)) {
+				$item->save($object, false);
+				unset($old[$item->store_id]);
 			}
 		}
 
