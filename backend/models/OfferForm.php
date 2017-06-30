@@ -417,7 +417,7 @@ class OfferForm extends Model
 		$object->length = empty($this->length) ? null : (int) $this->length;
 		$object->width = empty($this->width) ? null : (int) $this->width;
 		$object->height = empty($this->height) ? null : (int) $this->height;
-		$object->weight = empty($this->weight) ? null : (int) $this->weight;
+		$object->weight = empty($this->weight) ? null : (float) $this->weight;
 		$object->modifyDate = gmdate('Y-m-d H:i:s');
 		$object->thumb = null;
 		$object->imageCount = sizeof($this->_images);

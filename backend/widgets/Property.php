@@ -95,7 +95,15 @@ class Property extends InputWidget
 	 */
 	private function renderInteger()
 	{
-		return Html::textInput($this->getInputName(), $this->model->value, $this->options);
+		$model = $this->model;
+		$unit = $model->getTemplate()->unit;
+
+		$control = Html::textInput($this->getInputName(), $model->value, $this->options);
+
+		if (!empty($unit))
+			$control = $this->renderUnit($control, $unit);
+
+		return $control;
 	}
 
 	/**
@@ -104,7 +112,15 @@ class Property extends InputWidget
 	 */
 	private function renderFloat()
 	{
-		return Html::textInput($this->getInputName(), $this->model->value, $this->options);
+		$model = $this->model;
+		$unit = $model->getTemplate()->unit;
+
+		$control = Html::textInput($this->getInputName(), $model->value, $this->options);
+
+		if (!empty($unit))
+			$control = $this->renderUnit($control, $unit);
+
+		return $control;
 	}
 
 	/**
@@ -130,6 +146,18 @@ class Property extends InputWidget
 	private function getInputName()
 	{
 		return $this->name . '[' . $this->model->property_id . ']';
+	}
+
+	/**
+	 * Render measure unit
+	 * @param string $control 
+	 * @param string $unit 
+	 * @return string
+	 */
+	private function renderUnit($control, $unit)
+	{
+		$unit = Html::tag('span', Html::encode($unit), ['class' => 'input-group-addon offer-property-unit']);
+		return Html::tag('div', $control . $unit, ['class' => 'input-group']);
 	}
 
 }

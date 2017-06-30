@@ -25,15 +25,19 @@ $this->params['breadcrumbs'] = [
 	'tableOptions' => ['class' => 'table table-condensed'],
 	'columns' => [
 		[
+			'attribute' => 'name',
 			'format' => 'html',
 			'content' => function($model, $key, $index, $column) {
-				if (empty($model->image))
-					return '';
+				$result = '';
 
-				return Html::img($model->image, ['height' => 20]);
+				if (!empty($model->image))
+					$result .= Html::img($model->image, ['height' => 20]) . '&nbsp;';
+
+				$result .= Html::encode($model->name);
+
+				return $result;
 			},
 		],
-		'name',
 		[
 			'attribute' => 'url',
 			'format' => 'html',

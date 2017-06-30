@@ -78,6 +78,15 @@ class OfferPropertyForm extends Model
 	}
 
 	/**
+	 * Template getter
+	 * @return Property
+	 */
+	public function getTemplate()
+	{
+		return $this->_template;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function formName()

@@ -11,9 +11,12 @@ if ($settings === null)
 	$settings = new Settings;
 
 $imageSize = '<br><span class="label label-default">' . $settings->vendorImageWidth . '&times' . $settings->vendorImageHeight . '</span>';
-$height = $settings->vendorImageHeight / $settings->vendorImageWidth * 282;
-if ($height < 20)
-	$height = 20;
+
+$width = $settings->vendorImageWidth;
+if ($width < 20) $width = 20;
+if ($width > 282) $width = 282;
+$height = $settings->vendorImageHeight / $settings->vendorImageWidth * $width;
+if ($height < 20) $height = 20;
 
 ?>
 <?php $f = ActiveForm::begin([
@@ -29,7 +32,7 @@ if ($height < 20)
 			'thumbAttribute' => 'thumb',
 			'thumbWidth' => $settings->vendorImageWidth,
 			'thumbHeight' => $settings->vendorImageHeight,
-			'width' => 282,
+			'width' => $width,
 			'height' => $height,
 		]) ?>
 	</fieldset>
