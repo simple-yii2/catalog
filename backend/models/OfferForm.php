@@ -8,10 +8,12 @@ use yii\helpers\ArrayHelper;
 
 use cms\catalog\common\models\Currency;
 use cms\catalog\common\models\Category;
+use cms\catalog\common\models\Delivery;
 use cms\catalog\common\models\Offer;
 use cms\catalog\common\models\OfferBarcode;
 use cms\catalog\common\models\OfferImage;
 use cms\catalog\common\models\OfferProperty;
+use cms\catalog\common\models\OfferDelivery;
 use cms\catalog\common\models\Vendor;
 
 /**
@@ -81,6 +83,11 @@ class OfferForm extends Model
 	public $deliveryAvailable;
 
 	/**
+	 * @var boolean Use common delivery
+	 */
+	public $defaultDelivery;
+
+	/**
 	 * @var string Country of origin
 	 */
 	public $countryOfOrigin;
@@ -121,6 +128,11 @@ class OfferForm extends Model
 	private $_properties = [];
 
 	/**
+	 * @var OfferDeliveryForm[] Delivery types
+	 */
+	private $_delivery = [];
+
+	/**
 	 * @var Offer
 	 */
 	private $_object;
@@ -148,6 +160,7 @@ class OfferForm extends Model
 		$this->storeAvailable = $object->storeAvailable == 0 ? '0' : '1';
 		$this->pickupAvailable = $object->pickupAvailable == 0 ? '0' : '1';
 		$this->deliveryAvailable = $object->deliveryAvailable == 0 ? '0' : '1';
+		$this->defaultDelivery = $object->defaultDelivery == 0 ? '0' : '1';
 		$this->vendor_id = $object->vendor_id;
 		$this->countryOfOrigin = $object->countryOfOrigin;
 		$this->length = $object->length;
@@ -157,6 +170,7 @@ class OfferForm extends Model
 		$this->barcodes = $object->barcodes;
 		$this->images = $object->images;
 		$this->properties = $object->properties;
+		$this->delivery = $object->delivery;
 
 		parent::__construct($config);
 	}
@@ -231,17 +245,20 @@ class OfferForm extends Model
 	 */
 	public function setImages($value)
 	{
+		//old items
 		$old = [];
 		foreach ($this->_images as $item) {
 			if ($id = $item->id)
 				$old[$id] = $item;
 		}
 
+		//default
 		$this->_images = [];
 
 		if (!is_array($value))
 			return;
 
+		//assign items
 		foreach ($value as $item) {
 			if ($item instanceof OfferImage) {
 				$model = $item;
@@ -276,43 +293,112 @@ class OfferForm extends Model
 	 */
 	public function setProperties($value)
 	{
+		//check value and make $id=>$item array
 		$items = [];
 		if (is_array($value)) {
 			foreach ($value as $property_id => $item) {
 				if ($item instanceof OfferProperty) {
 					$items[$item->property_id] = $item;
-				} else {
-					$items[$property_id] = ['value' => $item]; //?
+				} elseif (is_array($item)) {
+					$items[$property_id] = $item;
 				}
 			}
 		}
 
+		//old items
 		$old = [];
 		foreach ($this->_properties as $item) {
 			if ($property_id = $item->property_id)
 				$old[$property_id] = $item;
 		}
 
-		$category = Category::findOne($this->category_id);
-
+		//default
 		$this->_properties = [];
-		if ($category !== null) {
-			foreach (array_merge($category->getParentProperties(), $category->properties) as $item) {
-				if (isset($old[$item->id])) {
-					$model = $old[$item->id];
-				} else {
-					$model = null;
-					if (isset($items[$item->id]) && ($items[$item->id] instanceof OfferProperty))
-						$model = $items[$item->id];
 
-					$model = new OfferPropertyForm($item, $model);
-				}
-				
-				if (isset($items[$item->id]) && is_array($items[$item->id]))
-					$model->setAttributes($items[$item->id]);
+		$category = Category::findOne($this->category_id);
+		if ($category === null)
+			return;
 
-				$this->_properties[] = $model;
+		//assign items
+		foreach (array_merge($category->getParentProperties(), $category->properties) as $item) {
+			if (isset($old[$item->id])) {
+				$model = $old[$item->id];
+			} else {
+				$model = null;
+				if (isset($items[$item->id]) && ($items[$item->id] instanceof OfferProperty))
+					$model = $items[$item->id];
+
+				$model = new OfferPropertyForm($item, $model);
 			}
+			
+			if (isset($items[$item->id]) && is_array($items[$item->id]))
+				$model->setAttributes($items[$item->id]);
+
+			$this->_properties[] = $model;
+		}
+	}
+
+	/**
+	 * Delivery getter
+	 * @return OfferDeliveryForm[]
+	 */
+	public function getDelivery()
+	{
+		return $this->_delivery;
+	}
+
+	/**
+	 * Delivery setter
+	 * @param OfferDelivery[]|array[] $value Delivery
+	 * @return void
+	 */
+	public function setDelivery($value)
+	{
+		//check value and make $id=>$item array
+		$items = [];
+		if (is_array($value)) {
+			foreach ($value as $delivery_id => $item) {
+				if ($item instanceof OfferDelivery) {
+					$items[$item->delivery_id] = $item;
+				} elseif (is_array($item)) {
+					$items[$delivery_id] = $item;
+				}
+			}
+		}
+
+		//old items
+		$old = [];
+		foreach ($this->_delivery as $item) {
+			if ($delivery_id = $item->delivery_id)
+				$old[$delivery_id] = $item;
+		}
+
+		//default
+		$this->_delivery = [];
+
+
+		//assign items
+		$config = [];
+		if ($this->defaultDelivery != 0)
+			$config['active'] = 1;
+		foreach (Delivery::find()->all() as $template) {
+			$id = $template->id;
+
+			$model = null;
+			$attributes = [];
+
+			$item = ArrayHelper::getValue($items, $id);
+			if ($item instanceof OfferDelivery) {
+				$model = $item;
+				$attributes = $item->getAttributes();
+			} elseif (is_array($item)) {
+				$attributes = $item;
+			}
+
+			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferDeliveryForm($template, $model, $config);
+
+			$formModel->setAttributes($attributes);
+			$this->_delivery[] = $formModel;
 		}
 	}
 
@@ -341,6 +427,7 @@ class OfferForm extends Model
 			'storeAvailable' => Yii::t('catalog', 'Can buy in the sales area'),
 			'pickupAvailable' => Yii::t('catalog', 'Can buy with self-delivery'),
 			'deliveryAvailable' => Yii::t('catalog', 'Can buy with delivery'),
+			'defaultDelivery' => Yii::t('catalog', 'Use default delivery'),
 			'vendor_id' => Yii::t('catalog', 'Vendor'),
 			'countryOfOrigin' => Yii::t('catalog', 'Country of origin'),
 			'length' => Yii::t('catalog', 'Length'),
@@ -359,14 +446,14 @@ class OfferForm extends Model
 	{
 		return [
 			[['category_id', 'vendor_id', 'currency_id'], 'integer'],
-			[['active', 'storeAvailable', 'pickupAvailable', 'deliveryAvailable'], 'boolean'],
+			[['active', 'storeAvailable', 'pickupAvailable', 'deliveryAvailable', 'defaultDelivery'], 'boolean'],
 			[['name', 'model', 'countryOfOrigin'], 'string', 'max' => 100],
 			['description', 'string', 'max' => 1000],
 			[['price', 'oldPrice'], 'double'],
 			[['length', 'width', 'height'], 'integer', 'min' => 1],
 			['weight', 'double', 'min' => 0.001],
 			[['category_id', 'name'], 'required'],
-			[['barcodes', 'images', 'properties'], function($attribute, $params) {
+			[['barcodes', 'images', 'properties', 'delivery'], function($attribute, $params) {
 				$hasError = false;
 				foreach ($this->$attribute as $formModel) {
 					if (!$formModel->validate())
@@ -411,6 +498,7 @@ class OfferForm extends Model
 		$object->storeAvailable = $this->storeAvailable == 0 ? false : true;
 		$object->pickupAvailable = $this->pickupAvailable == 0 ? false : true;
 		$object->deliveryAvailable = $this->deliveryAvailable == 0 ? false : true;
+		$object->defaultDelivery = $this->defaultDelivery == 0 ? false : true;
 		$object->vendor_id = $vendor === null ? null : $vendor->id;
 		$object->vendor = $vendor === null ? null : $vendor->name;
 		$object->countryOfOrigin = $this->countryOfOrigin;
@@ -434,6 +522,7 @@ class OfferForm extends Model
 		$this->saveBarcodes();
 		$this->saveImages();
 		$this->saveProperties();
+		$this->saveDelivery();
 
 		return true;
 	}
@@ -509,6 +598,33 @@ class OfferForm extends Model
 			if ($item->value !== '' && $item->value !== null) {
 				$item->save($object, false);
 				unset($old[$item->property_id]);
+			}
+		}
+
+		//delete
+		foreach ($old as $item)
+			$item->delete();
+	}
+
+	/**
+	 * Save delivery
+	 * @return void
+	 */
+	private function saveDelivery()
+	{
+		$object = $this->_object;
+
+		$old = [];
+		foreach ($object->delivery as $item)
+			$old[$item->delivery_id] = $item;
+
+		//insert/update
+		if (!$object->defaultDelivery) {
+			foreach ($this->_delivery as $item) {
+				if ($item->active != 0) {
+					$item->save($object, false);
+					unset($old[$item->delivery_id]);
+				}
 			}
 		}
 

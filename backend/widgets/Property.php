@@ -145,7 +145,7 @@ class Property extends InputWidget
 	 */
 	private function getInputName()
 	{
-		return $this->name . '[' . $this->model->property_id . ']';
+		return $this->name . '[' . $this->model->property_id . '][value]';
 	}
 
 	/**
