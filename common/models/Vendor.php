@@ -25,8 +25,11 @@ class Vendor extends ActiveRecord implements StoredInterface
 	{
 		$files = [];
 
-		if (!empty($attributes['image']))
-			$files[] = $attributes['image'];
+		if (!empty($attributes['file']))
+			$files[] = $attributes['file'];
+
+		if (!empty($attributes['thumb']))
+			$files[] = $attributes['thumb'];
 
 		return $files;
 	}
@@ -52,8 +55,11 @@ class Vendor extends ActiveRecord implements StoredInterface
 	 */
 	public function setFiles($files)
 	{
-		if (array_key_exists($this->image, $files))
-			$this->image = $files[$this->image];
+		if (array_key_exists($this->file, $files))
+			$this->file = $files[$this->file];
+
+		if (array_key_exists($this->thumb, $files))
+			$this->thumb = $files[$this->thumb];
 	}
 
 }

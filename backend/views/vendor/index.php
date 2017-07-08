@@ -30,8 +30,8 @@ $this->params['breadcrumbs'] = [
 			'content' => function($model, $key, $index, $column) {
 				$result = '';
 
-				if (!empty($model->image))
-					$result .= Html::img($model->image, ['height' => 20]) . '&nbsp;';
+				if (!empty($model->thumb))
+					$result .= Html::img($model->thumb, ['height' => 20]) . '&nbsp;';
 
 				$result .= Html::encode($model->name);
 

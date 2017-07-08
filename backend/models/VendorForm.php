@@ -41,44 +41,39 @@ class VendorForm extends Model
 	/**
 	 * @var Vendor
 	 */
-	private $_model;
+	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param Vendor|null $model 
+	 * @param Vendor|null $object 
 	 */
-	public function __construct(Vendor $model = null, $config = [])
+	public function __construct(Vendor $object = null, $config = [])
 	{
-		if ($model === null)
-			$model = new Vendor;
+		if ($object === null)
+			$object = new Vendor;
 
-		$this->_model = $model;
-
-		//attributes
-		$this->name = $model->name;
-		$this->description = $model->description;
-		$this->url = $model->url;
-		$this->thumb = $model->image;
-
-		if (!empty($this->thumb)) {
-			$this->file = Yii::$app->storage->tmpPath . '/' . basename($this->thumb);
-			$base = Yii::getAlias('@webroot');
-			@copy($base . $this->thumb, $base . $this->file);
-		}
+		$this->_object = $object;
 
 		//file caching
-		Yii::$app->storage->cacheObject($model);
+		Yii::$app->storage->cacheObject($object);
 
-		parent::__construct($config);
+		//attributes
+		parent::__construct(array_merge([
+			'name' => $object->name,
+			'description' => $object->description,
+			'url' => $object->url,
+			'file' => $object->file,
+			'thumb' => $object->thumb,
+		], $config));
 	}
 
 	/**
-	 * Model getter
+	 * Object getter
 	 * @return Vendor
 	 */
-	public function getModel()
+	public function getObject()
 	{
-		return $this->_model;
+		return $this->_object;
 	}
 
 	/**
@@ -109,7 +104,7 @@ class VendorForm extends Model
 	}
 
 	/**
-	 * Saving model using model attributes
+	 * Saving object using object attributes
 	 * @return boolean
 	 */
 	public function save()
@@ -117,19 +112,18 @@ class VendorForm extends Model
 		if (!$this->validate())
 			return false;
 
-		$model = $this->_model;
+		$object = $this->_object;
 
-		$model->name = $this->name;
-		$model->description = $this->description;
-		$model->url = $this->url;
-		$model->image = $this->thumb;
+		$object->name = $this->name;
+		$object->description = $this->description;
+		$object->url = $this->url;
+		$object->file = $this->file;
+		$object->thumb = $this->thumb;
 
-		@unlink(Yii::getAlias('@webroot') . $this->file);
-		
 		//files
-		Yii::$app->storage->storeObject($model);
+		Yii::$app->storage->storeObject($object);
 
-		if (!$model->save(false))
+		if (!$object->save(false))
 			return false;
 
 		return true;

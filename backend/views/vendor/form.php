@@ -19,16 +19,16 @@ $height = $settings->vendorImageHeight / $settings->vendorImageWidth * $width;
 if ($height < 20) $height = 20;
 
 ?>
-<?php $f = ActiveForm::begin([
+<?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 ]); ?>
 
 	<fieldset>
-		<?= $f->field($form, 'name') ?>
-		<?= $f->field($form, 'description')->textarea(['rows' => 5]) ?>
-		<?= $f->field($form, 'url') ?>
-		<?= $f->field($form, 'file')->label($form->getAttributeLabel('file') . $imageSize)->widget(UploadImage::className(), [
+		<?= $form->field($model, 'name') ?>
+		<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
+		<?= $form->field($model, 'url') ?>
+		<?= $form->field($model, 'file')->label($model->getAttributeLabel('file') . $imageSize)->widget(UploadImage::className(), [
 			'thumbAttribute' => 'thumb',
 			'thumbWidth' => $settings->vendorImageWidth,
 			'thumbHeight' => $settings->vendorImageHeight,

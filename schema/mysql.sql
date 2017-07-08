@@ -23,7 +23,8 @@ create table if not exists `CatalogVendor`
 	`name` varchar(100) not null,
 	`description` text,
 	`url` varchar(200) default null,
-	`image` varchar(200) default null,
+	`file` varchar(200) default null,
+	`thumb` varchar(200) default null,
 	primary key (`id`)
 ) engine InnoDB;
 
