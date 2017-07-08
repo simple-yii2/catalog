@@ -171,6 +171,26 @@ class CategoryController extends Controller
 		$this->updateOffers();
 	}
 
+	/**
+	 * Common properties
+	 * @return string
+	 */
+	public function actionProperties()
+	{
+		$model = new CategoryForm(Category::find()->roots()->one());
+
+		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
+			return $this->redirect([
+				'index',
+			]);
+		}
+
+		return $this->render('properties', [
+			'model' => $model,
+		]);
+	}
+
 	private function updateOffers()
 	{
 		$query = Category::find()->select(['id', 'lft', 'rgt'])->asArray();

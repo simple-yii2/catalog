@@ -16,6 +16,7 @@ return [
 	'Create delivery' => 'Добавить способ доставки',
 	'Create category' => 'Добавить категорию',
 	'Create offer' => 'Добавить товар/услугу',
+	'Common properties' => 'Общие характеристики',
 
 	'Changes saved successfully.' => 'Изменения успешно сохранены.',
 	'Item not found.' => 'Элемент не найден.',
