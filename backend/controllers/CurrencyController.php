@@ -35,10 +35,8 @@ class CurrencyController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$search = new CurrencySearch;
-
 		return $this->render('index', [
-			'search' => $search,
+			'search' => new CurrencySearch,
 		]);
 	}
 

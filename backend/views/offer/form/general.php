@@ -14,13 +14,13 @@ $imageSize = '<br><span class="label label-default">' . $width . '&times' . $hei
 //vendors
 $vendors = ['' => ''];
 $query = Vendor::find();
-foreach ($query->all() as $model)
-	$vendors[$model->id] = $model->name;
+foreach ($query->all() as $item)
+	$vendors[$item->id] = $item->name;
 
 ?>
 <fieldset>
-	<?= $activeForm->field($formModel, 'active')->checkbox() ?>
-	<?= $activeForm->field($formModel, 'images')->label($formModel->getAttributeLabel('images') . $imageSize)->widget(UploadImages::className(), [
+	<?= $form->field($model, 'active')->checkbox() ?>
+	<?= $form->field($model, 'images')->label($model->getAttributeLabel('images') . $imageSize)->widget(UploadImages::className(), [
 		'id' => 'goods-images',
 		'fileKey' => 'file',
 		'thumbKey' => 'thumb',
@@ -32,12 +32,12 @@ foreach ($query->all() as $model)
 			];
 		},
 	]) ?>
-	<?= $activeForm->field($formModel, 'name') ?>
-	<?= $activeForm->field($formModel, 'model') ?>
-	<?= $activeForm->field($formModel, 'description')->textarea(['rows' => 5]) ?>
-	<?= $activeForm->field($formModel, 'vendor_id')->dropDownList($vendors) ?>
-	<?= $activeForm->field($formModel, 'countryOfOrigin') ?>
-	<?= $activeForm->field($formModel, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
+	<?= $form->field($model, 'name') ?>
+	<?= $form->field($model, 'model') ?>
+	<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
+	<?= $form->field($model, 'vendor_id')->dropDownList($vendors) ?>
+	<?= $form->field($model, 'countryOfOrigin') ?>
+	<?= $form->field($model, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
 		'itemClass' => OfferBarcodeForm::className(),
 		'columns' => [
 			'barcode',

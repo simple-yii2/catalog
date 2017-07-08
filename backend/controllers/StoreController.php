@@ -35,10 +35,8 @@ class StoreController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$search = new StoreSearch;
-
 		return $this->render('index', [
-			'search' => $search,
+			'search' => new StoreSearch,
 		]);
 	}
 

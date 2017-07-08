@@ -10,38 +10,38 @@ use cms\catalog\backend\assets\OfferFormAsset;
 OfferFormAsset::register($this);
 
 ?>
-<?php $activeForm = ActiveForm::begin([
+<?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 	'options' => [
-		'data-properties-url' => Url::toRoute(['properties', 'id' => $formModel->getObject()->id]),
+		'data-properties-url' => Url::toRoute(['properties', 'id' => $model->getObject()->id]),
 	],
 ]); ?>
 
 	<?= Tabs::widget(['items' => [
 		[
 			'label' => Yii::t('catalog', 'General'),
-			'content' => $this->render('form/general', ['activeForm' => $activeForm, 'formModel' => $formModel]),
+			'content' => $this->render('form/general', ['form' => $form, 'model' => $model]),
 			'active' => true,
 		],
 		[
 			'label' => Yii::t('catalog', 'Properties'),
-			'content' => $this->render('form/properties', ['activeForm' => $activeForm, 'formModel' => $formModel]),
+			'content' => $this->render('form/properties', ['form' => $form, 'model' => $model]),
 			'active' => false,
 		],
 		[
 			'label' => Yii::t('catalog', 'Purchase'),
-			'content' => $this->render('form/purchase', ['activeForm' => $activeForm, 'formModel' => $formModel]),
+			'content' => $this->render('form/purchase', ['form' => $form, 'model' => $model]),
 			'active' => false,
 		],
 		[
 			'label' => Yii::t('catalog', 'Delivery'),
-			'content' => $this->render('form/delivery', ['activeForm' => $activeForm, 'formModel' => $formModel]),
+			'content' => $this->render('form/delivery', ['form' => $form, 'model' => $model]),
 			'active' => false,
 		],
 		[
 			'label' => Yii::t('catalog', 'Quantity'),
-			'content' => $this->render('form/quantity', ['activeForm' => $activeForm, 'formModel' => $formModel]),
+			'content' => $this->render('form/quantity', ['form' => $form, 'model' => $model]),
 			'active' => false,
 		],
 	]]) ?>

@@ -35,10 +35,8 @@ class VendorController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$search = new VendorSearch;
-
 		return $this->render('index', [
-			'search' => $search,
+			'search' => new VendorSearch,
 		]);
 	}
 

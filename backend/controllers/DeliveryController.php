@@ -35,10 +35,8 @@ class DeliveryController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$search = new DeliverySearch;
-
 		return $this->render('index', [
-			'search' => $search,
+			'search' => new DeliverySearch,
 		]);
 	}
 

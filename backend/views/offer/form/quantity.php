@@ -2,13 +2,13 @@
 
 use yii\helpers\Html;
 
-$storesName = Html::getInputName($formModel, 'stores');
+$storesName = Html::getInputName($model, 'stores');
 
 ?>
 <fieldset>
 	<?= Html::hiddenInput($storesName, '') ?>
-	<?php foreach ($formModel->stores as $store) {
-		echo $activeForm->field($store, 'quantity')->label($store->name)->textInput([
+	<?php foreach ($model->stores as $store) {
+		echo $form->field($store, 'quantity')->label($store->name)->textInput([
 			'name' => $storesName . '[' . $store->store_id . '][quantity]',
 		]);
 	} ?>

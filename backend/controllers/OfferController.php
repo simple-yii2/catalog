@@ -48,17 +48,17 @@ class OfferController extends Controller
 	{
 		$this->loadSettings();
 
-		$formModel = new OfferForm;
+		$model = new OfferForm;
 
-		if ($formModel->load(Yii::$app->getRequest()->post()) && $formModel->save()) {
-			$formModel->getObject()->category->updateOfferCount();
+		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+			$model->getObject()->category->updateOfferCount();
 
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect(['index']);
 		}
 
 		return $this->render('create', [
-			'formModel' => $formModel,
+			'model' => $model,
 		]);
 	}
 
@@ -77,9 +77,9 @@ class OfferController extends Controller
 
 		$category = $object->category;
 
-		$formModel = new OfferForm($object);
+		$model = new OfferForm($object);
 
-		if ($formModel->load(Yii::$app->getRequest()->post()) && $formModel->save()) {
+		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
 			$object->category->updateOfferCount();
 
 			if ($category->id != $object->category->id)
@@ -90,7 +90,7 @@ class OfferController extends Controller
 		}
 
 		return $this->render('update', [
-			'formModel' => $formModel,
+			'model' => $model,
 		]);
 	}
 
@@ -150,12 +150,12 @@ class OfferController extends Controller
 	 */
 	public function actionProperties($id = null)
 	{
-		$formModel = new OfferForm(Offer::findOne($id));
+		$model = new OfferForm(Offer::findOne($id));
 
-		$formModel->load(Yii::$app->getRequest()->post());
+		$model->load(Yii::$app->getRequest()->post());
 
 		return $this->renderAjax('form', [
-			'formModel' => $formModel,
+			'model' => $model,
 		]);
 	}
 

@@ -9,15 +9,15 @@ foreach (Currency::find()->all() as $item)
 
 //purchase
 $options = [];
-if (empty($formModel->currency_id))
+if (empty($model->currency_id))
 	$options['disabled'] = true;
 
 ?>
 <fieldset>
-	<?= $activeForm->field($formModel, 'currency_id')->dropDownList($currencies) ?>
-	<?= $activeForm->field($formModel, 'price')->textInput($options) ?>
-	<?= $activeForm->field($formModel, 'oldPrice')->textInput($options) ?>
-	<?= $activeForm->field($formModel, 'storeAvailable')->checkbox() ?>
-	<?= $activeForm->field($formModel, 'pickupAvailable')->checkbox() ?>
-	<?= $activeForm->field($formModel, 'deliveryAvailable')->checkbox() ?>
+	<?= $form->field($model, 'currency_id')->dropDownList($currencies) ?>
+	<?= $form->field($model, 'price')->textInput($options) ?>
+	<?= $form->field($model, 'oldPrice')->textInput($options) ?>
+	<?= $form->field($model, 'storeAvailable')->checkbox() ?>
+	<?= $form->field($model, 'pickupAvailable')->checkbox() ?>
+	<?= $form->field($model, 'deliveryAvailable')->checkbox() ?>
 </fieldset>
