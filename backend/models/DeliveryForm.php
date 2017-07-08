@@ -31,34 +31,34 @@ class DeliveryForm extends Model
 	/**
 	 * @var Delivery
 	 */
-	private $_model;
+	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param Delivery|null $model 
+	 * @param Delivery|null $object 
 	 */
-	public function __construct(Delivery $model = null, $config = [])
+	public function __construct(Delivery $object = null, $config = [])
 	{
-		if ($model === null)
-			$model = new Delivery;
+		if ($object === null)
+			$object = new Delivery;
 
-		$this->_model = $model;
+		$this->_object = $object;
 
 		//attributes
-		$this->name = $model->name;
-		$this->cost = $model->cost;
-		$this->days = $model->days;
-
-		parent::__construct($config);
+		parent::__construct(array_merge([
+			'name' => $object->name,
+			'cost' => $object->cost,
+			'days' => $object->days,
+		], $config));
 	}
 
 	/**
-	 * Model getter
+	 * Object getter
 	 * @return Delivery
 	 */
-	public function getModel()
+	public function getObject()
 	{
-		return $this->_model;
+		return $this->_object;
 	}
 
 	/**
@@ -87,7 +87,7 @@ class DeliveryForm extends Model
 	}
 
 	/**
-	 * Saving model using model attributes
+	 * Saving object using object attributes
 	 * @return boolean
 	 */
 	public function save()
@@ -95,13 +95,13 @@ class DeliveryForm extends Model
 		if (!$this->validate())
 			return false;
 
-		$model = $this->_model;
+		$object = $this->_object;
 
-		$model->name = $this->name;
-		$model->cost = (float) $this->cost;
-		$model->days = (integer) $this->days;
+		$object->name = $this->name;
+		$object->cost = (float) $this->cost;
+		$object->days = (integer) $this->days;
 
-		if (!$model->save(false))
+		if (!$object->save(false))
 			return false;
 
 		return true;

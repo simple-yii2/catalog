@@ -4,15 +4,15 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 ?>
-<?php $f = ActiveForm::begin([
+<?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 ]); ?>
 
 	<fieldset>
-		<?= $f->field($form, 'name') ?>
-		<?= $f->field($form, 'cost') ?>
-		<?= $f->field($form, 'days') ?>
+		<?= $form->field($model, 'name') ?>
+		<?= $form->field($model, 'cost') ?>
+		<?= $form->field($model, 'days') ?>
 	</fieldset>
 
 	<div class="form-group">
