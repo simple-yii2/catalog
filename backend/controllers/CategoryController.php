@@ -58,21 +58,22 @@ class CategoryController extends Controller
 		if ($parent->offerCount > 0)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
-		$form = new CategoryForm;
-		$form->properties = array_merge($parent->getParentProperties(), $parent->properties);
+		$model = new CategoryForm(null, [
+			'properties' => array_merge($parent->getParentProperties(), $parent->properties),
+		]);
 
-		if ($form->load(Yii::$app->getRequest()->post()) && $form->save($parent)) {
+		if ($model->load(Yii::$app->getRequest()->post()) && $model->save($parent)) {
 			$this->updateOffers();
 
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect([
 				'index',
-				'id' => $form->getModel()->id,
+				'id' => $model->getObject()->id,
 			]);
 		}
 
 		return $this->render('create', [
-			'form' => $form,
+			'model' => $model,
 			'id' => $id,
 			'parents' => array_merge($parent->parents()->all(), [$parent]),
 		]);
@@ -85,24 +86,24 @@ class CategoryController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model = Category::findOne($id);
-		if ($model === null || $model->isRoot())
+		$object = Category::findOne($id);
+		if ($object === null || $object->isRoot())
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		$form = new CategoryForm($model);
+		$model = new CategoryForm($object);
 
-		if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect([
 				'index',
-				'id' => $form->getModel()->id,
+				'id' => $model->getObject()->id,
 			]);
 		}
 
 		return $this->render('update', [
-			'form' => $form,
-			'id' => $model->id,
-			'parents' => $model->parents()->all(),
+			'model' => $model,
+			'id' => $object->id,
+			'parents' => $object->parents()->all(),
 		]);
 	}
 
@@ -113,18 +114,18 @@ class CategoryController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$model = Category::findOne($id);
-		if ($model === null || $model->isRoot())
+		$object = Category::findOne($id);
+		if ($object === null || $object->isRoot())
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		if ($model->offerCount > 0)
+		if ($object->offerCount > 0)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
-		$sibling = $model->prev()->one();
+		$sibling = $object->prev()->one();
 		if ($sibling === null)
-			$sibling = $model->next()->one();
+			$sibling = $object->next()->one();
 
-		if ($model->deleteWithChildren())
+		if ($object->deleteWithChildren())
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Item deleted successfully.'));
 
 		return $this->redirect(['index', 'id' => $sibling ? $sibling->id : null]);

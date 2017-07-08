@@ -7,7 +7,7 @@ use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Property;
+use cms\catalog\common\models\CategoryProperty;
 
 class CategoryForm extends Model
 {
@@ -23,33 +23,32 @@ class CategoryForm extends Model
 	public $title;
 
 	/**
-	 * @var PropertyForm[] Properties
+	 * @var CategoryPropertyForm[] Properties
 	 */
 	private $_properties = [];
 
 	/**
 	 * @var Category
 	 */
-	private $_model;
+	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param Category $model 
+	 * @param Category $object 
 	 */
-	public function __construct(Category $model = null, $config = [])
+	public function __construct(Category $object = null, $config = [])
 	{
-		if ($model === null)
-			$model = new Category;
+		if ($object === null)
+			$object = new Category;
 
-		$this->_model = $model;
+		$this->_object = $object;
 
 		//attributes
-		$this->active = $model->active == 0 ? '0' : '1';
-		$this->title = $model->title;
-
-		$this->properties = array_merge($model->getParentProperties(), $model->properties);
-
-		parent::__construct($config);
+		parent::__construct(array_merge([
+			'active' => $object->active == 0 ? '0' : '1',
+			'title' => $object->title,
+			'properties' => array_merge($object->getParentProperties(), $object->properties),
+		], $config));
 	}
 
 	/**
@@ -63,15 +62,15 @@ class CategoryForm extends Model
 
 	/**
 	 * Properies setter
-	 * @param Property[]|array[] $value Properies
+	 * @param CategoryProperty[]|array[] $value Properies
 	 * @return void
 	 */
 	public function setProperties($value)
 	{
 		$old = [];
-		foreach ($this->_properties as $item) {
-			if ($id = $item->id)
-				$old[$id] = $item;
+		foreach ($this->_properties as $formModel) {
+			if ($id = $formModel->getId())
+				$old[$id] = $formModel;
 		}
 
 		$this->_properties = [];
@@ -80,20 +79,20 @@ class CategoryForm extends Model
 			return;
 
 		foreach ($value as $item) {
-			if ($item instanceof Property) {
-				$model = $item;
+			if ($item instanceof CategoryProperty) {
+				$object = $item;
 				$id = $item->id;
 				$attributes = $item->getAttributes();
 			} else {
-				$model = null;
+				$object = null;
 				$id = ArrayHelper::getValue($item, 'id');
 				$attributes = $item;
 			}
 
-			$form = array_key_exists($id, $old) ? $old[$id] : new PropertyForm($model);
+			$formModel = array_key_exists($id, $old) ? $old[$id] : new CategoryPropertyForm($object);
 
-			$form->setAttributes($attributes);
-			$this->_properties[] = $form;
+			$formModel->setAttributes($attributes);
+			$this->_properties[] = $formModel;
 		}
 	}
 
@@ -128,7 +127,7 @@ class CategoryForm extends Model
 			['title', 'required'],
 			['properties', function($attribute, $params) {
 				$hasError = false;
-				foreach ($this->_properties as $model) {
+				foreach ($this->$attribute as $model) {
 					if (!$model->validate())
 						$hasError = true;
 				}
@@ -140,12 +139,12 @@ class CategoryForm extends Model
 	}
 
 	/**
-	 * Model getter
+	 * Object getter
 	 * @return Category
 	 */
-	public function getModel()
+	public function getObject()
 	{
-		return $this->_model;
+		return $this->_object;
 	}
 
 	/**
@@ -158,34 +157,34 @@ class CategoryForm extends Model
 		if (!$this->validate())
 			return false;
 
-		$model = $this->_model;
+		$object = $this->_object;
 
-		$model->active = $this->active == 1;
-		$model->title = $this->title;
+		$object->active = $this->active == 1;
+		$object->title = $this->title;
 
-		if ($model->getIsNewRecord()) {
-			if (!$model->appendTo($parent, false))
+		if ($object->getIsNewRecord()) {
+			if (!$object->appendTo($parent, false))
 				return false;
 		} else {
-			if (!$model->save(false))
+			if (!$object->save(false))
 				return false;
 		}
 
-		if (empty($model->alias)) {
-			$model->makeAlias();
-			$model->update(false, ['alias']);
+		if (empty($object->alias)) {
+			$object->makeAlias();
+			$object->update(false, ['alias']);
 		}
 
-		$model->updatePath($parent);
+		$object->updatePath($parent);
 
 		//update relations
 		$old = [];
-		foreach ($model->properties as $item) {
+		foreach ($object->properties as $item) {
 			$old[$item->id] = $item;
 		};
 		//insert/update
 		foreach ($this->_properties as $item) {
-			$item->save($model, false);
+			$item->save($object, false);
 			unset($old[$item->id]);
 		}
 		//delete

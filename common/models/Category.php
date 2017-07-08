@@ -41,7 +41,7 @@ class Category extends ActiveRecord
 	 */
 	public function getProperties()
 	{
-		return $this->hasMany(Property::className(), ['category_id' => 'id']);
+		return $this->hasMany(CategoryProperty::className(), ['category_id' => 'id']);
 	}
 
 	/**

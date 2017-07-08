@@ -59,7 +59,7 @@ create table if not exists `CatalogCategory`
 	key `alias` (`alias`)
 ) engine InnoDB;
 
-create table if not exists `CatalogProperty`
+create table if not exists `CatalogCategoryProperty`
 (
 	`id` int(10) not null auto_increment,
 	`category_id` int(10) not null,

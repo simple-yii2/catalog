@@ -4,27 +4,27 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 use cms\catalog\backend\assets\CategoryFormAsset;
-use cms\catalog\backend\models\PropertyForm;
-use cms\catalog\common\models\Property;
+use cms\catalog\backend\models\CategoryPropertyForm;
+use cms\catalog\common\models\CategoryProperty;
 
 CategoryFormAsset::register($this);
 
-$typesWithValues = Property::getTypesWithValues();
+$typesWithValues = CategoryProperty::getTypesWithValues();
 
 ?>
-<?php $f = ActiveForm::begin([
+<?php $activeForm = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 ]); ?>
 
 	<fieldset>
-		<?= $f->field($form, 'active')->checkbox() ?>
-		<?= $f->field($form, 'title') ?>
-		<?= $f->field($form, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
-			'itemClass' => PropertyForm::className(),
+		<?= $activeForm->field($model, 'active')->checkbox() ?>
+		<?= $activeForm->field($model, 'title') ?>
+		<?= $activeForm->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
+			'itemClass' => CategoryPropertyForm::className(),
 			'columns' => [
 				'name',
-				['attribute' => 'type', 'items' => Property::getTypeNames(), 'inputOptions' => ['class' => 'form-control property-type']],
+				['attribute' => 'type', 'items' => CategoryProperty::getTypeNames(), 'inputOptions' => ['class' => 'form-control property-type']],
 				['attribute' => 'values', 'content' => function($model, $key, $index, $column) use ($typesWithValues) {
 					if ($model->getReadOnly())
 						return '';

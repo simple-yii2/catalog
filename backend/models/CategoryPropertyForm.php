@@ -7,12 +7,12 @@ use yii\base\Model;
 
 use helpers\Translit;
 use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Property;
+use cms\catalog\common\models\CategoryProperty;
 
 /**
  * Category property form
  */
-class PropertyForm extends Model
+class CategoryPropertyForm extends Model
 {
 
 	/**
@@ -26,38 +26,46 @@ class PropertyForm extends Model
 	public $type;
 
 	/**
-	 * @var string[] Values
-	 */
-	public $values = [];
-
-	/**
 	 * @var string Measure unit
 	 */
 	public $unit;
 
 	/**
-	 * @var Property
+	 * @var string[] Values
+	 */
+	private $_values = [];
+
+	/**
+	 * @var CategoryProperty
 	 */
 	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param Property|null $object 
+	 * @param CategoryProperty|null $object 
 	 */
-	public function __construct(Property $object = null, $config = [])
+	public function __construct(CategoryProperty $object = null, $config = [])
 	{
 		if ($object === null)
-			$object = new Property;
+			$object = new CategoryProperty;
 
 		$this->_object = $object;
 
 		//attributes
-		$this->name = $object->name;
-		$this->type = $object->type;
-		$this->values = $object->values;
-		$this->unit = $object->unit;
+		parent::__construct(array_merge([
+			'name' => $object->name,
+			'type' => $object->type,
+			'values' => $object->values,
+			'unit' => $object->unit,
+		], $config));
+	}
 
-		parent::__construct($config);
+	/**
+	 * @inheritdoc
+	 */
+	public function attributes()
+	{
+		return array_merge(parent::attributes(), ['values']);
 	}
 
 	/**
@@ -76,6 +84,29 @@ class PropertyForm extends Model
 	public function getReadOnly()
 	{
 		return $this->_object->readOnly;
+	}
+
+	/**
+	 * Getter for values
+	 * @return string[]
+	 */
+	public function getValues()
+	{
+		return $this->_values;
+	}
+
+	/**
+	 * Setter for values
+	 * @param string[] $value 
+	 * @return void
+	 */
+	public function setValues($value)
+	{
+		if (is_array($value)) {
+			$this->_values = $value;
+		} else {
+			$this->_values = [];
+		}
 	}
 
 	/**
@@ -98,9 +129,10 @@ class PropertyForm extends Model
 	{
 		return [
 			['name', 'string', 'max' => 50],
-			['type', 'in', 'range' => Property::getTypes()],
-			['values', 'each', 'rule' => ['string', 'max' => 30]],
+			['type', 'in', 'range' => CategoryProperty::getTypes()],
+			['values', 'safe'],
 			['unit', 'string', 'max' => 10],
+			['name', 'required'],
 		];
 	}
 

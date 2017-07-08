@@ -7,7 +7,7 @@ use yii\db\ActiveRecord;
 
 use helpers\Translit;
 
-class Property extends ActiveRecord
+class CategoryProperty extends ActiveRecord
 {
 
 	const TYPE_BOOLEAN = 0;
@@ -64,7 +64,7 @@ class Property extends ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'CatalogProperty';
+		return 'CatalogCategoryProperty';
 	}
 
 	/**
