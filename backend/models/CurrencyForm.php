@@ -26,33 +26,33 @@ class CurrencyForm extends Model
 	/**
 	 * @var Currency
 	 */
-	private $_model;
+	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param Currency|null $model 
+	 * @param Currency|null $object 
 	 */
-	public function __construct(Currency $model = null, $config = [])
+	public function __construct(Currency $object = null, $config = [])
 	{
-		if ($model === null)
-			$model = new Currency;
+		if ($object === null)
+			$object = new Currency;
 
-		$this->_model = $model;
+		$this->_object = $object;
 
 		//attributes
-		$this->code = $model->code;
-		$this->rate = $model->rate;
-
-		parent::__construct($config);
+		parent::__construct(array_merge([
+			'code' => $object->code,
+			'rate' => $object->rate,
+		], $config));
 	}
 
 	/**
-	 * Model getter
+	 * Object getter
 	 * @return Currency
 	 */
-	public function getModel()
+	public function getObject()
 	{
-		return $this->_model;
+		return $this->_object;
 	}
 
 	/**
@@ -79,7 +79,7 @@ class CurrencyForm extends Model
 	}
 
 	/**
-	 * Saving model using model attributes
+	 * Save
 	 * @return boolean
 	 */
 	public function save()
@@ -87,12 +87,12 @@ class CurrencyForm extends Model
 		if (!$this->validate())
 			return false;
 
-		$model = $this->_model;
+		$object = $this->_object;
 
-		$model->code = $this->code;
-		$model->rate = empty($this->rate) ? null : (float) $this->rate;
+		$object->code = $this->code;
+		$object->rate = empty($this->rate) ? null : (float) $this->rate;
 
-		if (!$model->save(false))
+		if (!$object->save(false))
 			return false;
 
 		return true;

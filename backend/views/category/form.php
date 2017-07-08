@@ -12,15 +12,15 @@ CategoryFormAsset::register($this);
 $typesWithValues = CategoryProperty::getTypesWithValues();
 
 ?>
-<?php $activeForm = ActiveForm::begin([
+<?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 ]); ?>
 
 	<fieldset>
-		<?= $activeForm->field($model, 'active')->checkbox() ?>
-		<?= $activeForm->field($model, 'title') ?>
-		<?= $activeForm->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
+		<?= $form->field($model, 'active')->checkbox() ?>
+		<?= $form->field($model, 'title') ?>
+		<?= $form->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
 			'itemClass' => CategoryPropertyForm::className(),
 			'columns' => [
 				'name',

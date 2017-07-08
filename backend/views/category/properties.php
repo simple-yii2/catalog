@@ -20,14 +20,14 @@ $typesWithValues = CategoryProperty::getTypesWithValues();
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
-<?php $activeForm = ActiveForm::begin([
+<?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 	'fieldConfig' => ['template' => "{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}"],
 ]); ?>
 
 	<fieldset>
-		<?= $activeForm->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
+		<?= $form->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
 			'itemClass' => CategoryPropertyForm::className(),
 			'columns' => [
 				'name',

@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$title = $form->getModel()->code;
+$title = $model->getObject()->code;
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
@@ -15,5 +15,5 @@ $this->params['breadcrumbs'] = [
 <h1><?= Html::encode($title) ?></h1>
 
 <?= $this->render('form', [
-	'form' => $form,
+	'model' => $model,
 ]) ?>
