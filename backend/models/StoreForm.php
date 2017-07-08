@@ -26,33 +26,33 @@ class StoreForm extends Model
 	/**
 	 * @var Store
 	 */
-	private $_model;
+	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param Store|null $model 
+	 * @param Store|null $object 
 	 */
-	public function __construct(Store $model = null, $config = [])
+	public function __construct(Store $object = null, $config = [])
 	{
-		if ($model === null)
-			$model = new Store;
+		if ($object === null)
+			$object = new Store;
 
-		$this->_model = $model;
+		$this->_object = $object;
 
 		//attributes
-		$this->type = $model->type;
-		$this->name = $model->name;
-
-		parent::__construct($config);
+		parent::__construct(array_merge([
+			'type' => $object->type,
+			'name' => $object->name,
+		], $config));
 	}
 
 	/**
-	 * Model getter
+	 * Object getter
 	 * @return Store
 	 */
-	public function getModel()
+	public function getObject()
 	{
-		return $this->_model;
+		return $this->_object;
 	}
 
 	/**
@@ -79,7 +79,7 @@ class StoreForm extends Model
 	}
 
 	/**
-	 * Saving model using model attributes
+	 * Saving object using object attributes
 	 * @return boolean
 	 */
 	public function save()
@@ -87,12 +87,12 @@ class StoreForm extends Model
 		if (!$this->validate())
 			return false;
 
-		$model = $this->_model;
+		$object = $this->_object;
 
-		$model->type = (integer) $this->type;
-		$model->name = $this->name;
+		$object->type = (integer) $this->type;
+		$object->name = $this->name;
 
-		if (!$model->save(false))
+		if (!$object->save(false))
 			return false;
 
 		return true;

@@ -6,14 +6,14 @@ use yii\helpers\Html;
 use cms\catalog\common\models\Store;
 
 ?>
-<?php $f = ActiveForm::begin([
+<?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 ]); ?>
 
 	<fieldset>
-		<?= $f->field($form, 'type')->dropDownList(Store::getTypeNames()) ?>
-		<?= $f->field($form, 'name') ?>
+		<?= $form->field($model, 'type')->dropDownList(Store::getTypeNames()) ?>
+		<?= $form->field($model, 'name') ?>
 	</fieldset>
 
 	<div class="form-group">

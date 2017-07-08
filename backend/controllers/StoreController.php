@@ -48,16 +48,16 @@ class StoreController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$form = new StoreForm;
+		$model = new StoreForm;
 
-		if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 
 			return $this->redirect(['index']);
 		}
 
 		return $this->render('create', [
-			'form' => $form,
+			'model' => $model,
 		]);
 	}
 
@@ -68,20 +68,20 @@ class StoreController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model = Store::findOne($id);
-		if ($model === null)
+		$object = Store::findOne($id);
+		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		$form = new StoreForm($model);
+		$model = new StoreForm($object);
 
-		if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 
 			return $this->redirect(['index']);
 		}
 
 		return $this->render('update', [
-			'form' => $form,
+			'model' => $model,
 		]);
 	}
 
@@ -92,11 +92,11 @@ class StoreController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$model = Store::findOne($id);
-		if ($model === null)
+		$object = Store::findOne($id);
+		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		if ($model->delete())
+		if ($object->delete())
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Item deleted successfully.'));
 
 		return $this->redirect(['index']);
