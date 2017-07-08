@@ -13,6 +13,11 @@ class OfferStoreForm extends Model
 {
 
 	/**
+	 * @var integer
+	 */
+	public $store_id;
+
+	/**
 	 * @var string Name
 	 */
 	public $name;
@@ -47,19 +52,20 @@ class OfferStoreForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		$this->name = $template->name;
-		$this->quantity = $object->quantity;
-
-		parent::__construct($config);
+		parent::__construct(array_merge([
+			'store_id' => $template->id,
+			'name' => $template->name,
+			'quantity' => $object->quantity,
+		], $config));
 	}
 
 	/**
-	 * Store id getter
-	 * @return integer
+	 * Template getter
+	 * @return Store
 	 */
-	public function getStore_id()
+	public function getTemplate()
 	{
-		return $this->_template->id;
+		return $this->_template;
 	}
 
 	/**

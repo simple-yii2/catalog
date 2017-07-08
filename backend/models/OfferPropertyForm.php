@@ -7,10 +7,15 @@ use yii\base\Model;
 
 use cms\catalog\common\models\Offer;
 use cms\catalog\common\models\OfferProperty;
-use cms\catalog\common\models\Property;
+use cms\catalog\common\models\CategoryProperty;
 
 class OfferPropertyForm extends Model
 {
+
+	/**
+	 * @var integer;
+	 */
+	public $property_id;
 
 	/**
 	 * @var string Name
@@ -28,7 +33,7 @@ class OfferPropertyForm extends Model
 	public $value;
 
 	/**
-	 * @var Property
+	 * @var CategoryProperty
 	 */
 	private $_template;
 
@@ -39,10 +44,10 @@ class OfferPropertyForm extends Model
 
 	/**
 	 * @inheritdoc
-	 * @param Property $template 
+	 * @param CategoryProperty $template 
 	 * @param OfferProperty|null $object 
 	 */
-	public function __construct(Property $template, OfferProperty $object = null, $config = [])
+	public function __construct(CategoryProperty $template, OfferProperty $object = null, $config = [])
 	{
 		$this->_template = $template;
 
@@ -52,20 +57,12 @@ class OfferPropertyForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		$this->name = $template->name;
-		$this->values = $template->getValues();
-		$this->value = $object->value;
-
-		parent::__construct($config);
-	}
-
-	/**
-	 * Property id getter
-	 * @return integer
-	 */
-	public function getProperty_id()
-	{
-		return $this->_template->id;
+		parent::__construct(array_merge([
+			'property_id' => $template->id,
+			'name' => $template->name,
+			'values' => $template->getValues(),
+			'value' => $object->value,
+		], $config));
 	}
 
 	/**
@@ -79,7 +76,7 @@ class OfferPropertyForm extends Model
 
 	/**
 	 * Template getter
-	 * @return Property
+	 * @return CategoryProperty
 	 */
 	public function getTemplate()
 	{

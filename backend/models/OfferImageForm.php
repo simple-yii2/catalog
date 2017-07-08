@@ -12,6 +12,11 @@ class OfferImageForm extends Model
 {
 
 	/**
+	 * @var integer|null
+	 */
+	public $id;
+
+	/**
 	 * @var string
 	 */
 	public $file;
@@ -24,44 +29,37 @@ class OfferImageForm extends Model
 	/**
 	 * @var OfferImage
 	 */
-	private $_model;
+	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param OfferImage|null $model 
+	 * @param OfferImage|null $object 
 	 */
-	public function __construct(OfferImage $model = null, $config = [])
+	public function __construct(OfferImage $object = null, $config = [])
 	{
-		if ($model === null)
-			$model = new OfferImage;
+		if ($object === null)
+			$object = new OfferImage;
 
-		$this->_model = $model;
+		$this->_object = $object;
+
+		//file caching
+		Yii::$app->storage->cacheObject($object);
 
 		//attributes
-		$this->file = $model->file;
-		$this->thumb = $model->thumb;
-
-		Yii::$app->storage->cacheObject($model);
-
-		parent::__construct($config);
+		parent::__construct(array_merge([
+			'id' => $object->id,
+			'file' => $object->file,
+			'thumb' => $object->thumb,
+		], $config));
 	}
 
 	/**
-	 * Id getter
-	 * @return integer
-	 */
-	public function getId()
-	{
-		return $this->_model->id;
-	}
-
-	/**
-	 * Model getter
+	 * Object getter
 	 * @return OfferImage
 	 */
-	public function getModel()
+	public function getObject()
 	{
-		return $this->_model;
+		return $this->_object;
 	}
 
 	/**
@@ -85,15 +83,15 @@ class OfferImageForm extends Model
 		if ($runValidation && !$this->validate())
 			return false;
 
-		$model = $this->_model;
+		$object = $this->_object;
 
-		$model->offer_id = $offer->id;
-		$model->file = $this->file;
-		$model->thumb = $this->thumb;
+		$object->offer_id = $offer->id;
+		$object->file = $this->file;
+		$object->thumb = $this->thumb;
 
-		Yii::$app->storage->storeObject($model);
+		Yii::$app->storage->storeObject($object);
 
-		if (!$model->save(false))
+		if (!$object->save(false))
 			return false;
 
 		return true;

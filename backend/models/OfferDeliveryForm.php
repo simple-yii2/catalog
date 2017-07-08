@@ -13,6 +13,11 @@ class OfferDeliveryForm extends Model
 {
 
 	/**
+	 * @var integer
+	 */
+	public $delivery_id;
+
+	/**
 	 * @var string Name
 	 */
 	public $name;
@@ -67,23 +72,15 @@ class OfferDeliveryForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		$this->name = $template->name;
-		$this->active = $object->getIsNewRecord() ? '0' : '1';
-		$this->defaultCost = $object->cost === null ? '1' : '0';
-		$this->cost = $object->cost;
-		$this->defaultDays = $object->days === null ? '1' : '0';
-		$this->days = $object->days;
-
-		parent::__construct($config);
-	}
-
-	/**
-	 * Delivery id getter
-	 * @return integer
-	 */
-	public function getDelivery_id()
-	{
-		return $this->_template->id;
+		parent::__construct(array_merge([
+			'delivery_id' => $template->id,
+			'name' => $template->name,
+			'active' => $object->getIsNewRecord() ? '0' : '1',
+			'defaultCost' => $object->cost === null ? '1' : '0',
+			'cost' => $object->cost,
+			'defaultDays' => $object->days === null ? '1' : '0',
+			'days' => $object->days,
+		], $config));
 	}
 
 	/**

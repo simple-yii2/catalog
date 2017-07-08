@@ -37,18 +37,18 @@ class OfferBarcodeForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		$this->barcode = $object->barcode;
-
-		parent::__construct($config);
+		parent::__construct(array_merge([
+			'barcode' => $object->barcode,
+		], $config));
 	}
 
 	/**
-	 * Id getter
-	 * @return integer|null
+	 * Object getter
+	 * @return OfferBarcode
 	 */
-	public function getId()
+	public function getObject()
 	{
-		return $this->_object->id;
+		return $this->_object;
 	}
 
 	/**

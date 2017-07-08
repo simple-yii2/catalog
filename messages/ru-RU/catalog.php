@@ -65,7 +65,7 @@ return [
 	'Width' => 'Ширина',
 	'Height' => 'Высота',
 	'Weight' => 'Вес',
-	'Quantity' => 'Количество',
+	'Quantity' => 'Остатки',
 
 	'Sales area' => 'Торговый зал',
 	'Pickup point' => 'Пункт выдачи заказов',

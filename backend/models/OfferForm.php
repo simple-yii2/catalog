@@ -24,6 +24,8 @@ use cms\catalog\common\models\Vendor;
 class OfferForm extends Model
 {
 
+	use ArrayAttributeTrait;
+
 	/**
 	 * @var integer Category id
 	 */
@@ -156,31 +158,31 @@ class OfferForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		$this->category_id = $object->category_id;
-		$this->active = $object->active == 0 ? '0' : '1';
-		$this->name = $object->name;
-		$this->model = $object->model;
-		$this->description = $object->description;
-		$this->currency_id = $object->currency_id;
-		$this->price = $object->price;
-		$this->oldPrice = $object->oldPrice;
-		$this->storeAvailable = $object->storeAvailable == 0 ? '0' : '1';
-		$this->pickupAvailable = $object->pickupAvailable == 0 ? '0' : '1';
-		$this->deliveryAvailable = $object->deliveryAvailable == 0 ? '0' : '1';
-		$this->defaultDelivery = $object->defaultDelivery == 0 ? '0' : '1';
-		$this->vendor_id = $object->vendor_id;
-		$this->countryOfOrigin = $object->countryOfOrigin;
-		$this->length = $object->length;
-		$this->width = $object->width;
-		$this->height = $object->height;
-		$this->weight = $object->weight;
-		$this->barcodes = $object->barcodes;
-		$this->images = $object->images;
-		$this->properties = $object->properties;
-		$this->delivery = $object->delivery;
-		$this->stores = $object->stores;
-
-		parent::__construct($config);
+		parent::__construct(array_merge([
+			'category_id' => $object->category_id,
+			'active' => $object->active == 0 ? '0' : '1',
+			'name' => $object->name,
+			'model' => $object->model,
+			'description' => $object->description,
+			'currency_id' => $object->currency_id,
+			'price' => $object->price,
+			'oldPrice' => $object->oldPrice,
+			'storeAvailable' => $object->storeAvailable == 0 ? '0' : '1',
+			'pickupAvailable' => $object->pickupAvailable == 0 ? '0' : '1',
+			'deliveryAvailable' => $object->deliveryAvailable == 0 ? '0' : '1',
+			'defaultDelivery' => $object->defaultDelivery == 0 ? '0' : '1',
+			'vendor_id' => $object->vendor_id,
+			'countryOfOrigin' => $object->countryOfOrigin,
+			'length' => $object->length,
+			'width' => $object->width,
+			'height' => $object->height,
+			'weight' => $object->weight,
+			'barcodes' => $object->barcodes,
+			'images' => $object->images,
+			'properties' => $object->properties,
+			'delivery' => $object->delivery,
+			'stores' => $object->stores,
+		], $config));
 	}
 
 	/**
@@ -208,33 +210,7 @@ class OfferForm extends Model
 	 */
 	public function setBarcodes($value)
 	{
-		$old = [];
-		foreach ($this->_barcodes as $item) {
-			if ($id = $item->id)
-				$old[$id] = $item;
-		}
-
-		$this->_barcodes = [];
-
-		if (!is_array($value))
-			return;
-
-		foreach ($value as $item) {
-			if ($item instanceof OfferBarcode) {
-				$model = $item;
-				$id = $item->id;
-				$attributes = $item->getAttributes();
-			} else {
-				$model = null;
-				$id = ArrayHelper::getValue($item, 'id');
-				$attributes = $item;
-			}
-
-			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferBarcodeForm($model);
-
-			$formModel->setAttributes($attributes);
-			$this->_barcodes[] = $formModel;
-		}
+		$this->setArrayAttribute('_barcodes', OfferBarcode::className(), OfferBarcodeForm::className(), $value);
 	}
 
 	/**
@@ -253,36 +229,7 @@ class OfferForm extends Model
 	 */
 	public function setImages($value)
 	{
-		//old items
-		$old = [];
-		foreach ($this->_images as $item) {
-			if ($id = $item->id)
-				$old[$id] = $item;
-		}
-
-		//default
-		$this->_images = [];
-
-		if (!is_array($value))
-			return;
-
-		//assign items
-		foreach ($value as $item) {
-			if ($item instanceof OfferImage) {
-				$model = $item;
-				$id = $item->id;
-				$attributes = $item->getAttributes();
-			} else {
-				$model = null;
-				$id = ArrayHelper::getValue($item, 'id');
-				$attributes = $item;
-			}
-
-			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferImageForm($model);
-
-			$formModel->setAttributes($attributes);
-			$this->_images[] = $formModel;
-		}
+		$this->setArrayAttribute('_images', OfferImage::className(), OfferImageForm::className(), $value);
 	}
 
 	/**
@@ -301,52 +248,12 @@ class OfferForm extends Model
 	 */
 	public function setProperties($value)
 	{
-		//check value and make $id=>$item array
-		$items = [];
-		if (is_array($value)) {
-			foreach ($value as $property_id => $item) {
-				if ($item instanceof OfferProperty) {
-					$items[$item->property_id] = $item;
-				} elseif (is_array($item)) {
-					$items[$property_id] = $item;
-				}
-			}
-		}
-
-		//old items
-		$old = [];
-		foreach ($this->_properties as $item) {
-			if ($property_id = $item->property_id)
-				$old[$property_id] = $item;
-		}
-
-		//default
-		$this->_properties = [];
-
+		$templates = [];
 		$category = Category::findOne($this->category_id);
-		if ($category === null)
-			return;
+		if ($category !== null)
+			$templates = array_merge($category->getParentProperties(), $category->properties);
 
-		//assign items
-		foreach (array_merge($category->getParentProperties(), $category->properties) as $template) {
-			$id = $template->id;
-
-			$model = null;
-			$attributes = [];
-
-			$item = ArrayHelper::getValue($items, $id);
-			if ($item instanceof OfferProperty) {
-				$model = $item;
-				$attributes = $item->getAttributes();
-			} elseif (is_array($item)) {
-				$attributes = $item;
-			}
-
-			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferPropertyForm($template, $model);
-
-			$formModel->setAttributes($attributes);
-			$this->_properties[] = $formModel;
-		}
+		$this->SetArrayAttributeWithTemplate('_properties', OfferProperty::className(), OfferPropertyForm::className(), $value, $templates, 'property_id');
 	}
 
 	/**
@@ -365,52 +272,13 @@ class OfferForm extends Model
 	 */
 	public function setDelivery($value)
 	{
-		//check value and make $id=>$item array
-		$items = [];
-		if (is_array($value)) {
-			foreach ($value as $delivery_id => $item) {
-				if ($item instanceof OfferDelivery) {
-					$items[$item->delivery_id] = $item;
-				} elseif (is_array($item)) {
-					$items[$delivery_id] = $item;
-				}
-			}
-		}
+		$templates = Delivery::find()->all();
 
-		//old items
-		$old = [];
-		foreach ($this->_delivery as $item) {
-			if ($delivery_id = $item->delivery_id)
-				$old[$delivery_id] = $item;
-		}
-
-		//default
-		$this->_delivery = [];
-
-
-		//assign items
 		$config = [];
 		if ($this->defaultDelivery != 0)
 			$config['active'] = 1;
-		foreach (Delivery::find()->all() as $template) {
-			$id = $template->id;
 
-			$model = null;
-			$attributes = [];
-
-			$item = ArrayHelper::getValue($items, $id);
-			if ($item instanceof OfferDelivery) {
-				$model = $item;
-				$attributes = $item->getAttributes();
-			} elseif (is_array($item)) {
-				$attributes = $item;
-			}
-
-			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferDeliveryForm($template, $model, $config);
-
-			$formModel->setAttributes($attributes);
-			$this->_delivery[] = $formModel;
-		}
+		$this->SetArrayAttributeWithTemplate('_delivery', OfferDelivery::className(), OfferDeliveryForm::className(), $value, $templates, 'delivery_id', $config);
 	}
 
 	/**
@@ -429,48 +297,9 @@ class OfferForm extends Model
 	 */
 	public function setStores($value)
 	{
-		//check value and make $id=>$item array
-		$items = [];
-		if (is_array($value)) {
-			foreach ($value as $store_id => $item) {
-				if ($item instanceof StoreOffer) {
-					$items[$item->store_id] = $item;
-				} elseif (is_array($item)) {
-					$items[$store_id] = $item;
-				}
-			}
-		}
+		$templates = Store::find()->all();
 
-		//old items
-		$old = [];
-		foreach ($this->_stores as $item) {
-			if ($store_id = $item->store_id)
-				$old[$store_id] = $item;
-		}
-
-		//default
-		$this->_stores = [];
-
-		//assign items
-		foreach (Store::find()->all() as $template) {
-			$id = $template->id;
-
-			$model = null;
-			$attributes = [];
-
-			$item = ArrayHelper::getValue($items, $id);
-			if ($item instanceof StoreOffer) {
-				$model = $item;
-				$attributes = $item->getAttributes();
-			} elseif (is_array($item)) {
-				$attributes = $item;
-			}
-
-			$formModel = array_key_exists($id, $old) ? $old[$id] : new OfferStoreForm($template, $model);
-
-			$formModel->setAttributes($attributes);
-			$this->_stores[] = $formModel;
-		}
+		$this->SetArrayAttributeWithTemplate('_stores', StoreOffer::className(), OfferStoreForm::className(), $value, $templates, 'store_id');
 	}
 
 	/**
@@ -615,9 +444,9 @@ class OfferForm extends Model
 			$old[$item->id] = $item;
 
 		//insert/update
-		foreach ($this->_barcodes as $item) {
-			$item->save($object, false);
-			unset($old[$item->id]);
+		foreach ($this->_barcodes as $model) {
+			$model->save($object, false);
+			unset($old[$model->getObject()->id]);
 		}
 
 		//delete
@@ -638,9 +467,9 @@ class OfferForm extends Model
 			$old[$item->id] = $item;
 
 		//insert/update
-		foreach ($this->_images as $item) {
-			$item->save($object, false);
-			unset($old[$item->id]);
+		foreach ($this->_images as $model) {
+			$model->save($object, false);
+			unset($old[$model->getObject()->id]);
 		}
 
 		//delete
@@ -651,7 +480,7 @@ class OfferForm extends Model
 
 		//object thumb
 		if (!empty($this->_images)) {
-			$object->thumb = $this->_images[0]->getModel()->thumb;
+			$object->thumb = $this->_images[0]->getObject()->thumb;
 			$object->update(false, ['thumb']);
 		}
 	}
@@ -695,10 +524,10 @@ class OfferForm extends Model
 
 		//insert/update
 		if (!$object->defaultDelivery) {
-			foreach ($this->_delivery as $item) {
-				if ($item->active != 0) {
-					$item->save($object, false);
-					unset($old[$item->delivery_id]);
+			foreach ($this->_delivery as $model) {
+				if ($model->active != 0) {
+					$model->save($object, false);
+					unset($old[$model->getTemplate()->id]);
 				}
 			}
 		}
@@ -721,10 +550,10 @@ class OfferForm extends Model
 			$old[$item->store_id] = $item;
 
 		//insert/update
-		foreach ($this->_stores as $item) {
-			if (!empty($item->quantity)) {
-				$item->save($object, false);
-				unset($old[$item->store_id]);
+		foreach ($this->_stores as $model) {
+			if (!empty($model->quantity)) {
+				$model->save($object, false);
+				unset($old[$model->getTemplate()->id]);
 			}
 		}
 

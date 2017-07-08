@@ -6,7 +6,7 @@ use Yii;
 use yii\widgets\InputWidget;
 use yii\helpers\Html;
 
-use cms\catalog\common\models;
+use cms\catalog\common\models\CategoryProperty;
 use cms\catalog\backend\widgets\assets\PropertyAsset;
 
 class Property extends InputWidget
@@ -38,19 +38,19 @@ class Property extends InputWidget
 	public function run()
 	{
 		switch ($this->model->type) {
-			case models\Property::TYPE_BOOLEAN:
+			case CategoryProperty::TYPE_BOOLEAN:
 				echo $this->renderBoolean();
 				break;
 
-			case models\Property::TYPE_INTEGER:
+			case CategoryProperty::TYPE_INTEGER:
 				echo $this->renderInteger();
 				break;
 
-			case models\Property::TYPE_FLOAT:
+			case CategoryProperty::TYPE_FLOAT:
 				echo $this->renderFloat();
 				break;
 
-			case models\Property::TYPE_SELECT:
+			case CategoryProperty::TYPE_SELECT:
 				echo $this->renderSelect();
 				break;
 		}
