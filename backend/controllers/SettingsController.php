@@ -34,16 +34,16 @@ class SettingsController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$form = new SettingsForm(Settings::find()->one());
+		$model = new SettingsForm(Settings::find()->one());
 
-		if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 
 			return $this->refresh();
 		}
 
 		return $this->render('index', [
-			'form' => $form,
+			'model' => $model,
 		]);
 	}
 

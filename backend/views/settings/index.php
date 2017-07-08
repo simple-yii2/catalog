@@ -20,17 +20,17 @@ foreach (Currency::find()->all() as $currency)
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
-<?php $f = ActiveForm::begin([
+<?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 ]); ?>
 
 	<fieldset>
-		<?= $f->field($form, 'defaultCurrency_id')->dropDownList($currencies) ?>
-		<?= $f->field($form, 'vendorImageWidth') ?>
-		<?= $f->field($form, 'vendorImageHeight') ?>
-		<?= $f->field($form, 'offerImageWidth') ?>
-		<?= $f->field($form, 'offerImageHeight') ?>
+		<?= $form->field($model, 'defaultCurrency_id')->dropDownList($currencies) ?>
+		<?= $form->field($model, 'vendorImageWidth') ?>
+		<?= $form->field($model, 'vendorImageHeight') ?>
+		<?= $form->field($model, 'offerImageWidth') ?>
+		<?= $form->field($model, 'offerImageHeight') ?>
 	</fieldset>
 
 	<div class="form-group">

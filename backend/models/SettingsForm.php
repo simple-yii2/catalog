@@ -41,27 +41,27 @@ class SettingsForm extends Model
 	/**
 	 * @var Settings
 	 */
-	private $_model;
+	private $_object;
 
 	/**
 	 * @inheritdoc
-	 * @param Settings|null $model 
+	 * @param Settings|null $object 
 	 */
-	public function __construct(Settings $model = null, $config = [])
+	public function __construct(Settings $object = null, $config = [])
 	{
-		if ($model === null)
-			$model = new Settings;
+		if ($object === null)
+			$object = new Settings;
 
-		$this->_model = $model;
+		$this->_object = $object;
 
 		//attributes
-		$this->defaultCurrency_id = $model->defaultCurrency_id;
-		$this->vendorImageWidth = $model->vendorImageWidth;
-		$this->vendorImageHeight = $model->vendorImageHeight;
-		$this->offerImageWidth = $model->offerImageWidth;
-		$this->offerImageHeight = $model->offerImageHeight;
-
-		parent::__construct($config);
+		parent::__construct(array_merge([
+			'defaultCurrency_id' => $object->defaultCurrency_id,
+			'vendorImageWidth' => $object->vendorImageWidth,
+			'vendorImageHeight' => $object->vendorImageHeight,
+			'offerImageWidth' => $object->offerImageWidth,
+			'offerImageHeight' => $object->offerImageHeight,
+		], $config));
 	}
 
 	/**
@@ -91,7 +91,7 @@ class SettingsForm extends Model
 	}
 
 	/**
-	 * Saving model using model attributes
+	 * Saving object using object attributes
 	 * @return boolean
 	 */
 	public function save()
@@ -99,15 +99,15 @@ class SettingsForm extends Model
 		if (!$this->validate())
 			return false;
 
-		$model = $this->_model;
+		$object = $this->_object;
 
-		$model->defaultCurrency_id = empty($this->defaultCurrency_id) ? null : (integer) $this->defaultCurrency_id;
-		$model->vendorImageWidth = (integer) $this->vendorImageWidth;
-		$model->vendorImageHeight = (integer) $this->vendorImageHeight;
-		$model->offerImageWidth = (integer) $this->offerImageWidth;
-		$model->offerImageHeight = (integer) $this->offerImageHeight;
+		$object->defaultCurrency_id = empty($this->defaultCurrency_id) ? null : (integer) $this->defaultCurrency_id;
+		$object->vendorImageWidth = (integer) $this->vendorImageWidth;
+		$object->vendorImageHeight = (integer) $this->vendorImageHeight;
+		$object->offerImageWidth = (integer) $this->offerImageWidth;
+		$object->offerImageHeight = (integer) $this->offerImageHeight;
 
-		if (!$model->save(false))
+		if (!$object->save(false))
 			return false;
 
 		return true;
