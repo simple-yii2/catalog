@@ -34,6 +34,11 @@ class Module extends \yii\base\Module {
 	public $vendorEnabled = true;
 
 	/**
+	 * @var boolean
+	 */
+	public $barcodeEnabled = true;
+
+	/**
 	 * @inheritdoc
 	 */
 	public function init()

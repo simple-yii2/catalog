@@ -40,7 +40,7 @@ foreach ($query->all() as $item)
 	<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
 	<?php if (Yii::$app->controller->module->vendorEnabled) echo $form->field($model, 'vendor_id')->dropDownList($vendors) ?>
 	<?= $form->field($model, 'countryOfOrigin') ?>
-	<?= $form->field($model, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
+	<?php if (Yii::$app->controller->module->barcodeEnabled) echo $form->field($model, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
 		'itemClass' => OfferBarcodeForm::className(),
 		'columns' => [
 			'barcode',
