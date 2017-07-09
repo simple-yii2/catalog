@@ -44,6 +44,11 @@ class Module extends \yii\base\Module {
 	public $propertiesEnabled = true;
 
 	/**
+	 * @var boolean
+	 */
+	public $deliveryEnabled = true;
+
+	/**
 	 * @inheritdoc
 	 */
 	public function init()
@@ -111,10 +116,13 @@ class Module extends \yii\base\Module {
 		$items = [];
 		$items[] = ['label' => Yii::t('catalog', 'Settings'), 'url' => ["$base/catalog/settings/index"]];
 		$items[] = ['label' => Yii::t('catalog', 'Currencies'), 'url' => ["$base/catalog/currency/index"]];
-		if ($this->vendorEnabled)
+		if ($this->vendorEnabled) {
 			$items[] = ['label' => Yii::t('catalog', 'Vendors'), 'url' => ["$base/catalog/vendor/index"]];
+		}
 		$items[] = ['label' => Yii::t('catalog', 'Stores'), 'url' => ["$base/catalog/store/index"]];
-		$items[] = ['label' => Yii::t('catalog', 'Delivery'), 'url' => ["$base/catalog/delivery/index"]];
+		if ($this->deliveryEnabled) {
+			$items[] = ['label' => Yii::t('catalog', 'Delivery'), 'url' => ["$base/catalog/delivery/index"]];
+		}
 		$items[] = ['label' => Yii::t('catalog', 'Categories'), 'url' => ["$base/catalog/category/index"]];
 		$items[] = ['label' => Yii::t('catalog', 'Offers'), 'url' => ["$base/catalog/offer/index"]];
 

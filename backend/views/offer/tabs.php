@@ -44,11 +44,13 @@ $tabs[] = [
 	'content' => $this->render('form/purchase', ['form' => $form, 'model' => $model]),
 	'active' => $active == 'purchase',
 ];
-$tabs[] = [
-	'label' => Yii::t('catalog', 'Delivery'),
-	'content' => $this->render('form/delivery', ['form' => $form, 'model' => $model]),
-	'active' => $active == 'delivery',
-];
+if (Yii::$app->controller->module->deliveryEnabled) {
+	$tabs[] = [
+		'label' => Yii::t('catalog', 'Delivery'),
+		'content' => $this->render('form/delivery', ['form' => $form, 'model' => $model]),
+		'active' => $active == 'delivery',
+	];
+}
 $tabs[] = [
 	'label' => Yii::t('catalog', 'Recommended'),
 	'content' => $this->render('form/recommended', ['form' => $form, 'model' => $model]),
