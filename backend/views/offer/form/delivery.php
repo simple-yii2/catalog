@@ -39,6 +39,14 @@ $deliveryName = Html::getInputName($offerModel, 'delivery');
 				'attribute' => 'cost',
 				'format' => 'html',
 				'options' => ['style' => 'width: 200px;'],
+				'contentOptions' => function($model, $key, $index, $column) {
+					$error = $model->getFirstError('cost');
+
+					if ($error === null)
+						return [];
+
+					return ['class' => 'has-error', 'title' => $error];
+				},
 				'content' => function($model, $key, $index, $column) use ($offerModel, $deliveryName) {
 					$base = $deliveryName . '[' . $model->delivery_id . ']';
 
@@ -62,6 +70,14 @@ $deliveryName = Html::getInputName($offerModel, 'delivery');
 				'attribute' => 'days',
 				'format' => 'html',
 				'options' => ['style' => 'width: 200px;'],
+				'contentOptions' => function($model, $key, $index, $column) {
+					$error = $model->getFirstError('days');
+
+					if ($error === null)
+						return [];
+
+					return ['class' => 'has-error', 'title' => $error];
+				},
 				'content' => function($model, $key, $index, $column) use ($offerModel, $deliveryName) {
 					$base = $deliveryName . '[' . $model->delivery_id . ']';
 
