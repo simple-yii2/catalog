@@ -56,11 +56,13 @@ $tabs[] = [
 	'content' => $this->render('form/recommended', ['form' => $form, 'model' => $model]),
 	'active' => $active == 'recommended',
 ];
-$tabs[] = [
-	'label' => Yii::t('catalog', 'Quantity'),
-	'content' => $this->render('form/quantity', ['form' => $form, 'model' => $model]),
-	'active' => $active == 'quantity',
-];
+if (Yii::$app->controller->module->storeEnabled) {
+	$tabs[] = [
+		'label' => Yii::t('catalog', 'Quantity'),
+		'content' => $this->render('form/quantity', ['form' => $form, 'model' => $model]),
+		'active' => $active == 'quantity',
+	];
+}
 
 ?>
 <?= Tabs::widget(['items' => $tabs]) ?>
