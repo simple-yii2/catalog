@@ -1,21 +1,25 @@
 <?php
 
 use yii\bootstrap\ActiveForm;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 use cms\catalog\common\models\Settings;
 use dkhlystov\uploadimage\widgets\UploadImage;
 
-$settings = Settings::find()->one();
-if ($settings === null)
-	$settings = new Settings;
+//thumb size
+$module = Yii::$app->controller->module;
+$thumbWidth = ArrayHelper::getValue($module, 'vendorThumbWidth', 100);
+$thumbHeight = ArrayHelper::getValue($module, 'vendorThumbHeight', 100);
 
-$imageSize = '<br><span class="label label-default">' . $settings->vendorImageWidth . '&times' . $settings->vendorImageHeight . '</span>';
+//label suffix
+$imageSize = '<br><span class="label label-default">' . $thumbWidth . '&times' . $thumbHeight . '</span>';
 
-$width = $settings->vendorImageWidth;
+//widget size
+$width = $thumbWidth;
 if ($width < 20) $width = 20;
 if ($width > 282) $width = 282;
-$height = $settings->vendorImageHeight / $settings->vendorImageWidth * $width;
+$height = $thumbHeight / $thumbWidth * $width;
 if ($height < 20) $height = 20;
 
 ?>
@@ -30,8 +34,8 @@ if ($height < 20) $height = 20;
 		<?= $form->field($model, 'url') ?>
 		<?= $form->field($model, 'file')->label($model->getAttributeLabel('file') . $imageSize)->widget(UploadImage::className(), [
 			'thumbAttribute' => 'thumb',
-			'thumbWidth' => $settings->vendorImageWidth,
-			'thumbHeight' => $settings->vendorImageHeight,
+			'thumbWidth' => $thumbWidth,
+			'thumbHeight' => $thumbHeight,
 			'width' => $width,
 			'height' => $height,
 		]) ?>

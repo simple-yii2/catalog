@@ -9,6 +9,26 @@ use cms\catalog\common\models\Category;
 class Module extends \yii\base\Module {
 
 	/**
+	 * @var integer;
+	 */
+	public $vendorThumbWidth = 100;
+
+	/**
+	 * @var integer;
+	 */
+	public $vendorThumbHeight = 100;
+
+	/**
+	 * @var integer;
+	 */
+	public $offerThumbWidth = 360;
+
+	/**
+	 * @var integer;
+	 */
+	public $offerThumbHeight = 270;
+
+	/**
 	 * @inheritdoc
 	 */
 	public function init()

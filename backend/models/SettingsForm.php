@@ -19,26 +19,6 @@ class SettingsForm extends Model
 	public $defaultCurrency_id;
 
 	/**
-	 * @var integer Rate
-	 */
-	public $vendorImageWidth;
-
-	/**
-	 * @var integer Rate
-	 */
-	public $vendorImageHeight;
-
-	/**
-	 * @var integer Rate
-	 */
-	public $offerImageWidth;
-
-	/**
-	 * @var integer Rate
-	 */
-	public $offerImageHeight;
-
-	/**
 	 * @var Settings
 	 */
 	private $_object;
@@ -57,10 +37,6 @@ class SettingsForm extends Model
 		//attributes
 		parent::__construct(array_merge([
 			'defaultCurrency_id' => $object->defaultCurrency_id,
-			'vendorImageWidth' => $object->vendorImageWidth,
-			'vendorImageHeight' => $object->vendorImageHeight,
-			'offerImageWidth' => $object->offerImageWidth,
-			'offerImageHeight' => $object->offerImageHeight,
 		], $config));
 	}
 
@@ -71,10 +47,6 @@ class SettingsForm extends Model
 	{
 		return [
 			'defaultCurrency_id' => Yii::t('catalog', 'Default currency'),
-			'vendorImageWidth' => Yii::t('catalog', 'Vendor image width'),
-			'vendorImageHeight' => Yii::t('catalog', 'Vendor image height'),
-			'offerImageWidth' => Yii::t('catalog', 'Offer image width'),
-			'offerImageHeight' => Yii::t('catalog', 'Offer image height'),
 		];
 	}
 
@@ -85,13 +57,11 @@ class SettingsForm extends Model
 	{
 		return [
 			['defaultCurrency_id', 'integer'],
-			[['vendorImageWidth', 'vendorImageHeight', 'offerImageWidth', 'offerImageHeight'], 'integer', 'min' => 20],
-			[['vendorImageWidth', 'vendorImageHeight', 'offerImageWidth', 'offerImageHeight'], 'required'],
 		];
 	}
 
 	/**
-	 * Saving object using object attributes
+	 * Save
 	 * @return boolean
 	 */
 	public function save()
@@ -102,10 +72,6 @@ class SettingsForm extends Model
 		$object = $this->_object;
 
 		$object->defaultCurrency_id = empty($this->defaultCurrency_id) ? null : (integer) $this->defaultCurrency_id;
-		$object->vendorImageWidth = (integer) $this->vendorImageWidth;
-		$object->vendorImageHeight = (integer) $this->vendorImageHeight;
-		$object->offerImageWidth = (integer) $this->offerImageWidth;
-		$object->offerImageHeight = (integer) $this->offerImageHeight;
 
 		if (!$object->save(false))
 			return false;

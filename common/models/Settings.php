@@ -15,17 +15,4 @@ class Settings extends ActiveRecord
 		return 'CatalogSettings';
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function __construct($config = [])
-	{
-		parent::__construct(array_merge([
-			'vendorImageWidth' => 100,
-			'vendorImageHeight' => 100,
-			'offerImageWidth' => 360,
-			'offerImageHeight' => 270,
-		], $config));
-	}
-
 }

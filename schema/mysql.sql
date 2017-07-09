@@ -2,10 +2,6 @@ create table if not exists `CatalogSettings`
 (
 	`id` int(10) not null auto_increment,
 	`defaultCurrency_id` int(10) default null,
-	`vendorImageWidth` int(10) default '100',
-	`vendorImageHeight` int(10) default '100',
-	`offerImageWidth` int(10) default '360',
-	`offerImageHeight` int(10) default '270',
 	primary key (`id`)
 ) engine InnoDB;
 

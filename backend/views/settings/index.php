@@ -27,10 +27,6 @@ foreach (Currency::find()->all() as $currency)
 
 	<fieldset>
 		<?= $form->field($model, 'defaultCurrency_id')->dropDownList($currencies) ?>
-		<?= $form->field($model, 'vendorImageWidth') ?>
-		<?= $form->field($model, 'vendorImageHeight') ?>
-		<?= $form->field($model, 'offerImageWidth') ?>
-		<?= $form->field($model, 'offerImageHeight') ?>
 	</fieldset>
 
 	<div class="form-group">

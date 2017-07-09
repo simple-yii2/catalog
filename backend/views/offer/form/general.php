@@ -1,15 +1,18 @@
 <?php
 
+use yii\helpers\ArrayHelper;
+
 use cms\catalog\backend\models\OfferBarcodeForm;
 use cms\catalog\common\models\Vendor;
 use dkhlystov\uploadimage\widgets\UploadImages;
 
-$settings = Yii::$app->params['catalogSettings'];
+//thumb size
+$module = Yii::$app->controller->module;
+$thumbWidth = ArrayHelper::getValue($module, 'offerThumbWidth', 100);
+$thumbHeight = ArrayHelper::getValue($module, 'offerThumbHeight', 100);
 
-//images
-$width = $settings->offerImageWidth;
-$height = $settings->offerImageHeight;
-$imageSize = '<br><span class="label label-default">' . $width . '&times' . $height . '</span>';
+//label suffix
+$imageSize = '<br><span class="label label-default">' . $thumbWidth . '&times' . $thumbHeight . '</span>';
 
 //vendors
 $vendors = ['' => ''];
@@ -24,8 +27,8 @@ foreach ($query->all() as $item)
 		'id' => 'goods-images',
 		'fileKey' => 'file',
 		'thumbKey' => 'thumb',
-		'thumbWidth' => $width,
-		'thumbHeight' => $height,
+		'thumbWidth' => $thumbWidth,
+		'thumbHeight' => $thumbHeight,
 		'data' => function($item) {
 			return [
 				'id' => $item['id'],

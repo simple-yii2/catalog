@@ -26,10 +26,6 @@ return [
 	'Cannot use "Old price" if "Price" is not set.' => 'Нельзя использовать «Старую цену», если «Цена» не установлена.',
 
 	'Default currency' => 'Валюта по-умолчанию',
-	'Vendor image width' => 'Ширина изображения производиталя',
-	'Vendor image height' => 'Высота изображения производиталя',
-	'Offer image width' => 'Ширина изображения предложения',
-	'Offer image height' => 'Высота изображения предложения',
 	'Code' => 'Код',
 	'Rate' => 'Курс',
 	'Name' => 'Наименование',
