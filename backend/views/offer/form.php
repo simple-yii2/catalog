@@ -9,6 +9,29 @@ use cms\catalog\backend\assets\OfferFormAsset;
 
 OfferFormAsset::register($this);
 
+//fields by tab for determine tab with error
+$tabFields = [
+	'properties' => ['category_id', 'properties[]', 'length', 'width', 'height', 'weight'],
+	'purchase' => ['currency_id', 'price', 'oldPrice', 'storeAvailable', 'pickupAvailable', 'deliveryAvailable'],
+	'delivery' => ['delivery[]'],
+	'recommended' => ['recommended[]'],
+	'quantity' => ['stores[]'],
+];
+
+//active tab (if there are errors, make tab with first error active)
+$active = 'general';
+$errorFields = array_keys($model->getFirstErrors());
+foreach ($tabFields as $tab => $fields) {
+	foreach ($fields as $field) {
+		if (in_array($field, $errorFields)) {
+			$active = $tab;
+			break;
+		}
+	}
+	if ($active != 'general')
+		break;
+}
+
 ?>
 <?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
@@ -22,32 +45,32 @@ OfferFormAsset::register($this);
 		[
 			'label' => Yii::t('catalog', 'General'),
 			'content' => $this->render('form/general', ['form' => $form, 'model' => $model]),
-			'active' => true,
+			'active' => $active == 'general',
 		],
 		[
 			'label' => Yii::t('catalog', 'Properties'),
 			'content' => $this->render('form/properties', ['form' => $form, 'model' => $model]),
-			'active' => false,
+			'active' => $active == 'properties',
 		],
 		[
 			'label' => Yii::t('catalog', 'Purchase'),
 			'content' => $this->render('form/purchase', ['form' => $form, 'model' => $model]),
-			'active' => false,
+			'active' => $active == 'purchase',
 		],
 		[
 			'label' => Yii::t('catalog', 'Delivery'),
 			'content' => $this->render('form/delivery', ['form' => $form, 'model' => $model]),
-			'active' => false,
+			'active' => $active == 'delivery',
 		],
 		[
 			'label' => Yii::t('catalog', 'Recommended'),
 			'content' => $this->render('form/recommended', ['form' => $form, 'model' => $model]),
-			'active' => false,
+			'active' => $active == 'recommended',
 		],
 		[
 			'label' => Yii::t('catalog', 'Quantity'),
 			'content' => $this->render('form/quantity', ['form' => $form, 'model' => $model]),
-			'active' => false,
+			'active' => $active == 'quantity',
 		],
 	]]) ?>
 
