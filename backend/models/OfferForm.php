@@ -281,11 +281,11 @@ class OfferForm extends Model
 	{
 		$templates = Delivery::find()->all();
 
-		$config = [];
-		if ($this->defaultDelivery != 0)
-			$config['active'] = 1;
-
-		$this->SetArrayAttributeWithTemplate('_delivery', OfferDelivery::className(), OfferDeliveryForm::className(), $value, $templates, 'delivery_id', $config);
+		$this->SetArrayAttributeWithTemplate('_delivery', OfferDelivery::className(), OfferDeliveryForm::className(), $value, $templates, 'delivery_id');
+		if ($this->defaultDelivery != 0) {
+			foreach ($this->_delivery as $model)
+				$model->active = 1;
+		}
 	}
 
 	/**

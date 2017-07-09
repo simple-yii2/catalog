@@ -58,7 +58,7 @@ trait ArrayAttributeTrait
 		}
 	}
 
-	protected function SetArrayAttributeWithTemplate($attribute, $objectClass, $modelClass, $value, $templates, $key, $config = [])
+	protected function SetArrayAttributeWithTemplate($attribute, $objectClass, $modelClass, $value, $templates, $key)
 	{
 		//check value and make $id=>$item array
 		//make shure that keys of $value array corresponds $key when render form
@@ -103,7 +103,7 @@ trait ArrayAttributeTrait
 			}
 
 			//determine model
-			$model = array_key_exists($id, $old) ? $old[$id] : new $modelClass($template, $object, $config);
+			$model = array_key_exists($id, $old) ? $old[$id] : new $modelClass($template, $object);
 
 			//attributes
 			$model->setAttributes($attributes);
