@@ -19,6 +19,10 @@ foreach ($query->all() as $item) {
 //properties
 $propertiesName = Html::getInputName($model, 'properties');
 
+//input templates
+$templateLength = '<div class="input-group">{input}<span class="input-group-addon">' . Html::encode(Yii::t('catalog', 'mm')) . '</span></div>';
+$templateWeight = '<div class="input-group">{input}<span class="input-group-addon">' . Html::encode(Yii::t('catalog', 'kg')) . '</span></div>';
+
 ?>
 <fieldset>
 	<?= $form->field($model, 'category_id')->dropDownList($categories) ?>
@@ -30,8 +34,8 @@ $propertiesName = Html::getInputName($model, 'properties');
 			]);
 		} ?>
 	</div>
-	<?= $form->field($model, 'length') ?>
-	<?= $form->field($model, 'width') ?>
-	<?= $form->field($model, 'height') ?>
-	<?= $form->field($model, 'weight') ?>
+	<?= $form->field($model, 'length', ['inputTemplate' => $templateLength]) ?>
+	<?= $form->field($model, 'width', ['inputTemplate' => $templateLength]) ?>
+	<?= $form->field($model, 'height', ['inputTemplate' => $templateLength]) ?>
+	<?= $form->field($model, 'weight', ['inputTemplate' => $templateWeight]) ?>
 </fieldset>
