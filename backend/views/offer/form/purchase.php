@@ -12,6 +12,9 @@ $options = [];
 if (empty($model->currency_id))
 	$options['disabled'] = true;
 
+//module
+$module = Yii::$app->controller->module;
+
 ?>
 <fieldset>
 	<?= $form->field($model, 'currency_id')->dropDownList($currencies) ?>
@@ -19,5 +22,5 @@ if (empty($model->currency_id))
 	<?= $form->field($model, 'oldPrice')->textInput($options) ?>
 	<?= $form->field($model, 'storeAvailable')->checkbox() ?>
 	<?= $form->field($model, 'pickupAvailable')->checkbox() ?>
-	<?= $form->field($model, 'deliveryAvailable')->checkbox() ?>
+	<?php if ($module->deliveryEnabled) echo $form->field($model, 'deliveryAvailable')->checkbox() ?>
 </fieldset>
