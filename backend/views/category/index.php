@@ -18,7 +18,7 @@ $this->params['breadcrumbs'] = [
 
 <div class="btn-toolbar" role="toolbar">
 	<?= Html::a(Yii::t('catalog', 'Create'), ['create'], ['class' => 'btn btn-primary']) ?>
-	<?= Html::a(Yii::t('catalog', 'Common properties'), ['properties'], ['class' => 'btn btn-primary']) ?>
+	<?php if (Yii::$app->controller->module->propertiesEnabled) echo Html::a(Yii::t('catalog', 'Common properties'), ['properties'], ['class' => 'btn btn-primary']) ?>
 </div>
 
 <?= NestedTreeGrid::widget([

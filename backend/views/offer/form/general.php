@@ -3,6 +3,7 @@
 use yii\helpers\ArrayHelper;
 
 use cms\catalog\backend\models\OfferBarcodeForm;
+use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Vendor;
 use dkhlystov\uploadimage\widgets\UploadImages;
 
@@ -13,6 +14,14 @@ $thumbHeight = ArrayHelper::getValue($module, 'offerThumbHeight', 100);
 
 //label suffix
 $imageSize = '<br><span class="label label-default">' . $thumbWidth . '&times' . $thumbHeight . '</span>';
+
+//categories
+$categories = ['' => ''];
+$query = Category::find()->orderBy(['lft' => SORT_ASC]);
+foreach ($query->all() as $item) {
+	if ($item->isLeaf() && $item->active)
+		$categories[$item->id] = $item->path;
+}
 
 //vendors
 $vendors = ['' => ''];
@@ -35,6 +44,7 @@ foreach ($query->all() as $item)
 			];
 		},
 	]) ?>
+	<?= $form->field($model, 'category_id')->dropDownList($categories) ?>
 	<?= $form->field($model, 'name') ?>
 	<?= $form->field($model, 'model') ?>
 	<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>

@@ -39,6 +39,11 @@ class Module extends \yii\base\Module {
 	public $barcodeEnabled = true;
 
 	/**
+	 * @var boolean
+	 */
+	public $propertiesEnabled = true;
+
+	/**
 	 * @inheritdoc
 	 */
 	public function init()

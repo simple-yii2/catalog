@@ -20,7 +20,7 @@ $typesWithValues = CategoryProperty::getTypesWithValues();
 	<fieldset>
 		<?= $form->field($model, 'active')->checkbox() ?>
 		<?= $form->field($model, 'title') ?>
-		<?= $form->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
+		<?php if (Yii::$app->controller->module->propertiesEnabled) echo $form->field($model, 'properties')->widget('dkhlystov\widgets\ArrayInput', [
 			'itemClass' => CategoryPropertyForm::className(),
 			'columns' => [
 				'name',
