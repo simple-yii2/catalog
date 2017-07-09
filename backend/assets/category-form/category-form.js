@@ -26,6 +26,7 @@ $(function() {
 		$modal.find('.btn-modal-add').text($properties.data('modalAdd')).on('click', addClick);
 		$modal.find('.btn-modal-ok').text($properties.data('modalOk')).on('click', saveClick);
 		$modal.find('.btn-modal-cancel').text($properties.data('modalCancel'));
+		$table.on('click', 'a', removeClick);
 
 		$input.nextAll('input').each(function() {
 			addTableRow($table, this.value);
@@ -46,6 +47,12 @@ $(function() {
 	function addClick() {
 		var $table = $(this).closest('.modal').find('table');
 		addTableRow($table, '');
+		$table.find('input:last').focus();
+	};
+
+	function removeClick(e) {
+		e.preventDefault();
+		$(this).closest('tr').remove();
 	};
 
 	function saveClick() {
