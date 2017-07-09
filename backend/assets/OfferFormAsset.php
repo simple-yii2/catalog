@@ -11,6 +11,10 @@ class OfferFormAsset extends AssetBundle
 		'offer-form.js',
 	];
 
+	public $css = [
+		'offer-form.css',
+	];
+
 	public $depends = [
 		'yii\web\JqueryAsset',
 	];
