@@ -31,6 +31,16 @@ class OfferController extends Controller
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function beforeAction($action)
+	{
+		$this->loadSettings();
+
+		return true;
+	}
+
+	/**
 	 * List
 	 * @return string
 	 */
@@ -47,8 +57,6 @@ class OfferController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$this->loadSettings();
-
 		$model = new OfferForm;
 
 		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
@@ -70,8 +78,6 @@ class OfferController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$this->loadSettings();
-
 		$object = Offer::findOne($id);
 		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
@@ -190,8 +196,6 @@ class OfferController extends Controller
 	 */
 	public function actionRecommendedAdd($id, $recommended_id)
 	{
-		$this->loadSettings();
-
 		$object = Offer::findOne($id);
 		if ($object === null)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
