@@ -393,13 +393,9 @@ class OfferForm extends Model
 			['description', 'string', 'max' => 1000],
 			[['price', 'oldPrice'], 'double'],
 			['oldPrice', 'compare', 'compareAttribute' => 'price', 'operator' => '>', 'type' => 'number'],
-			['oldPrice', function() {
-				if (empty($this->price))
-					$this->addError('oldPrice', Yii::t('catalog', 'Cannot use "Old price" if "Price" is not set.'));
-			}],
 			[['length', 'width', 'height'], 'integer', 'min' => 1],
 			['weight', 'double', 'min' => 0.001],
-			[['category_id', 'name'], 'required'],
+			[['category_id', 'name', 'price'], 'required'],
 			[['barcodes', 'images', 'properties', 'delivery', 'stores', 'recommended'], function($attribute, $params) {
 				$hasError = false;
 				foreach ($this->$attribute as $model) {

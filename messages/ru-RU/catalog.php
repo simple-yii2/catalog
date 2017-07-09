@@ -23,7 +23,6 @@ return [
 	'Item deleted successfully.' => 'Элемент успешно удален.',
 	'The value is incorrect.' => 'Значение указано неверно.',
 	'Operation not permitted.' => 'Операция недопустима.',
-	'Cannot use "Old price" if "Price" is not set.' => 'Нельзя использовать «Старую цену», если «Цена» не установлена.',
 
 	'Default currency' => 'Валюта по-умолчанию',
 	'Code' => 'Код',
