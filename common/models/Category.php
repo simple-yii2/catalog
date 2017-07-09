@@ -125,7 +125,7 @@ class Category extends ActiveRecord
 
 		$path = '';
 
-		if ($parent !== null)
+		if ($parent !== null && !$parent->isRoot())
 			$path = $parent->path;
 
 		if (!empty($path))
