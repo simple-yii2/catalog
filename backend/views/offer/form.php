@@ -40,6 +40,11 @@ OfferFormAsset::register($this);
 			'active' => false,
 		],
 		[
+			'label' => Yii::t('catalog', 'Recommended'),
+			'content' => $this->render('form/recommended', ['form' => $form, 'model' => $model]),
+			'active' => false,
+		],
+		[
 			'label' => Yii::t('catalog', 'Quantity'),
 			'content' => $this->render('form/quantity', ['form' => $form, 'model' => $model]),
 			'active' => false,

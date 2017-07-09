@@ -83,7 +83,7 @@ class Offer extends ActiveRecord
 	 */
 	public function getRecommended()
 	{
-		return $this->hasMany(OfferRecommended::className(), ['offer_id' => 'id']);
+		return $this->hasMany(Offer::className(), ['id' => 'recommended_id'])->viaTable('CatalogOfferRecommended', ['offer_id' => 'id']);
 	}
 
 	/**

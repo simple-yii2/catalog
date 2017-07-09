@@ -66,6 +66,7 @@ return [
 	'Height' => 'Высота',
 	'Weight' => 'Вес',
 	'Quantity' => 'Остатки',
+	'Recommended' => 'Рекомендации',
 
 	'Sales area' => 'Торговый зал',
 	'Pickup point' => 'Пункт выдачи заказов',
@@ -83,4 +84,6 @@ return [
 	'Cancel' => 'Отмена',
 	'Save' => 'Сохранить',
 	'Create' => 'Добавить',
+	'Search' => 'Поиск',
+	'Delete' => 'Удалить',
 ];

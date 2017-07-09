@@ -14,6 +14,7 @@ use cms\catalog\common\models\OfferBarcode;
 use cms\catalog\common\models\OfferImage;
 use cms\catalog\common\models\OfferProperty;
 use cms\catalog\common\models\OfferDelivery;
+use cms\catalog\common\models\OfferRecommended;
 use cms\catalog\common\models\Store;
 use cms\catalog\common\models\StoreOffer;
 use cms\catalog\common\models\Vendor;
@@ -142,6 +143,11 @@ class OfferForm extends Model
 	private $_stores = [];
 
 	/**
+	 * @var OfferRecommendedForm[] Recommended
+	 */
+	private $_recommended = [];
+
+	/**
 	 * @var Offer
 	 */
 	private $_object;
@@ -182,6 +188,7 @@ class OfferForm extends Model
 			'properties' => $object->properties,
 			'delivery' => $object->delivery,
 			'stores' => $object->stores,
+			'recommended' => $object->recommended,
 		], $config));
 	}
 
@@ -303,6 +310,41 @@ class OfferForm extends Model
 	}
 
 	/**
+	 * Recommended getter
+	 * @return OfferRecommendedForm[]
+	 */
+	public function getRecommended()
+	{
+		return $this->_recommended;
+	}
+
+	/**
+	 * Recommended setter
+	 * @param OfferRecommended[]|array[] $value 
+	 * @return void
+	 */
+	public function setRecommended($value)
+	{
+		//if there are arrays to set, preload objects
+		$items = [];
+		$ids = [];
+		foreach ($value as $item) {
+			$id = ArrayHelper::getValue($item, 'id');
+			if ($id !== null) {
+				$items[$id] = $item;
+				if (is_array($item))
+					$ids[] = $id;
+			}
+		}
+		if (!empty($ids)) {
+			foreach (Offer::findAll($ids) as $object)
+				$items[$object->id] = $object;
+		}
+
+		$this->setArrayAttribute('_recommended', Offer::className(), OfferRecommendedForm::className(), $items);
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function attributes()
@@ -353,10 +395,10 @@ class OfferForm extends Model
 			[['length', 'width', 'height'], 'integer', 'min' => 1],
 			['weight', 'double', 'min' => 0.001],
 			[['category_id', 'name'], 'required'],
-			[['barcodes', 'images', 'properties', 'delivery', 'stores'], function($attribute, $params) {
+			[['barcodes', 'images', 'properties', 'delivery', 'stores', 'recommended'], function($attribute, $params) {
 				$hasError = false;
-				foreach ($this->$attribute as $formModel) {
-					if (!$formModel->validate())
+				foreach ($this->$attribute as $model) {
+					if (!$model->validate())
 						$hasError = true;
 				}
 
@@ -427,6 +469,7 @@ class OfferForm extends Model
 		$this->saveProperties();
 		$this->saveDelivery();
 		$this->saveStores();
+		$this->saveRecommended();
 
 		return true;
 	}
@@ -560,6 +603,33 @@ class OfferForm extends Model
 		//delete
 		foreach ($old as $item)
 			$item->delete();
+	}
+
+	/**
+	 * Save recommended
+	 * @return void
+	 */
+	private function saveRecommended()
+	{
+		$object = $this->_object;
+
+		$old = [];
+		foreach ($object->recommended as $item)
+			$old[$item->id] = $item;
+
+		//insert/update
+		foreach ($this->_recommended as $model) {
+			$item = $model->getObject();
+			if (array_key_exists($item->id, $old)) {
+				unset($old[$item->id]);
+			} else {
+				$object->link('recommended', $item);
+			}
+		}
+
+		//delete
+		foreach ($old as $item)
+			$object->unlink('recommended', $item, true);
 	}
 
 }

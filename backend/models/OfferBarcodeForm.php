@@ -5,7 +5,6 @@ namespace cms\catalog\backend\models;
 use Yii;
 use yii\base\Model;
 
-use helpers\Translit;
 use cms\catalog\common\models\Offer;
 use cms\catalog\common\models\OfferBarcode;
 

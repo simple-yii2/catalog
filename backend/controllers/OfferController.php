@@ -4,6 +4,7 @@ namespace cms\catalog\backend\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\web\Controller;
 
 use cms\catalog\backend\models\OfferForm;
@@ -156,6 +157,54 @@ class OfferController extends Controller
 
 		return $this->renderAjax('form', [
 			'model' => $model,
+		]);
+	}
+
+	/**
+	 * Offer autocomplete
+	 * @return string
+	 */
+	public function actionRecommendedOffer()
+	{
+		$query = Offer::find()
+			->andFilterWhere(['like', 'name', Yii::$app->getRequest()->get('term')])
+			->orderBy(['name' => SORT_ASC])
+			->limit(10);
+
+		$items = [];
+		foreach ($query->all() as $object) {
+			$items[] = [
+				'id' => $object->id,
+				'label' => $object->name,
+			];
+		}
+
+		return Json::encode($items);
+	}
+
+	/**
+	 * Add recommended and render it
+	 * @param integer $id 
+	 * @param integer $recommended_id 
+	 * @return string
+	 */
+	public function actionRecommendedAdd($id, $recommended_id)
+	{
+		$this->loadSettings();
+
+		$object = Offer::findOne($id);
+		if ($object === null)
+			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
+
+		$item = Offer::findOne($recommended_id);
+		if ($item === null)
+			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
+
+		$model = new OfferForm($object);
+		$model->recommended = [$item];
+
+		return Json::encode([
+			'content' => $this->renderAjax('form', ['model' => $model]),
 		]);
 	}
 
