@@ -4,6 +4,7 @@ use yii\bootstrap\Tabs;
 
 //fields by tab for determine tab with error
 $tabFields = [
+	'general' => ['active', 'images[]', 'category_id', 'name', 'model', 'description', 'vendor_id', 'countryOfOrigin', 'barcodes[]'],
 	'properties' => ['category_id', 'properties[]', 'length', 'width', 'height', 'weight'],
 	'purchase' => ['currency_id', 'price', 'oldPrice', 'storeAvailable', 'pickupAvailable', 'deliveryAvailable'],
 	'delivery' => ['delivery[]'],
@@ -12,7 +13,7 @@ $tabFields = [
 ];
 
 //active tab (if there are errors, make tab with first error active)
-$active = 'general';
+$active = '';
 $errorFields = array_keys($model->getFirstErrors());
 foreach ($tabFields as $tab => $fields) {
 	foreach ($fields as $field) {
@@ -21,45 +22,47 @@ foreach ($tabFields as $tab => $fields) {
 			break;
 		}
 	}
-	if ($active != 'general')
+	if (!empty($active))
 		break;
 }
+if (empty($active))
+	$active = 'general';
 
 //tabs
 $tabs = [];
 $tabs[] = [
 	'label' => Yii::t('catalog', 'General'),
-	'content' => $this->render('form/general', ['form' => $form, 'model' => $model]),
+	'content' => $this->render('general', ['form' => $form, 'model' => $model]),
 	'active' => $active == 'general',
 ];
 if (Yii::$app->controller->module->propertiesEnabled) {
 	$tabs[] = [
 		'label' => Yii::t('catalog', 'Properties'),
-		'content' => $this->render('form/properties', ['form' => $form, 'model' => $model]),
+		'content' => $this->render('properties', ['form' => $form, 'model' => $model]),
 		'active' => $active == 'properties',
 	];
 }
 $tabs[] = [
 	'label' => Yii::t('catalog', 'Purchase'),
-	'content' => $this->render('form/purchase', ['form' => $form, 'model' => $model]),
+	'content' => $this->render('purchase', ['form' => $form, 'model' => $model]),
 	'active' => $active == 'purchase',
 ];
 if (Yii::$app->controller->module->deliveryEnabled) {
 	$tabs[] = [
 		'label' => Yii::t('catalog', 'Delivery'),
-		'content' => $this->render('form/delivery', ['form' => $form, 'model' => $model]),
+		'content' => $this->render('delivery', ['form' => $form, 'model' => $model]),
 		'active' => $active == 'delivery',
 	];
 }
 $tabs[] = [
 	'label' => Yii::t('catalog', 'Recommended'),
-	'content' => $this->render('form/recommended', ['form' => $form, 'model' => $model]),
+	'content' => $this->render('recommended', ['form' => $form, 'model' => $model]),
 	'active' => $active == 'recommended',
 ];
 if (Yii::$app->controller->module->storeEnabled) {
 	$tabs[] = [
 		'label' => Yii::t('catalog', 'Quantity'),
-		'content' => $this->render('form/quantity', ['form' => $form, 'model' => $model]),
+		'content' => $this->render('quantity', ['form' => $form, 'model' => $model]),
 		'active' => $active == 'quantity',
 	];
 }

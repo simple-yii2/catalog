@@ -328,12 +328,14 @@ class OfferForm extends Model
 		//if there are arrays to set, preload objects
 		$items = [];
 		$ids = [];
-		foreach ($value as $item) {
-			$id = ArrayHelper::getValue($item, 'id');
-			if ($id !== null) {
-				$items[$id] = $item;
-				if (is_array($item))
-					$ids[] = $id;
+		if (is_array($value)) {
+			foreach ($value as $item) {
+				$id = ArrayHelper::getValue($item, 'id');
+				if ($id !== null) {
+					$items[$id] = $item;
+					if (is_array($item))
+						$ids[] = $id;
+				}
 			}
 		}
 		if (!empty($ids)) {

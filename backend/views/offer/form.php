@@ -17,7 +17,7 @@ OfferFormAsset::register($this);
 	],
 ]); ?>
 
-	<?= $this->render('tabs', ['form' => $form, 'model' => $model]) ?>
+	<?= $this->render('form/tabs', ['form' => $form, 'model' => $model]) ?>
 
 	<div class="form-group">
 		<div class="col-sm-offset-3 col-sm-6">
