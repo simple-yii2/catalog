@@ -6,6 +6,7 @@ use cms\catalog\backend\models\OfferBarcodeForm;
 use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Vendor;
 use dkhlystov\uploadimage\widgets\UploadImages;
+use dkhlystov\widgets\Chosen;
 
 //thumb size
 $module = Yii::$app->controller->module;
@@ -44,7 +45,7 @@ foreach ($query->all() as $item)
 			];
 		},
 	]) ?>
-	<?= $form->field($model, 'category_id')->dropDownList($categories) ?>
+	<?= $form->field($model, 'category_id')->widget(Chosen::className(), ['items' => $categories]) ?>
 	<?= $form->field($model, 'name') ?>
 	<?= $form->field($model, 'model') ?>
 	<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>

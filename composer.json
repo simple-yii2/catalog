@@ -17,7 +17,8 @@
         "dkhlystov/yii2-translit": "*",
         "dkhlystov/yii2-arrayinput": "*",
         "dkhlystov/yii2-storage": "*",
-        "dkhlystov/yii2-uploadimage": "*"
+        "dkhlystov/yii2-uploadimage": "*",
+        "dkhlystov/yii2-chosen": "*"
     },
     "autoload": {
         "psr-4": {
