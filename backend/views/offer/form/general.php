@@ -53,7 +53,11 @@ foreach ($query->all() as $item)
 	<?= $form->field($model, 'name') ?>
 	<?= $form->field($model, 'model') ?>
 	<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
-	<?php if (Yii::$app->controller->module->vendorEnabled) echo $form->field($model, 'vendor_id')->dropDownList($vendors) ?>
+	<?php if (Yii::$app->controller->module->vendorEnabled) echo $form->field($model, 'vendor_id')->widget(Chosen::className(), [
+		'items' => $vendors,
+		'placeholder' => ' ',
+		'noResultText' => Yii::t('catalog', 'No results matched'),
+	]) ?>
 	<?= $form->field($model, 'countryOfOrigin') ?>
 	<?php if (Yii::$app->controller->module->barcodeEnabled) echo $form->field($model, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
 		'itemClass' => OfferBarcodeForm::className(),
