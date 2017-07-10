@@ -18,6 +18,7 @@ class OfferSearch extends Offer {
 	public function attributeLabels()
 	{
 		return [
+			'category_id' => Yii::t('catalog', 'Category'),
 			'name' => Yii::t('catalog', 'Name'),
 		];
 	}
@@ -27,6 +28,7 @@ class OfferSearch extends Offer {
 	 */
 	public function rules() {
 		return [
+			['category_id', 'integer'],
 			['name', 'string'],
 		];
 	}
@@ -52,6 +54,7 @@ class OfferSearch extends Offer {
 			return $dataProvider;
 
 		//search
+		$query->andFilterWhere(['category_id' => $this->category_id]);
 		$query->andFilterWhere(['like', 'name', $this->name]);
 
 		return $dataProvider;

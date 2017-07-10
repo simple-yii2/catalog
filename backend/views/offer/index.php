@@ -1,7 +1,10 @@
 <?php
 
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+
+use cms\catalog\common\models\Category;
 
 $title = Yii::t('catalog', 'Offers');
 
@@ -11,6 +14,14 @@ $this->params['breadcrumbs'] = [
 	$title,
 ];
 
+//categories
+$categories = [];
+$query = Category::find()->orderBy(['lft' => SORT_ASC]);
+foreach ($query->all() as $item) {
+	if ($item->isLeaf() && $item->active)
+		$categories[$item->id] = $item->path;
+}
+
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
@@ -19,14 +30,21 @@ $this->params['breadcrumbs'] = [
 </div>
 
 <?= GridView::widget([
-	'dataProvider' => $searchModel->getDataProvider(),
-	'filterModel' => $searchModel,
+	'dataProvider' => $search->getDataProvider(),
+	'filterModel' => $search,
 	'summary' => '',
 	'tableOptions' => ['class' => 'table table-condensed'],
 	'rowOptions' => function ($model, $key, $index, $grid) {
 		return !$model->active ? ['class' => 'warning'] : [];
 	},
 	'columns' => [
+		[
+			'attribute' => 'category_id',
+			'filter' => $categories,
+			'content' => function($model, $key, $index, $column) use ($categories) {
+				return ArrayHelper::getValue($categories, $model->category_id);
+			},
+		],
 		[
 			'attribute' => 'name',
 			'format' => 'html',

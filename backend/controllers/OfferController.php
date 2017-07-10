@@ -47,7 +47,7 @@ class OfferController extends Controller
 	public function actionIndex()
 	{
 		return $this->render('index', [
-			'searchModel' => new OfferSearch,
+			'search' => new OfferSearch,
 		]);
 	}
 
