@@ -23,6 +23,7 @@ return [
 	'Item deleted successfully.' => 'Элемент успешно удален.',
 	'The value is incorrect.' => 'Значение указано неверно.',
 	'Operation not permitted.' => 'Операция недопустима.',
+	'No results matched' => 'Нет результатов, соответствующих',
 
 	'Default currency' => 'Валюта по-умолчанию',
 	'Code' => 'Код',

@@ -45,7 +45,11 @@ foreach ($query->all() as $item)
 			];
 		},
 	]) ?>
-	<?= $form->field($model, 'category_id')->widget(Chosen::className(), ['items' => $categories]) ?>
+	<?= $form->field($model, 'category_id')->widget(Chosen::className(), [
+		'items' => $categories,
+		'placeholder' => ' ',
+		'noResultText' => Yii::t('catalog', 'No results matched'),
+	]) ?>
 	<?= $form->field($model, 'name') ?>
 	<?= $form->field($model, 'model') ?>
 	<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
