@@ -6,18 +6,73 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use cms\catalog\common\models\Category;
+use cms\catalog\common\models\Offer;
 use cms\catalog\frontend\Module;
 
 /**
- * Helper for category in frontend module
+ * Frontend module helper
  */
-class CategoryHelper
+class CatalogHelper
 {
 
 	/**
 	 * @var string Route to catalog module
 	 */
-	private static $_route;
+	private static $_moduleName;
+
+	/**
+	 * Determine catalog module name
+	 * @return string|null
+	 */
+	private static function getModuleName()
+	{
+		if (self::$_moduleName !== null)
+			return self::$_moduleName;
+
+		$moduleClass = Module::className();
+		foreach (Yii::$app->getModules() as $name => $module) {
+			if (is_string($module)) {
+				$class = $module;
+			} elseif (is_array($module)) {
+				$class = $module['class'];
+			} else {
+				$class = get_class($module);
+			}
+
+			if ($class == $moduleClass)
+				return self::$_moduleName = $name;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Create url to category offers
+	 * @param Category $object 
+	 * @return string|array
+	 */
+	public static function createCategoryUrl(Category $object)
+	{
+		$name = self::getModuleName();
+		if ($name === null)
+			return '#';
+
+		return ["/{$name}/offer/index", 'alias' => $object->alias];
+	}
+
+	/**
+	 * Create url to offer view
+	 * @param Offer $object 
+	 * @return string|array
+	 */
+	public static function createOfferUrl(Offer $object)
+	{
+		$name = self::getModuleName();
+		if ($name === null)
+			return '#';
+
+		return ["/{$name}/offer/view", 'alias' => $object->alias];
+	}
 
 	/**
 	 * Make menu items for given category, if null given, use root
@@ -55,7 +110,7 @@ class CategoryHelper
 
 		$result = [
 			'label' => Html::encode($object->title),
-			'url' => self::createUrl($object),
+			'url' => self::createCategoryUrl($object),
 		];
 
 		$items = [];
@@ -67,7 +122,8 @@ class CategoryHelper
 			$item = self::makeBranch($objects, $i, $c);
 			$offerCount += $c;
 
-			$items[] = $item;
+			if ($c)
+				$items[] = $item;
 		}
 
 		if ($offerCount > 0)
@@ -77,36 +133,6 @@ class CategoryHelper
 			$result['items'] = $items;
 
 		return $result;
-	}
-
-	/**
-	 * Create url to category offers
-	 * @param Category $category 
-	 * @return array
-	 */
-	private static function createUrl(Category $category)
-	{
-		if (self::$_route !== null)
-			return [self::$_route, 'alias' => $category->alias];
-
-		$route = null;
-		$moduleClass = Module::className();
-		foreach (Yii::$app->getModules() as $id => $module) {
-			if (is_string($module)) {
-				$name = $module;
-			} elseif (is_array($module)) {
-				$name = $module['class'];
-			} else {
-				$name = get_class($module);
-			}
-
-			if ($name == $moduleClass)
-				$route = self::$_route = "/{$id}/offer/index";
-		}
-		if (empty($route))
-			return '#';
-
-		return [$route, 'alias' => $category->alias];
 	}
 
 }
