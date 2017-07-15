@@ -3,9 +3,12 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
+use cms\catalog\backend\assets\CategoryFormAsset;
 use cms\catalog\backend\models\CategoryPropertyForm;
 use cms\catalog\common\models\CategoryProperty;
 use dkhlystov\widgets\ArrayInput;
+
+CategoryFormAsset::register($this);
 
 $title = Yii::t('catalog', 'Common properties');
 
