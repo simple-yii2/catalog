@@ -21,7 +21,8 @@ create table if not exists `CatalogVendor`
 	`url` varchar(200) default null,
 	`file` varchar(200) default null,
 	`thumb` varchar(200) default null,
-	primary key (`id`)
+	primary key (`id`),
+	key `name` (`name`)
 ) engine InnoDB;
 
 create table if not exists `CatalogStore`
@@ -103,7 +104,8 @@ create table if not exists `CatalogOffer`
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
 	foreign key (`vendor_id`) references `CatalogVendor` (`id`) on delete cascade on update cascade,
 	foreign key (`currency_id`) references `CatalogCurrency` (`id`) on delete cascade on update cascade,
-	key `alias` (`alias`)
+	key `alias` (`alias`),
+	key `filter` (`category_lft`, `category_rgt`, `vendor_id`, `price`)
 ) engine InnoDB;
 
 create table if not exists `CatalogOfferBarcode`
@@ -136,7 +138,8 @@ create table if not exists `CatalogOfferProperty`
 	`value` varchar(30) not null,
 	primary key (`id`),
 	foreign key (`offer_id`) references `CatalogOffer` (`id`) on delete cascade on update cascade,
-	foreign key (`property_id`) references `CatalogProperty` (`id`) on delete cascade on update cascade
+	foreign key (`property_id`) references `CatalogCategoryProperty` (`id`) on delete cascade on update cascade,
+	key `filter` (`offer_id`, `property_id`, `value`)
 ) engine InnoDB;
 
 create table if not exists `CatalogOfferImage`
