@@ -24,6 +24,16 @@ class CurrencyForm extends Model
 	public $rate;
 
 	/**
+	 * @var string
+	 */
+	public $prefix;
+
+	/**
+	 * @var string
+	 */
+	public $suffix;
+
+	/**
 	 * @var Currency
 	 */
 	private $_object;
@@ -43,6 +53,8 @@ class CurrencyForm extends Model
 		parent::__construct(array_merge([
 			'code' => $object->code,
 			'rate' => $object->rate,
+			'prefix' => $object->prefix,
+			'suffix' => $object->suffix,
 		], $config));
 	}
 
@@ -63,6 +75,8 @@ class CurrencyForm extends Model
 		return [
 			'code' => Yii::t('catalog', 'Code'),
 			'rate' => Yii::t('catalog', 'Rate'),
+			'prefix' => Yii::t('catalog', 'Prefix'),
+			'suffix' => Yii::t('catalog', 'Suffix'),
 		];
 	}
 
@@ -72,7 +86,7 @@ class CurrencyForm extends Model
 	public function rules()
 	{
 		return [
-			['code', 'string', 'max' => 10],
+			[['code', 'prefix', 'suffix'], 'string', 'max' => 10],
 			['rate', 'double', 'min' => 0.01],
 			[['code', 'rate'], 'required'],
 		];
@@ -91,6 +105,8 @@ class CurrencyForm extends Model
 
 		$object->code = $this->code;
 		$object->rate = empty($this->rate) ? null : (float) $this->rate;
+		$object->prefix = $this->prefix;
+		$object->suffix = $this->suffix;
 
 		if (!$object->save(false))
 			return false;

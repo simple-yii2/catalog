@@ -10,6 +10,8 @@ create table if not exists `CatalogCurrency`
 	`id` int(10) not null auto_increment,
 	`code` varchar(10) not null,
 	`rate` decimal(10,2) not null,
+	`prefix` varchar(10) not null,
+	`suffix` varchar(10) not null,
 	primary key (`id`)
 ) engine InnoDB;
 
