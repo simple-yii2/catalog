@@ -13,6 +13,7 @@ use creocoder\nestedsets\NestedSetsQueryBehavior;
 class Category extends ActiveRecord
 {
 
+	const ALIAS_SEPARATOR = '/';
 	const PATH_SEPARATOR = ' » ';
 
 	/**
@@ -105,50 +106,53 @@ class Category extends ActiveRecord
 	}
 
 	/**
-	 * Making alias from title and id
-	 * @return void
-	 */
-	public function makeAlias()
-	{
-		$this->alias = Translit::t($this->title . '-' . $this->id);
-	}
-
-	/**
-	 * Making path from title and parent path
+	 * Making alias and path from title and parent alias and path
 	 * @param Category|null $parent 
 	 * @return void
 	 */
-	public function makePath(Category $parent = null)
+	public function makeAliasAndPath(Category $parent = null)
 	{
+		if ($this->isRoot()) {
+			$this->alias = null;
+			$this->path = null;
+			return;
+		}
+
 		if ($parent === null)
 			$parent = $this->parents(1)->one();
 
+		$alias = '';
 		$path = '';
 
-		if ($parent !== null && !$parent->isRoot())
+		if ($parent !== null && !$parent->isRoot()) {
+			$alias = $parent->alias;
 			$path = $parent->path;
+		}
 
+		if (!empty($alias))
+			$alias .= self::ALIAS_SEPARATOR;
 		if (!empty($path))
 			$path .= self::PATH_SEPARATOR;
 
+		$this->alias = $alias . Translit::t($this->title);
 		$this->path = $path . $this->title;
 	}
 
 	/**
-	 * Update path with children
+	 * Update alias and path with children
 	 * @param Category|null $parent 
 	 * @return void
 	 */
-	public function updatePath(Category $parent = null)
+	public function updateAliasAndPath(Category $parent = null)
 	{
-		$this->makePath($parent);
-		$this->update(false, ['path']);
+		$this->makeAliasAndPath($parent);
+		$this->update(false, ['alias', 'path']);
 
 		if ($this->isLeaf())
 			return;
 
 		foreach ($this->children(1)->all() as $object)
-			$object->updatePath($this);
+			$object->updateAliasAndPath($this);
 	}
 
 	/**

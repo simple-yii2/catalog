@@ -159,9 +159,11 @@ class CategoryForm extends Model
 
 		$object = $this->_object;
 
+		//attributes
 		$object->active = $this->active == 1;
 		$object->title = $this->title;
 
+		//save
 		if ($object->getIsNewRecord()) {
 			if (!$object->appendTo($parent, false))
 				return false;
@@ -170,12 +172,8 @@ class CategoryForm extends Model
 				return false;
 		}
 
-		if (empty($object->alias)) {
-			$object->makeAlias();
-			$object->update(false, ['alias']);
-		}
-
-		$object->updatePath($parent);
+		//update alias and path
+		$object->updateAliasAndPath($parent);
 
 		//update relations
 		$old = [];
