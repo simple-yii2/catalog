@@ -52,6 +52,9 @@ foreach ($query->all() as $item) {
 				if ($model->imageCount > 0)
 					$result .= '&nbsp;' . Html::tag('span', $model->imageCount, ['class' => 'badge']);
 
+				if (!empty($model->vendor))
+					$result .= '&nbsp;' . Html::tag('span', Html::encode($model->vendor), ['class' => 'label label-info']);
+
 				if ($model->category !== null)
 					$result .= '<br>' . Html::tag('span', $model->category->path, ['class' => 'text-muted']);
 
