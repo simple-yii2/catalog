@@ -106,8 +106,6 @@ create table if not exists `CatalogOffer`
 	`imageCount` int(10) not null,
 	primary key (`id`),
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
-	foreign key (`vendor_id`) references `CatalogVendor` (`id`) on delete cascade on update cascade,
-	foreign key (`currency_id`) references `CatalogCurrency` (`id`) on delete cascade on update cascade,
 	key `alias` (`alias`),
 	key `filter` (`category_lft`, `category_rgt`, `vendor_id`, `price`)
 ) engine InnoDB;

@@ -14,7 +14,6 @@ $(function() {
 		} else {
 			$unit.removeClass('hidden');
 		}
-		// $unit.prop('disabled', type == 0);
 	});
 
 	$(document).on('click', '.category-properties button.property-values', function() {
