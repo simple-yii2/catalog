@@ -39,25 +39,21 @@ foreach ($query->all() as $item) {
 	},
 	'columns' => [
 		[
-			'attribute' => 'category_id',
-			'filter' => $categories,
-			'content' => function($model, $key, $index, $column) use ($categories) {
-				return ArrayHelper::getValue($categories, $model->category_id);
-			},
-		],
-		[
 			'attribute' => 'name',
 			'format' => 'html',
 			'content' => function($model, $key, $index, $column) {
 				$result = '';
 
 				if (!empty($model->thumb))
-					$result .= Html::img($model->thumb, ['height' => 20]) . '&nbsp;';
+					$result .= Html::img($model->thumb, ['align' => 'left', 'height' => 40, 'hspace' => 10]);
 
 				$result .= Html::encode($model->name);
 
 				if ($model->imageCount > 0)
 					$result .= '&nbsp;' . Html::tag('span', $model->imageCount, ['class' => 'badge']);
+
+				if ($model->category !== null)
+					$result .= '<br>' . Html::tag('span', $model->category->path, ['class' => 'text-muted']);
 
 				return $result;
 			},
