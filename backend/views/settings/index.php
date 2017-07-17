@@ -15,7 +15,7 @@ $this->params['breadcrumbs'] = [
 //currencies
 $currencies = [];
 foreach (Currency::find()->all() as $currency)
-	$currencies[$currency->id] = $currency->code;
+	$currencies[$currency->id] = $currency->name;
 
 ?>
 <h1><?= Html::encode($title) ?></h1>

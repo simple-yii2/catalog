@@ -23,6 +23,7 @@ $this->params['breadcrumbs'] = [
 	'summary' => '',
 	'tableOptions' => ['class' => 'table table-condensed'],
 	'columns' => [
+		'name',
 		'code',
 		'rate',
 		[

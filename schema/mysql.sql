@@ -9,6 +9,7 @@ create table if not exists `CatalogSettings`
 create table if not exists `CatalogCurrency`
 (
 	`id` int(10) not null auto_increment,
+	`name` varchar(100) not null,
 	`code` varchar(10) not null,
 	`rate` decimal(10,2) not null,
 	`prefix` varchar(10) not null,

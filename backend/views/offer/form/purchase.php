@@ -5,7 +5,7 @@ use cms\catalog\common\models\Currency;
 //currencies
 $currencies = ['' => ''];
 foreach (Currency::find()->all() as $item)
-	$currencies[$item->id] = $item->code;
+	$currencies[$item->id] = $item->name;
 
 //purchase
 $options = [];

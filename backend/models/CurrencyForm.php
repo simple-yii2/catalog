@@ -14,6 +14,11 @@ class CurrencyForm extends Model
 {
 
 	/**
+	 * @var string name
+	 */
+	public $name;
+
+	/**
 	 * @var string Code
 	 */
 	public $code;
@@ -51,6 +56,7 @@ class CurrencyForm extends Model
 
 		//attributes
 		parent::__construct(array_merge([
+			'name' => $object->name,
 			'code' => $object->code,
 			'rate' => $object->rate,
 			'prefix' => $object->prefix,
@@ -73,6 +79,7 @@ class CurrencyForm extends Model
 	public function attributeLabels()
 	{
 		return [
+			'name' => Yii::t('catalog', 'Name'),
 			'code' => Yii::t('catalog', 'Code'),
 			'rate' => Yii::t('catalog', 'Rate'),
 			'prefix' => Yii::t('catalog', 'Prefix'),
@@ -86,9 +93,10 @@ class CurrencyForm extends Model
 	public function rules()
 	{
 		return [
+			['name', 'string', 'max' => 100],
 			[['code', 'prefix', 'suffix'], 'string', 'max' => 10],
 			['rate', 'double', 'min' => 0.01],
-			[['code', 'rate'], 'required'],
+			[['name', 'code', 'rate'], 'required'],
 		];
 	}
 
@@ -103,6 +111,7 @@ class CurrencyForm extends Model
 
 		$object = $this->_object;
 
+		$object->name = $this->name;
 		$object->code = $this->code;
 		$object->rate = empty($this->rate) ? null : (float) $this->rate;
 		$object->prefix = $this->prefix;

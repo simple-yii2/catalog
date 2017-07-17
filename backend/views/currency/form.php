@@ -10,6 +10,7 @@ use yii\helpers\Html;
 ]); ?>
 
 	<fieldset>
+		<?= $form->field($model, 'name') ?>
 		<?= $form->field($model, 'code') ?>
 		<?= $form->field($model, 'rate') ?>
 		<?= $form->field($model, 'prefix') ?>
