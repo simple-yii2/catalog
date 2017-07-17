@@ -143,20 +143,20 @@ class OfferItem extends Widget
 	{
 		$formatter = Yii::$app->getFormatter();
 		$appCurrency = $this->getApplicationCurrency();
+		$c = $appCurrency;
+		if ($c === null)
+			$c = $currency;			
+		$precision = ArrayHelper::getValue($c, 'precision', 0);
 
 		//calc
 		if ($appCurrency !== null && $currency !== null && $appCurrency->id != $currency->id)
 			$value = $value * $currency->rate / $appCurrency->rate;
 
 		//format
-		$r = Html::tag($tag, $formatter->asDecimal($value, $this->getSettings()->pricePrecision));
+		$r = Html::tag($tag, $formatter->asDecimal($value, $c == null ? 0 : $c->precision));
 
 		//prefix/suffix
-		if ($currency !== null) {
-			$c = $appCurrency;
-			if ($c === null)
-				$c = $currency;			
-
+		if ($c !== null) {
 			if (!empty($c->prefix))
 				$r = Html::encode($c->prefix) . '&nbsp;' . $r;
 			if (!empty($c->suffix))

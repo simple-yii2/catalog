@@ -26,9 +26,9 @@ return [
 	'No results matched' => 'Нет результатов, соответствующих',
 
 	'Default currency' => 'Валюта по-умолчанию',
-	'Price precision' => 'Ценовая точность',
 	'Code' => 'Код',
 	'Rate' => 'Курс',
+	'Precision' => 'Точность',
 	'Prefix' => 'Текст до',
 	'Suffix' => 'Текст после',
 	'Name' => 'Наименование',

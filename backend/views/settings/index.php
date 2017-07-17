@@ -27,7 +27,6 @@ foreach (Currency::find()->all() as $currency)
 
 	<fieldset>
 		<?= $form->field($model, 'defaultCurrency_id')->dropDownList($currencies) ?>
-		<?= $form->field($model, 'pricePrecision') ?>
 	</fieldset>
 
 	<div class="form-group">

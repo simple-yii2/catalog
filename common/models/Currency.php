@@ -15,4 +15,14 @@ class Currency extends ActiveRecord
 		return 'CatalogCurrency';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function __construct($config = [])
+	{
+		parent::init(array_merge([
+			'precision' => -2,
+		], $config));
+	}
+
 }

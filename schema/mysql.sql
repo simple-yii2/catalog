@@ -2,7 +2,6 @@ create table if not exists `CatalogSettings`
 (
 	`id` int(10) not null auto_increment,
 	`defaultCurrency_id` int(10) default null,
-	`pricePrecision` int(10) default 0,
 	primary key (`id`)
 ) engine InnoDB;
 
@@ -12,6 +11,7 @@ create table if not exists `CatalogCurrency`
 	`name` varchar(100) not null,
 	`code` varchar(10) not null,
 	`rate` decimal(10,2) not null,
+	`precision` integer default 2,
 	`prefix` varchar(10) not null,
 	`suffix` varchar(10) not null,
 	primary key (`id`)

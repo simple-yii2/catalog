@@ -13,6 +13,7 @@ use yii\helpers\Html;
 		<?= $form->field($model, 'name') ?>
 		<?= $form->field($model, 'code') ?>
 		<?= $form->field($model, 'rate') ?>
+		<?= $form->field($model, 'precision')->dropDownList([0 => '1', 1 => '0.1', 2 => '0.01']) ?>
 		<?= $form->field($model, 'prefix') ?>
 		<?= $form->field($model, 'suffix') ?>
 	</fieldset>
