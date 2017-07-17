@@ -35,6 +35,9 @@ class OfferController extends Controller
 	 */
 	public function beforeAction($action)
 	{
+		if (parent::beforeAction($action) !== true)
+			return false;
+
 		$this->loadSettings();
 
 		return true;
