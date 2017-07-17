@@ -24,7 +24,7 @@ class CategoryProperty extends ActiveRecord
 	 * @var string[] type names
 	 */
 	private static $typeNames = [
-		self::TYPE_BOOLEAN => 'Boolean',
+		self::TYPE_BOOLEAN => 'Logical',
 		self::TYPE_INTEGER => 'Integer',
 		self::TYPE_FLOAT => 'Decimal',
 		self::TYPE_SELECT => 'Select',

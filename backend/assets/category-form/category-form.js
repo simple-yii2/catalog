@@ -3,10 +3,18 @@ $(function() {
 	$(document).on('change', '.category-properties .property-type', function() {
 		var	$this = $(this),
 			type = parseInt($this.val()),
-			$button = $this.closest('tr').find('button.property-values'),
+			$tr = $this.closest('tr'),
+			$button = $tr.find('button.property-values'),
+			$unit = $tr.find('input[name$="[unit]"]'),
 			$properties = $this.closest('.category-properties');
 
 		$button.prop('disabled', $properties.data('typesWithValues').indexOf(type) == -1);
+		if (type == 0) {
+			$unit.addClass('hidden');
+		} else {
+			$unit.removeClass('hidden');
+		}
+		// $unit.prop('disabled', type == 0);
 	});
 
 	$(document).on('click', '.category-properties button.property-values', function() {

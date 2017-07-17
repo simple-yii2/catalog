@@ -73,7 +73,7 @@ return [
 	'Sales area and pickup point' => 'Торговый зал и пункт выдачи заказов',
 	'Store' => 'Склад',
 
-	'Boolean' => 'Логический',
+	'Logical' => 'Логический',
 	'Integer' => 'Целый',
 	'Decimal' => 'Дробный',
 	'Select' => 'Выбор',
