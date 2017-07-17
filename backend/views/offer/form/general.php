@@ -26,7 +26,7 @@ foreach ($query->all() as $item) {
 
 //vendors
 $vendors = ['' => ''];
-$query = Vendor::find();
+$query = Vendor::find()->orderBy(['name' => SORT_ASC]);
 foreach ($query->all() as $item)
 	$vendors[$item->id] = $item->name;
 
