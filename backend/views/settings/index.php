@@ -12,7 +12,7 @@ $this->params['breadcrumbs'] = [
 	$title,
 ];
 
-
+//currencies
 $currencies = [];
 foreach (Currency::find()->all() as $currency)
 	$currencies[$currency->id] = $currency->code;
@@ -27,6 +27,7 @@ foreach (Currency::find()->all() as $currency)
 
 	<fieldset>
 		<?= $form->field($model, 'defaultCurrency_id')->dropDownList($currencies) ?>
+		<?= $form->field($model, 'pricePrecision') ?>
 	</fieldset>
 
 	<div class="form-group">

@@ -19,6 +19,11 @@ class SettingsForm extends Model
 	public $defaultCurrency_id;
 
 	/**
+	 * @var integer price precision
+	 */
+	public $pricePrecision;
+
+	/**
 	 * @var Settings
 	 */
 	private $_object;
@@ -37,6 +42,7 @@ class SettingsForm extends Model
 		//attributes
 		parent::__construct(array_merge([
 			'defaultCurrency_id' => $object->defaultCurrency_id,
+			'pricePrecision' => $object->pricePrecision,
 		], $config));
 	}
 
@@ -47,6 +53,7 @@ class SettingsForm extends Model
 	{
 		return [
 			'defaultCurrency_id' => Yii::t('catalog', 'Default currency'),
+			'pricePrecision' => Yii::t('catalog', 'Price precision'),
 		];
 	}
 
@@ -57,6 +64,7 @@ class SettingsForm extends Model
 	{
 		return [
 			['defaultCurrency_id', 'integer'],
+			['pricePrecision', 'integer', 'min' => 0, 'max' => 2],
 		];
 	}
 
@@ -72,6 +80,7 @@ class SettingsForm extends Model
 		$object = $this->_object;
 
 		$object->defaultCurrency_id = empty($this->defaultCurrency_id) ? null : (integer) $this->defaultCurrency_id;
+		$object->pricePrecision = (integer) $this->pricePrecision;
 
 		if (!$object->save(false))
 			return false;

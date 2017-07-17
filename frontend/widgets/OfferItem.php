@@ -149,7 +149,7 @@ class OfferItem extends Widget
 			$value = $value * $currency->rate / $appCurrency->rate;
 
 		//format
-		$r = Html::tag($tag, $formatter->asDecimal($value));
+		$r = Html::tag($tag, $formatter->asDecimal($value, $this->getSettings()->pricePrecision));
 
 		//prefix/suffix
 		if ($currency !== null) {
