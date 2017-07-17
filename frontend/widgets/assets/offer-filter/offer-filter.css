@@ -41,7 +41,7 @@
 
 .filter-select-items {
 	max-height: 216px;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 .filter-select-items label {
 	cursor: pointer;
