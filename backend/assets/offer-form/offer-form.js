@@ -8,10 +8,6 @@ $(function() {
 		});
 	});
 
-	$(document).on('change', '#offerform-currency_id', function() {
-		$('#offerform-price, #offerform-oldprice').prop('disabled', $(this).val() == '');
-	});
-
 	$(document).on('change', '#offerform-defaultdelivery', function() {
 		if (this.checked) {
 			$('.offer-delivery :checkbox').prop({'disabled': true, 'checked': true});
