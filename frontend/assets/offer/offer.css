@@ -1,0 +1,36 @@
+.offer-images {
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+.offer-images a,
+.offer-images img {
+	display: block;
+	max-width: 100%;
+}
+.offer-thumbs a {
+	float: left;
+	width: 20%;
+}
+.offer-thumbs a > img {
+	width: 100%;
+}
+.offer-price {
+	color: #ddd;
+	font-size: 36px;
+	font-weight: bold;
+}
+.offer-price span {
+	color: #333;
+}
+.offer-old-price {
+	font-size: 20px;
+	height: 20px;
+	line-height: 20px;
+	margin-bottom: 20px;
+}
+.offer-description {
+	margin-bottom: 20px;
+}
+.offer-properties-table td {
+	width: 50%;
+}

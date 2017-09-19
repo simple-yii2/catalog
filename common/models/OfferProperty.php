@@ -15,4 +15,13 @@ class OfferProperty extends ActiveRecord
 		return 'CatalogOfferProperty';
 	}
 
+	/**
+	 * Category property relation
+	 * @return ActiveQueryInterface
+	 */
+	public function getCategoryProperty()
+	{
+		return $this->hasOne(CategoryProperty::className(), ['id' => 'property_id']);
+	}
+
 }
