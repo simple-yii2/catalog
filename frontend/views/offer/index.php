@@ -10,7 +10,7 @@ $this->title = $title . ' | ' . Yii::$app->name;
 $breadcrumbs = [
 	['label' => Yii::t('catalog', 'Categories'), 'url' => ['index']],
 ];
-foreach ($category->parents()->all() as $object) {
+foreach ($category->getParents() as $object) {
 	if (!$object->isRoot())
 		$breadcrumbs[] = ['label' => $object->title, 'url' => ['index', 'alias' => $object->alias]];
 }

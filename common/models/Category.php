@@ -17,6 +17,11 @@ class Category extends ActiveRecord
 	const PATH_SEPARATOR = ' » ';
 
 	/**
+	 * @var Category[]
+	 */
+	private $_parents;
+
+	/**
 	 * @inheritdoc
 	 */
 	public static function tableName()
@@ -55,13 +60,25 @@ class Category extends ActiveRecord
 	}
 
 	/**
+	 * Parents getter
+	 * @return Category[]
+	 */
+	public function getParents()
+	{
+		if ($this->_parents !== null)
+			return $this->_parents;
+
+		return $this->_parents = $this->parents()->all();
+	}
+
+	/**
 	 * Parent properties
 	 * @return CategoryProperty[]
 	 */
 	public function getParentProperties()
 	{
 		$items = [];
-		foreach ($this->parents()->all() as $parent) {
+		foreach ($this->getParents() as $parent) {
 			$items = array_merge($items, $parent->properties);
 		}
 
