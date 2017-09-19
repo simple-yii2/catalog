@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 $title = $category->isRoot() ? Yii::t('catalog', 'Catalog') : $category->title;
 
-//breadcrumbs;
+//breadcrumbs
 $breadcrumbs = [
 	['label' => Yii::t('catalog', 'Categories'), 'url' => ['index']],
 ];
