@@ -58,6 +58,10 @@ class CategoryController extends Controller
 		if ($parent->offerCount > 0)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
+		$maxDepth = $this->module->maxCategoryDepth;
+		if ($maxDepth !== null && $parent->depth >= $maxDepth)
+			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
+
 		$model = new CategoryForm(null, [
 			'properties' => array_merge($parent->getParentProperties(), $parent->properties),
 		]);

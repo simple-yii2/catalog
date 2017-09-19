@@ -13,6 +13,8 @@ $this->params['breadcrumbs'] = [
 	$title,
 ];
 
+$maxDepth = Yii::$app->controller->module->maxCategoryDepth;
+
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
@@ -74,8 +76,14 @@ $this->params['breadcrumbs'] = [
 				'delete' => function($model, $key, $index) {
 					return $model->offerCount == 0;
 				},
-				'create' => function($model, $key, $index) {
-					return $model->offerCount == 0;
+				'create' => function($model, $key, $index) use ($maxDepth) {
+					if ($model->offerCount > 0)
+						return false;
+
+					if ($maxDepth !== null && $model->depth >= $maxDepth)
+						return false;
+
+					return true;
 				},
 			],
 		],

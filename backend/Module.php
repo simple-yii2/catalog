@@ -54,6 +54,11 @@ class Module extends \yii\base\Module {
 	public $storeEnabled = true;
 
 	/**
+	 * @var integer|null
+	 */
+	public $maxCategoryDepth = null;
+
+	/**
 	 * @inheritdoc
 	 */
 	public function init()
