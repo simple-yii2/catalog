@@ -120,6 +120,8 @@ class VendorForm extends Model
 		$object->file = $this->file;
 		$object->thumb = $this->thumb;
 
+		$object->makeAlias();
+
 		//files
 		Yii::$app->storage->storeObject($object);
 

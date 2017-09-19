@@ -4,6 +4,7 @@ namespace cms\catalog\common\models;
 
 use yii\db\ActiveRecord;
 use dkhlystov\storage\components\StoredInterface;
+use helpers\Translit;
 
 class Vendor extends ActiveRecord implements StoredInterface
 {
@@ -60,6 +61,15 @@ class Vendor extends ActiveRecord implements StoredInterface
 
 		if (array_key_exists($this->thumb, $files))
 			$this->thumb = $files[$this->thumb];
+	}
+
+	/**
+	 * Making page alias from name
+	 * @return void
+	 */
+	public function makeAlias()
+	{
+		$this->alias = Translit::t($this->name);
 	}
 
 }

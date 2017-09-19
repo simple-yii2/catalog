@@ -20,12 +20,14 @@ create table if not exists `CatalogCurrency`
 create table if not exists `CatalogVendor`
 (
 	`id` int(10) not null auto_increment,
+	`alias` varchar(100) not null,
 	`name` varchar(100) not null,
 	`description` text,
 	`url` varchar(200) default null,
 	`file` varchar(200) default null,
 	`thumb` varchar(200) default null,
 	primary key (`id`),
+	key `alias` (`alias`),
 	key `name` (`name`)
 ) engine InnoDB;
 
