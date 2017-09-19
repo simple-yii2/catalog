@@ -58,6 +58,11 @@ class OfferFilter extends Model
 	private $_currentCurrency;
 
 	/**
+	 * @var integer[]
+	 */
+	private $_vendor_ids;
+
+	/**
 	 * Active query getter
 	 * @return ActiveQuery
 	 */
@@ -160,7 +165,7 @@ class OfferFilter extends Model
 		if (empty($this->vendor))
 			return;
 
-		$query->andWhere(['in', 'vendor_id', FilterHelper::selectItems($this->vendor)]);
+		$query->andWhere(['in', 'vendor_id', $this->getVendor_ids()]);
 	}
 
 	/**
@@ -255,6 +260,23 @@ class OfferFilter extends Model
 	}
 
 	/**
+	 * Checked vendors ids getter
+	 * @return integer[]
+	 */
+	public function getVendor_ids()
+	{
+		if ($this->_vendor_ids !== null)
+			return $this->_vendor_ids;
+
+		$alias = FilterHelper::selectItems($this->vendor);
+		$ids = [];
+		foreach (Vendor::find()->select(['id'])->andWhere(['in', 'alias', $alias])->asArray()->all() as $row)
+			$ids[] = $row['id'];
+
+		return $this->_vendor_ids = $ids;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function init()
@@ -340,18 +362,18 @@ class OfferFilter extends Model
 
 		$rows = [];
 		foreach ($query->all() as $row) {
-			if ($row['vendor_id'] !== null) {
-				$rows[$row['vendor_id']] = [
-					'value' => $row['vendor_id'],
-					'count' => $row['cnt'],
-				];
-			}
+			if ($row['vendor_id'] !== null)
+				$rows[$row['vendor_id']] = ['count' => $row['cnt']];
 		}
 
 		$items = [];
 		if (!empty($rows)) {
-			foreach (Vendor::find()->where(['id' => array_keys($rows)])->orderBy(['name' => SORT_ASC])->all() as $object)
-				$items[] = array_merge($rows[$object->id], ['title' => $object->name]);
+			foreach (Vendor::find()->where(['id' => array_keys($rows)])->orderBy(['name' => SORT_ASC])->all() as $object) {
+				$items[] = array_merge($rows[$object->id], [
+					'title' => $object->name,
+					'value' => $object->alias,
+				]);
+			}
 		}
 
 		return $items;
