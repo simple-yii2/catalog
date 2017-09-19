@@ -9,6 +9,8 @@ OfferAsset::register($this);
 
 $title = $model->name;
 
+$this->title = $title . ' | ' . Yii::$app->name;
+
 
 
 //breadcrumbs

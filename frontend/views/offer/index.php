@@ -4,6 +4,8 @@ use yii\helpers\Html;
 
 $title = $category->isRoot() ? Yii::t('catalog', 'Catalog') : $category->title;
 
+$this->title = $title . ' | ' . Yii::$app->name;
+
 //breadcrumbs
 $breadcrumbs = [
 	['label' => Yii::t('catalog', 'Categories'), 'url' => ['index']],
