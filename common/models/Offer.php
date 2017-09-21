@@ -33,12 +33,41 @@ class Offer extends ActiveRecord
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave($insert)
+	{
+		if (parent::beforeSave($insert) === false)
+			return false;
+
+		//price value
+		if ($this->isAttributeChanged('price') || $this->isAttributeChanged('currency_id')) {
+			$value = $this->price;
+			if ($this->currency !== null)
+				$value *= $this->currency->rate;
+
+			$this->priceValue = $value;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Category relation
 	 * @return yii\db\ActiveQueryInterface;
 	 */
 	public function getCategory()
 	{
 		return $this->hasOne(Category::className(), ['id' => 'category_id']);
+	}
+
+	/**
+	 * Currency relation
+	 * @return yii\db\ActiveQueryInterface;
+	 */
+	public function getCurrency()
+	{
+		return $this->hasOne(Currency::className(), ['id' => 'currency_id']);
 	}
 
 	/**
