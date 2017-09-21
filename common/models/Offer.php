@@ -25,7 +25,7 @@ class Offer extends ActiveRecord
 	 */
 	public function __construct($config = [])
 	{
-		parent::__construct(array_merge([
+		parent::__construct(array_replace([
 			'active' => true,
 			'imageCount' => 0,
 			'currency_id' => ArrayHelper::getValue(Yii::$app->params, ['catalogSettings', 'defaultCurrency_id']),

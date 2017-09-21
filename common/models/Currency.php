@@ -20,7 +20,7 @@ class Currency extends ActiveRecord
 	 */
 	public function __construct($config = [])
 	{
-		parent::init(array_merge([
+		parent::init(array_replace([
 			'precision' => -2,
 		], $config));
 	}

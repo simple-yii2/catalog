@@ -35,7 +35,7 @@ class Category extends ActiveRecord
 	 */
 	public function __construct($config = [])
 	{
-		parent::__construct(array_merge([
+		parent::__construct(array_replace([
 			'active' => true,
 			'offerCount' => 0,
 		], $config));
