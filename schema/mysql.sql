@@ -106,6 +106,7 @@ create table if not exists `CatalogOffer`
 	`modifyDate` datetime,
 	`thumb` varchar(200) default null,
 	`imageCount` int(10) not null,
+	`priceValue` decimal(12, 4) default null,
 	primary key (`id`),
 	foreign key (`category_id`) references `CatalogCategory` (`id`) on delete cascade on update cascade,
 	key `alias` (`alias`),
