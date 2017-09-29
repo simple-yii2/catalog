@@ -50,7 +50,7 @@ class OfferRecommendedForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		parent::__construct(array_merge([
+		parent::__construct(array_replace([
 			'id' => $object->id,
 			'name' => $object->name,
 			'thumb' => $object->thumb,

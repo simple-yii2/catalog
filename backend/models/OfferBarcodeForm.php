@@ -36,7 +36,7 @@ class OfferBarcodeForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		parent::__construct(array_merge([
+		parent::__construct(array_replace([
 			'barcode' => $object->barcode,
 		], $config));
 	}

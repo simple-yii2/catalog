@@ -57,7 +57,7 @@ class OfferPropertyForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		parent::__construct(array_merge([
+		parent::__construct(array_replace([
 			'property_id' => $template->id,
 			'name' => $template->name,
 			'values' => $template->getValues(),

@@ -46,7 +46,7 @@ class OfferImageForm extends Model
 		Yii::$app->storage->cacheObject($object);
 
 		//attributes
-		parent::__construct(array_merge([
+		parent::__construct(array_replace([
 			'id' => $object->id,
 			'file' => $object->file,
 			'thumb' => $object->thumb,

@@ -164,7 +164,7 @@ class OfferForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		parent::__construct(array_merge([
+		parent::__construct(array_replace([
 			'category_id' => $object->category_id,
 			'active' => $object->active == 0 ? '0' : '1',
 			'name' => $object->name,

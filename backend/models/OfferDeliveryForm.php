@@ -72,7 +72,7 @@ class OfferDeliveryForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		parent::__construct(array_merge([
+		parent::__construct(array_replace([
 			'delivery_id' => $template->id,
 			'name' => $template->name,
 			'active' => $object->getIsNewRecord() ? '0' : '1',
