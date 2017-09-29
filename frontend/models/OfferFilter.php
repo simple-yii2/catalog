@@ -110,49 +110,17 @@ class OfferFilter extends Model
 			return;
 
 		list($from, $to) = FilterHelper::rangeItems($this->price);
-		//currencies rates
-		$rates = $this->getRates();
-		//default currency
-		$default_id = $this->getDefaultCurrency_id();
 		//current rate
 		$currency = $this->getCurrentCurrency();
 		$current_rate = $currency === null ? 1 : $currency->rate;
 
 		//from
-		if ($from !== null) {
-			$conditions = ['or'];
-			if ($default_id !== null && array_key_exists($default_id, $rates))
-				$conditions[] = ['and',
-					['currency_id' => null],
-					['>=', 'price', $from * $current_rate / $rates[$default_id]],
-				];
-			foreach ($rates as $id => $rate) {
-				$value = $from * $current_rate / $rate;
-				$conditions[] = ['and',
-					['=', 'currency_id', $id],
-					['>=', 'price', $value],
-				];
-			}
-			$query->andWhere($conditions);
-		}
+		if ($from !== null)
+			$query->andWhere(['>=', 'priceValue', $from * $current_rate]);
 
 		//to
-		if ($to !== null) {
-			$conditions = ['or'];
-			if ($default_id !== null && array_key_exists($default_id, $rates))
-				$conditions[] = ['and',
-					['currency_id' => null],
-					['<=', 'price', $to * $current_rate / $rates[$default_id]],
-				];
-			foreach ($rates as $id => $rate) {
-				$value = $to * $current_rate / $rate;
-				$conditions[] = ['and',
-					['currency_id' => $id],
-					['<=', 'price', $value],
-				];
-			}
-			$query->andWhere($conditions);
-		}
+		if ($to !== null)
+			$query->andWhere(['<=', 'priceValue', $to * $current_rate]);
 	}
 
 	/**
@@ -212,35 +180,6 @@ class OfferFilter extends Model
 			return [];
 
 		return $this->_properties = array_merge($category->getParentProperties(), $category->properties);
-	}
-
-	/**
-	 * Currencies rates getter
-	 * @return float[]
-	 */
-	public function getRates()
-	{
-		if ($this->_rates !== null)
-			return $this->_rates;
-
-		$rates = [];
-		foreach (Currency::find()->select(['id', 'rate'])->asArray()->all() as $row)
-			$rates[$row['id']] = $row['rate'];
-
-		return $this->_rates = $rates;
-	}
-
-	/**
-	 * Default currency id getter
-	 * @return integer
-	 */
-	public function getDefaultCurrency_id()
-	{
-		if ($this->_defaultCurrency_id !== null)
-			return $this->_defaultCurrency_id;
-
-		$settings = Settings::find()->one();
-		return $this->_defaultCurrency_id = $settings === null ? null : $settings['defaultCurrency_id'];
 	}
 
 	/**
@@ -321,29 +260,22 @@ class OfferFilter extends Model
 	public function getPriceRange()
 	{
 		//rates
-		$rates = $this->getRates();
-		$defaultCurrency_id = $this->getDefaultCurrency_id();
 		$currency = $this->getCurrentCurrency();
 
-		$aMin = $aMax = [];
+		//default
+		$min = $max = null;
 
 		if ($currency !== null) {
 			$query = clone $this->getQuery();
-			$query->select(['currency_id', 'MIN(price) AS min', 'MAX(price) AS max'])->groupBy(['currency_id'])->asArray();
-			foreach ($query->all() as $row) {
-				$id = $row['currency_id'];
-				if ($id === null)
-					$id = $defaultCurrency_id;
+			$query->groupBy = [];
 
-				if (!array_key_exists($id, $rates))
-					continue;
+			$row = $query->select(['MIN(priceValue) AS min', 'MAX(priceValue) AS max'])->asArray()->one();
 
-				$aMin[] = round($row['min'] * $rates[$id] / $currency->rate, $currency->precision);
-				$aMax[] = round($row['max'] * $rates[$id] / $currency->rate, $currency->precision);
-			}
+			$min = round($row['min'] * $currency->rate, $currency->precision);
+			$max = round($row['max'] * $currency->rate, $currency->precision);
 		}
 
-		return [min($aMin), max($aMax)];
+		return [$min, $max];
 	}
 
 	/**
