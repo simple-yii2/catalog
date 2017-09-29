@@ -3,11 +3,16 @@
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use cms\catalog\backend\models\OfferDeliveryForm;
+use cms\catalog\common\models\Delivery;
 
 $offerModel = $model;
 
 //delivery
 $deliveryName = Html::getInputName($offerModel, 'delivery');
+
+//offer delivery form object for table headers
+$object = new OfferDeliveryForm(new Delivery);
 
 ?>
 <fieldset>
@@ -24,6 +29,7 @@ $deliveryName = Html::getInputName($offerModel, 'delivery');
 		'columns' => [
 			[
 				'attribute' => 'name',
+				'header' => Html::encode($object->getAttributeLabel('name')),
 				'format' => 'html',
 				'content' => function($model, $key, $index, $column) use ($offerModel, $deliveryName) {
 					$checkbox = Html::activeCheckbox($model, 'active', [
@@ -37,6 +43,7 @@ $deliveryName = Html::getInputName($offerModel, 'delivery');
 			],
 			[
 				'attribute' => 'cost',
+				'header' => Html::encode($object->getAttributeLabel('cost')),
 				'format' => 'html',
 				'options' => ['style' => 'width: 200px;'],
 				'contentOptions' => function($model, $key, $index, $column) {
@@ -68,6 +75,7 @@ $deliveryName = Html::getInputName($offerModel, 'delivery');
 			],
 			[
 				'attribute' => 'days',
+				'header' => Html::encode($object->getAttributeLabel('days')),
 				'format' => 'html',
 				'options' => ['style' => 'width: 200px;'],
 				'contentOptions' => function($model, $key, $index, $column) {
