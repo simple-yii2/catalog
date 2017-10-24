@@ -80,15 +80,6 @@ class Offer extends ActiveRecord
 	}
 
 	/**
-	 * Delivery relation
-	 * @return yii\db\ActiveQueryInterface
-	 */
-	public function getDelivery()
-	{
-		return $this->hasMany(OfferDelivery::className(), ['offer_id' => 'id']);
-	}
-
-	/**
 	 * Properties relation
 	 * @return yii\db\ActiveQueryInterface
 	 */

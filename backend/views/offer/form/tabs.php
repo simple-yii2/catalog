@@ -6,8 +6,7 @@ use yii\bootstrap\Tabs;
 $tabFields = [
 	'general' => ['active', 'images[]', 'category_id', 'name', 'model', 'description', 'vendor_id', 'countryOfOrigin', 'barcodes[]'],
 	'properties' => ['category_id', 'properties[]', 'length', 'width', 'height', 'weight'],
-	'purchase' => ['currency_id', 'price', 'oldPrice', 'storeAvailable', 'pickupAvailable', 'deliveryAvailable'],
-	'delivery' => ['delivery[]'],
+	'purchase' => ['currency_id', 'price', 'oldPrice'],
 	'recommended' => ['recommended[]'],
 	'quantity' => ['stores[]'],
 ];
@@ -47,13 +46,6 @@ $tabs[] = [
 	'content' => $this->render('purchase', ['form' => $form, 'model' => $model]),
 	'active' => $active == 'purchase',
 ];
-if (Yii::$app->controller->module->deliveryEnabled) {
-	$tabs[] = [
-		'label' => Yii::t('catalog', 'Delivery'),
-		'content' => $this->render('delivery', ['form' => $form, 'model' => $model]),
-		'active' => $active == 'delivery',
-	];
-}
 $tabs[] = [
 	'label' => Yii::t('catalog', 'Recommended'),
 	'content' => $this->render('recommended', ['form' => $form, 'model' => $model]),
@@ -67,5 +59,5 @@ if (Yii::$app->controller->module->storeEnabled) {
 	];
 }
 
-?>
-<?= Tabs::widget(['items' => $tabs]) ?>
+//render
+echo Tabs::widget(['items' => $tabs]);

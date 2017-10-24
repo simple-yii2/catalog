@@ -13,7 +13,6 @@ use cms\catalog\common\models\Offer;
 use cms\catalog\common\models\OfferBarcode;
 use cms\catalog\common\models\OfferImage;
 use cms\catalog\common\models\OfferProperty;
-use cms\catalog\common\models\OfferDelivery;
 use cms\catalog\common\models\OfferRecommended;
 use cms\catalog\common\models\Store;
 use cms\catalog\common\models\StoreOffer;
@@ -73,26 +72,6 @@ class OfferForm extends Model
 	public $oldPrice;
 
 	/**
-	 * @var boolean Can buy in sales area
-	 */
-	public $storeAvailable;
-
-	/**
-	 * @var boolean Can buy with pickup
-	 */
-	public $pickupAvailable;
-
-	/**
-	 * @var boolean Can buy with delivery
-	 */
-	public $deliveryAvailable;
-
-	/**
-	 * @var boolean Use common delivery
-	 */
-	public $defaultDelivery;
-
-	/**
 	 * @var string Country of origin
 	 */
 	public $countryOfOrigin;
@@ -133,11 +112,6 @@ class OfferForm extends Model
 	private $_properties = [];
 
 	/**
-	 * @var OfferDeliveryForm[] Delivery types
-	 */
-	private $_delivery = [];
-
-	/**
 	 * @var OfferStoreForm[] Stores
 	 */
 	private $_stores = [];
@@ -173,10 +147,6 @@ class OfferForm extends Model
 			'currency_id' => $object->currency_id,
 			'price' => $object->price,
 			'oldPrice' => $object->oldPrice,
-			'storeAvailable' => $object->storeAvailable == 0 ? '0' : '1',
-			'pickupAvailable' => $object->pickupAvailable == 0 ? '0' : '1',
-			'deliveryAvailable' => $object->deliveryAvailable == 0 ? '0' : '1',
-			'defaultDelivery' => $object->defaultDelivery == 0 ? '0' : '1',
 			'vendor_id' => $object->vendor_id,
 			'countryOfOrigin' => $object->countryOfOrigin,
 			'length' => $object->length,
@@ -186,7 +156,6 @@ class OfferForm extends Model
 			'barcodes' => $object->barcodes,
 			'images' => $object->images,
 			'properties' => $object->properties,
-			'delivery' => $object->delivery,
 			'stores' => $object->stores,
 			'recommended' => $object->recommended,
 		], $config));
@@ -261,31 +230,6 @@ class OfferForm extends Model
 			$templates = array_merge($category->getParentProperties(), $category->properties);
 
 		$this->SetArrayAttributeWithTemplate('_properties', OfferProperty::className(), OfferPropertyForm::className(), $value, $templates, 'property_id');
-	}
-
-	/**
-	 * Delivery getter
-	 * @return OfferDeliveryForm[]
-	 */
-	public function getDelivery()
-	{
-		return $this->_delivery;
-	}
-
-	/**
-	 * Delivery setter
-	 * @param OfferDelivery[]|array[] $value Delivery
-	 * @return void
-	 */
-	public function setDelivery($value)
-	{
-		$templates = Delivery::find()->all();
-
-		$this->SetArrayAttributeWithTemplate('_delivery', OfferDelivery::className(), OfferDeliveryForm::className(), $value, $templates, 'delivery_id');
-		if ($this->defaultDelivery != 0) {
-			foreach ($this->_delivery as $model)
-				$model->active = 1;
-		}
 	}
 
 	/**
@@ -368,10 +312,6 @@ class OfferForm extends Model
 			'currency_id' => Yii::t('catalog', 'Currency'),
 			'price' => Yii::t('catalog', 'Price'),
 			'oldPrice' => Yii::t('catalog', 'Old price'),
-			'storeAvailable' => Yii::t('catalog', 'Can buy in the sales area'),
-			'pickupAvailable' => Yii::t('catalog', 'Can buy with self-delivery'),
-			'deliveryAvailable' => Yii::t('catalog', 'Can buy with delivery'),
-			'defaultDelivery' => Yii::t('catalog', 'Use default delivery'),
 			'vendor_id' => Yii::t('catalog', 'Vendor'),
 			'countryOfOrigin' => Yii::t('catalog', 'Country of origin'),
 			'length' => Yii::t('catalog', 'Length'),
@@ -390,7 +330,7 @@ class OfferForm extends Model
 	{
 		return [
 			[['category_id', 'vendor_id', 'currency_id'], 'integer'],
-			[['active', 'storeAvailable', 'pickupAvailable', 'deliveryAvailable', 'defaultDelivery'], 'boolean'],
+			['active', 'boolean'],
 			[['name', 'model', 'countryOfOrigin'], 'string', 'max' => 100],
 			['description', 'string', 'max' => 1000],
 			[['price', 'oldPrice'], 'double'],
@@ -398,7 +338,7 @@ class OfferForm extends Model
 			[['length', 'width', 'height'], 'integer', 'min' => 1],
 			['weight', 'double', 'min' => 0.001],
 			[['category_id', 'name', 'price'], 'required'],
-			[['barcodes', 'images', 'properties', 'delivery', 'stores', 'recommended'], function($attribute, $params) {
+			[['barcodes', 'images', 'properties', 'stores', 'recommended'], function($attribute, $params) {
 				$hasError = false;
 				foreach ($this->$attribute as $model) {
 					if (!$model->validate())
@@ -440,10 +380,6 @@ class OfferForm extends Model
 		$object->description = $this->description;
 		$object->price = empty($this->price) ? null : (float) $this->price;
 		$object->oldPrice = empty($this->oldPrice) ? null : (float) $this->oldPrice;
-		$object->storeAvailable = $this->storeAvailable == 0 ? false : true;
-		$object->pickupAvailable = $this->pickupAvailable == 0 ? false : true;
-		$object->deliveryAvailable = $this->deliveryAvailable == 0 ? false : true;
-		$object->defaultDelivery = $this->defaultDelivery == 0 ? false : true;
 		$object->vendor_id = $vendor === null ? null : $vendor->id;
 		$object->vendor = $vendor === null ? null : $vendor->name;
 		$object->countryOfOrigin = $this->countryOfOrigin;
@@ -470,7 +406,6 @@ class OfferForm extends Model
 		$this->saveBarcodes();
 		$this->saveImages();
 		$this->saveProperties();
-		$this->saveDelivery();
 		$this->saveStores();
 		$this->saveRecommended();
 
@@ -548,33 +483,6 @@ class OfferForm extends Model
 			if ($item->value !== '' && $item->value !== null) {
 				$item->save($object, false);
 				unset($old[$item->property_id]);
-			}
-		}
-
-		//delete
-		foreach ($old as $item)
-			$item->delete();
-	}
-
-	/**
-	 * Save delivery
-	 * @return void
-	 */
-	private function saveDelivery()
-	{
-		$object = $this->_object;
-
-		$old = [];
-		foreach ($object->delivery as $item)
-			$old[$item->delivery_id] = $item;
-
-		//insert/update
-		if (!$object->defaultDelivery) {
-			foreach ($this->_delivery as $model) {
-				if ($model->active != 0) {
-					$model->save($object, false);
-					unset($old[$model->getTemplate()->id]);
-				}
 			}
 		}
 

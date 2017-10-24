@@ -39,15 +39,6 @@ create table if not exists `CatalogStore`
 	primary key (`id`)
 ) engine InnoDB;
 
-create table if not exists `CatalogDelivery`
-(
-	`id` int(10) not null auto_increment,
-	`name` varchar(100) not null,
-	`cost` decimal(10,2) not null,
-	`days` int(10) not null,
-	primary key (`id`)
-) engine InnoDB;
-
 create table if not exists `CatalogCategory`
 (
 	`id` int(10) not null auto_increment,
@@ -93,10 +84,6 @@ create table if not exists `CatalogOffer`
 	`vendor` varchar(100) default null,
 	`price` decimal(10,2) default null,
 	`oldPrice` decimal(10,2) default null,
-	`storeAvailable` tinyint(1) default 0,
-	`pickupAvailable` tinyint(1) default 0,
-	`deliveryAvailable` tinyint(1) default 0,
-	`defaultDelivery` tinyint(1) default 1,
 	`quantity` int(10) default 0,
 	`countryOfOrigin` varchar(100) default null,
 	`length` int(10) default null,
@@ -121,18 +108,6 @@ create table if not exists `CatalogOfferBarcode`
 	primary key (`id`),
 	foreign key (`offer_id`) references `CatalogOffer` (`id`) on delete cascade on update cascade,
 	key `barcode` (`barcode`)
-) engine InnoDB;
-
-create table if not exists `CatalogOfferDelivery`
-(
-	`id` int(10) not null auto_increment,
-	`offer_id` int(10) not null,
-	`delivery_id` int(10) not null,
-	`cost` decimal(10,2) default null,
-	`days` int(10) default null,
-	primary key (`id`),
-	foreign key (`offer_id`) references `CatalogOffer` (`id`) on delete cascade on update cascade,
-	foreign key (`delivery_id`) references `CatalogDelivery` (`id`) on delete cascade on update cascade
 ) engine InnoDB;
 
 create table if not exists `CatalogOfferProperty`

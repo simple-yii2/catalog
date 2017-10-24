@@ -46,11 +46,6 @@ class Module extends \yii\base\Module {
 	/**
 	 * @var boolean
 	 */
-	public $deliveryEnabled = true;
-
-	/**
-	 * @var boolean
-	 */
 	public $storeEnabled = true;
 
 	/**
@@ -132,9 +127,7 @@ class Module extends \yii\base\Module {
 		if ($this->storeEnabled) {
 			$items[] = ['label' => Yii::t('catalog', 'Stores'), 'url' => ["$base/catalog/store/index"]];
 		}
-		if ($this->deliveryEnabled) {
-			$items[] = ['label' => Yii::t('catalog', 'Delivery'), 'url' => ["$base/catalog/delivery/index"]];
-		}
+		$items[] = '<li role="separator" class="divider"></li>';
 		$items[] = ['label' => Yii::t('catalog', 'Categories'), 'url' => ["$base/catalog/category/index"]];
 		$items[] = ['label' => Yii::t('catalog', 'Offers'), 'url' => ["$base/catalog/offer/index"]];
 
