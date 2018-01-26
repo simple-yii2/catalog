@@ -49,6 +49,9 @@ foreach ($query->all() as $item) {
 
 				$result .= Html::encode($model->name);
 
+				if (!empty($model->model))
+					$result .= ' ' . $model->model;
+
 				if ($model->imageCount > 0)
 					$result .= '&nbsp;' . Html::tag('span', '<span class="glyphicon glyphicon-picture"></span>&nbsp;' . $model->imageCount, ['class' => 'badge']);
 
