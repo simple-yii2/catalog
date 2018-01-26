@@ -50,7 +50,7 @@ foreach ($query->all() as $item) {
 				$result .= Html::encode($model->name);
 
 				if ($model->imageCount > 0)
-					$result .= '&nbsp;' . Html::tag('span', $model->imageCount, ['class' => 'badge']);
+					$result .= '&nbsp;' . Html::tag('span', '<span class="glyphicon glyphicon-picture"></span>&nbsp;' . $model->imageCount, ['class' => 'badge']);
 
 				if (!empty($model->vendor))
 					$result .= '&nbsp;' . Html::tag('span', Html::encode($model->vendor), ['class' => 'label label-info']);
