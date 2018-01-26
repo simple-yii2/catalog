@@ -18,6 +18,7 @@ class CurrencySearch extends Currency {
 	public function attributeLabels()
 	{
 		return [
+			'name' => Yii::t('catalog', 'Name'),
 			'code' => Yii::t('catalog', 'Code'),
 			'rate' => Yii::t('catalog', 'Rate'),
 		];

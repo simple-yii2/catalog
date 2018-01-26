@@ -6,7 +6,7 @@ use yii\helpers\Html;
 
 use cms\catalog\common\models\Category;
 
-$title = Yii::t('catalog', 'Offers');
+$title = Yii::t('catalog', 'Goods/Services');
 
 $this->title = $title . ' | ' . Yii::$app->name;
 

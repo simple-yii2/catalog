@@ -129,7 +129,7 @@ class Module extends \yii\base\Module {
 		}
 		$items[] = '<li role="separator" class="divider"></li>';
 		$items[] = ['label' => Yii::t('catalog', 'Categories'), 'url' => ["$base/catalog/category/index"]];
-		$items[] = ['label' => Yii::t('catalog', 'Offers'), 'url' => ["$base/catalog/offer/index"]];
+		$items[] = ['label' => Yii::t('catalog', 'Goods/Services'), 'url' => ["$base/catalog/offer/index"]];
 
 		if (Yii::$app->user->can('Catalog')) {
 			return [
