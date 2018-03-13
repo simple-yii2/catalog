@@ -38,8 +38,8 @@
 .offer-price {
 	color: #ddd;
 	font-size: 24px;
-	font-weight: bold;
 }
 .offer-price span {
 	color: #333;
+	font-weight: bold;
 }
