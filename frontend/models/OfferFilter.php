@@ -12,6 +12,7 @@ use cms\catalog\common\models\Offer;
 use cms\catalog\common\models\OfferProperty;
 use cms\catalog\common\models\Settings;
 use cms\catalog\common\models\Vendor;
+use cms\catalog\frontend\helpers\CurrencyHelper;
 use cms\catalog\frontend\helpers\FilterHelper;
 
 class OfferFilter extends Model
@@ -56,11 +57,6 @@ class OfferFilter extends Model
 	 * @var integer
 	 */
 	private $_defaultCurrency_id;
-
-	/**
-	 * @var float
-	 */
-	private $_currentCurrency;
 
 	/**
 	 * @var integer[]
@@ -126,7 +122,7 @@ class OfferFilter extends Model
 
 		list($from, $to) = FilterHelper::rangeItems($this->price);
 		//current rate
-		$currency = $this->getCurrentCurrency();
+		$currency = CurrencyHelper::getCurrency();
 		$current_rate = $currency === null ? 1 : $currency->rate;
 
 		//from
@@ -225,22 +221,6 @@ class OfferFilter extends Model
 	}
 
 	/**
-	 * Current currency getter
-	 * @return float
-	 */
-	public function getCurrentCurrency()
-	{
-		if ($this->_currentCurrency !== null)
-			return $this->_currentCurrency;
-
-		$currency = null;
-		if (Yii::$app->has('currency')) 
-			$currency = Yii::$app->currency->currency;
-
-		return $this->_currentCurrency = $currency;
-	}
-
-	/**
 	 * Checked vendors ids getter
 	 * @return integer[]
 	 */
@@ -306,7 +286,7 @@ class OfferFilter extends Model
 		}
 
 		//rates
-		$currency = $this->getCurrentCurrency();
+		$currency = CurrencyHelper::getCurrency();
 
 		//default
 		$min = $max = null;
