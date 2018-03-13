@@ -56,6 +56,16 @@ class PropertyHelper
 	}
 
 	/**
+	 * Render value as integer
+	 * @param string $value 
+	 * @return string
+	 */
+	private static function renderInteger($value)
+	{
+		return Yii::$app->formatter->asInteger($value);
+	}
+
+	/**
 	 * Render value as float
 	 * @param string $value 
 	 * @return string

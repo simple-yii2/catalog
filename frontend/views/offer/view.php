@@ -8,6 +8,9 @@ use dkhlystov\widgets\Lightbox;
 OfferAsset::register($this);
 
 $title = $model->name;
+if (!empty($model->model)) {
+	$title .= ' ' . $model->model;
+}
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
@@ -15,7 +18,7 @@ $this->title = $title . ' | ' . Yii::$app->name;
 
 //breadcrumbs
 $breadcrumbs = [
-	['label' => Yii::t('catalog', 'Categories'), 'url' => ['index']],
+	// ['label' => Yii::t('catalog', 'Categories'), 'url' => ['index']],
 ];
 $category = $model->category;
 if ($category !== null) {
