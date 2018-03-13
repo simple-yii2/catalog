@@ -88,7 +88,11 @@ class OfferItem extends Widget
 	protected function renderCaption($model)
 	{
 		//name
-		$name = Html::tag('div', Html::a(Html::encode($model->name), $this->createUrl($model)), ['class'=>'offer-name']);
+		$s = $model->name;
+		if (!empty($model->model)) {
+			$s .= ' ' . $model->model;
+		}
+		$name = Html::tag('div', Html::a(Html::encode($s), $this->createUrl($model)), ['class'=>'offer-name']);
 
 		//rating
 		$rating = '';
