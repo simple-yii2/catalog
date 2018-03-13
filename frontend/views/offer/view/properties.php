@@ -7,7 +7,7 @@ use yii\helpers\Html;
 $title = Yii::t('catalog', 'Properties');
 
 ?>
-<h2><?= Html::encode($title) ?></h2>
+<div class="h3"><?= Html::encode($title) ?></div>
 
 <?= GridView::widget([
 	'dataProvider' => new ArrayDataProvider([
