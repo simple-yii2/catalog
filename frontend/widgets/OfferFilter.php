@@ -76,6 +76,11 @@ class OfferFilter extends Widget
 	 */
 	public function run()
 	{
+		//do not render filter if there are no items
+		if ($this->model->getPropertyCount() == 0) {
+			return '';
+		}
+
 		//price
 		$items = $this->renderPrice();
 
@@ -85,10 +90,6 @@ class OfferFilter extends Widget
 		//properties
 		foreach ($this->_items as $item)
 			$items .= $this->renderProperty($item);
-
-		//do not render filter if there are no items
-		if (empty($items))
-			return '';
 
 		//render
 		// var_dump($this->_queryParams); die();

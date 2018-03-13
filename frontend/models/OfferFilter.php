@@ -43,6 +43,11 @@ class OfferFilter extends Model
 	private $_properties;
 
 	/**
+	 * @var integer
+	 */
+	private $_propertyCount;
+
+	/**
 	 * @var float[]
 	 */
 	private $_rates;
@@ -61,6 +66,16 @@ class OfferFilter extends Model
 	 * @var integer[]
 	 */
 	private $_vendor_ids;
+
+	/**
+	 * @var [float, float]
+	 */
+	private $_priceRange;
+
+	/**
+	 * @var array
+	 */
+	private $_vendorItems;
 
 	/**
 	 * Active query getter
@@ -183,6 +198,33 @@ class OfferFilter extends Model
 	}
 
 	/**
+	 * Count of properties
+	 * @return integer;
+	 */
+	public function getPropertyCount()
+	{
+		if ($this->_propertyCount !== null) {
+			return $this->_propertyCount;
+		}
+
+		$count = sizeof($this->getProperties());
+
+		//price
+		list($min, $max) = $this->getPriceRange();
+		if ($min < $max) {
+			$count++;
+		}
+
+		//vendor
+		$items = $this->getVendorItems();
+		if (!empty($items)) {
+			$count++;
+		}
+
+		return $this->_propertyCount = $count;
+	}
+
+	/**
 	 * Current currency getter
 	 * @return float
 	 */
@@ -259,6 +301,10 @@ class OfferFilter extends Model
 	 */
 	public function getPriceRange()
 	{
+		if ($this->_priceRange !== null) {
+			return $this->_priceRange;
+		}
+
 		//rates
 		$currency = $this->getCurrentCurrency();
 
@@ -275,7 +321,7 @@ class OfferFilter extends Model
 			$max = round($row['max'] * $currency->rate, $currency->precision);
 		}
 
-		return [$min, $max];
+		return $this->_priceRange = [$min, $max];
 	}
 
 	/**
@@ -284,6 +330,10 @@ class OfferFilter extends Model
 	 */
 	public function getVendorItems()
 	{
+		if ($this->_vendorItems !== null) {
+			return $this->_vendorItems;
+		}
+
 		$query = clone $this->getQuery();
 		foreach ($query->where as $key => $value) {
 			if (is_array($value) && ArrayHelper::getValue($value, 1) == 'vendor_id')
@@ -308,7 +358,7 @@ class OfferFilter extends Model
 			}
 		}
 
-		return $items;
+		return $this->_vendorItems = $items;
 	}
 
 	/**

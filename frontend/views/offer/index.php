@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use cms\catalog\frontend\widgets\OfferList;
 
 $title = $category->isRoot() ? Yii::t('catalog', 'Catalog') : $category->title;
 
@@ -17,11 +18,11 @@ foreach ($category->getParents() as $object) {
 $breadcrumbs[] = $title;
 $this->params['breadcrumbs'] = $breadcrumbs;
 
+var_dump($model->getPropertyCount()); die();
+
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
-<div class="row">
-	<div class="col-sm-3"><?= $this->render('index/filter', ['model' => $model]) ?></div>
-	<div class="col-sm-9"><?= $this->render('index/list', ['model' => $model]) ?></div>
-</div>
-
+<?= OfferList::widget([
+	'model' => $model,
+]) ?>
