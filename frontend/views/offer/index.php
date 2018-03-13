@@ -18,11 +18,15 @@ foreach ($category->getParents() as $object) {
 $breadcrumbs[] = $title;
 $this->params['breadcrumbs'] = $breadcrumbs;
 
-var_dump($model->getPropertyCount()); die();
+//offer list widget config
+$config = ['model' => $model];
+if ($model->getPropertyCount() == 0) {
+	$config['layout'] = "{list}";
+	$config['listOptions'] = ['class' => 'col-sm-12'];
+	$config['listItemOptions'] = ['class' => 'col-sm-3'];
+}
 
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
-<?= OfferList::widget([
-	'model' => $model,
-]) ?>
+<?= OfferList::widget($config) ?>

@@ -14,7 +14,7 @@ class OfferList extends Widget
      * @var array the HTML attributes for the container tag of the offer list container.
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public $options = [];
+    public $options = ['class' => 'row'];
 
     /**
      * @var string the layout that determines how different sections of the offer list should be organized.
@@ -26,14 +26,19 @@ class OfferList extends Widget
     public $layout = "{filter}\n{list}";
 
     /**
-     * @var array Filter block options
+     * @var array Filter block HTML options
      */
     public $filterOptions = ['class' => 'col-sm-3'];
 
     /**
-     * @var array List block options
+     * @var array List block HTML options
      */
     public $listOptions = ['class' => 'col-sm-9'];
+
+    /**
+     * @var array List item block HTML options
+     */
+    public $listItemOptions = ['class' => 'col-sm-4'];
 
     /**
      * @var array Filter widget config
@@ -107,7 +112,7 @@ class OfferList extends Widget
         $config = array_replace([
             'dataProvider' => $this->model->getDataProvider(),
             'layout' => '<div class="row">{items}</div>{pager}',
-            'itemOptions' => ['class' => 'col-sm-4'],
+            'itemOptions' => $this->listItemOptions,
             'itemView' => function($model, $key, $index, $widget) {
                 return OfferItem::widget(['model' => $model]);
             },
