@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use cms\catalog\frontend\assets\OfferAsset;
 use cms\catalog\frontend\helpers\PriceHelper;
+use cms\catalog\frontend\helpers\PropertyHelper;
 use dkhlystov\widgets\Lightbox;
 
 OfferAsset::register($this);
@@ -60,7 +61,15 @@ $oldPrice = Html::tag('div', $s, ['class' => 'offer-old-price']);
 
 
 //properties
-$properties = $model->getProperties()->with(['categoryProperty'])->all();
+$properties = [];
+foreach ($model->getProperties()->with(['categoryProperty'])->all() as $item) {
+	$properties[] = ['label' => $item->categoryProperty->name, 'value' => PropertyHelper::renderValue($item)];
+}
+$formatter = Yii::$app->getFormatter();
+$properties[] = ['label' => Yii::t('catalog', 'Length'), 'value' => $formatter->asInteger($model->length) . ' ' . Yii::t('catalog', 'mm')];
+$properties[] = ['label' => Yii::t('catalog', 'Width'), 'value' => $formatter->asInteger($model->width) . ' ' . Yii::t('catalog', 'mm')];
+$properties[] = ['label' => Yii::t('catalog', 'Height'), 'value' => $formatter->asInteger($model->height) . ' ' . Yii::t('catalog', 'mm')];
+$properties[] = ['label' => Yii::t('catalog', 'Weight'), 'value' => $formatter->asDecimal($model->weight) . ' ' . Yii::t('catalog', 'kg')];
 
 
 

@@ -3,7 +3,6 @@
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use cms\catalog\frontend\helpers\PropertyHelper;
 
 $title = Yii::t('catalog', 'Properties');
 
@@ -20,10 +19,10 @@ $title = Yii::t('catalog', 'Properties');
 	'tableOptions' => ['class' => 'table offer-properties-table'],
 	'columns' => [
 		['content' => function ($model, $key, $index, $column) {
-			return $model->categoryProperty->name;
+			return Html::encode($model['label']);
 		}],
 		['content' => function ($model, $key, $index, $column) {
-			return PropertyHelper::renderValue($model);
+			return Html::encode($model['value']);
 		}],
 	],
 ]) ?>
