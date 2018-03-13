@@ -262,17 +262,17 @@ class OfferFilter extends Model
 	 * Data provider getter
 	 * @return ActiveDataProvider
 	 */
-	public function getDataProvider()
+	public function getDataProvider($config = [])
 	{
 		$query = $this->getQuery();
 
-		return new ActiveDataProvider([
+		return new ActiveDataProvider(array_replace_recursive([
 			'query' => $query,
 			'pagination' => [
 				'defaultPageSize' => 24,
 				'pageParam' => 'p',
 			],
-		]);
+		], $config));
 	}
 
 	/**

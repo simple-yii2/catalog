@@ -19,12 +19,13 @@ $breadcrumbs[] = $title;
 $this->params['breadcrumbs'] = $breadcrumbs;
 
 //offer list widget config
-$config = ['model' => $model];
-if ($model->getPropertyCount() == 0) {
-	$config['layout'] = "{list}";
-	$config['listOptions'] = ['class' => 'col-sm-12'];
-	$config['listItemOptions'] = ['class' => 'col-sm-3'];
+$module = Yii::$app->controller->module;
+if ($model->getPropertyCount()) {
+	$config = $module->offerListWithFilterConfig;
+} else {
+	$config = $module->offerListConfig;
 }
+$config['model'] = $model;
 
 ?>
 <h1><?= Html::encode($title) ?></h1>

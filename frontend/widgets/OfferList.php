@@ -41,6 +41,11 @@ class OfferList extends Widget
     public $listItemOptions = ['class' => 'col-sm-4'];
 
     /**
+     * @var integer
+     */
+    public $pageSize = 24;
+
+    /**
      * @var array Filter widget config
      */
     public $filterConfig = [];
@@ -110,7 +115,7 @@ class OfferList extends Widget
     protected function renderList()
     {
         $config = array_replace([
-            'dataProvider' => $this->model->getDataProvider(),
+            'dataProvider' => $this->model->getDataProvider(['pagination' => ['defaultPageSize' => $this->pageSize]]),
             'layout' => '<div class="row">{items}</div>{pager}',
             'itemOptions' => $this->listItemOptions,
             'itemView' => function($model, $key, $index, $widget) {
