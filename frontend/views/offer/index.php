@@ -9,7 +9,7 @@ $this->title = $title . ' | ' . Yii::$app->name;
 
 //breadcrumbs
 $breadcrumbs = [
-	['label' => Yii::t('catalog', 'Categories'), 'url' => ['index']],
+	// ['label' => Yii::t('catalog', 'Categories'), 'url' => ['index']],
 ];
 foreach ($category->getParents() as $object) {
 	if (!$object->isRoot())
