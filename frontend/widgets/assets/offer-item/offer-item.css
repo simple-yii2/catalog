@@ -8,12 +8,15 @@
 	padding: 10px;
 }
 .offer-thumb {
-	height: 200px;
+	height: 190px;
+	margin-bottom: 10px;
 	overflow: hidden;
 }
 .offer-thumb a,
 .offer-thumb a img {
 	display: block;
+	height: 100%;
+    object-fit: cover;
 	width: 100%;
 }
 .offer-name {
