@@ -25,6 +25,11 @@ class OfferItem extends Widget
 	public $options = ['class' => 'offer-item'];
 
 	/**
+	 * @var array of string or Closure
+	 */
+	public $buttons = [];
+
+	/**
 	 * @var array
 	 */
 	protected $_url;
@@ -124,11 +129,28 @@ class OfferItem extends Widget
 		$s = PriceHelper::render('span', $model->price, $currency);
 		$price = Html::tag('div', $s, ['class' => 'offer-price']);
 
-
 		//buttons
-		$buttons = $available = '';
+		$buttons = '';
+		foreach ($this->buttons as $button) {
+			$buttons .= $this->renderButton($button);
+		}
+		if (!empty($buttons)) {
+			$buttons = Html::tag('div', $buttons, ['class' => 'offer-buttons']);
+		}
+
+		//available
+		$available = '';
 
 		return Html::tag('div', $oldPrice . $price . $buttons . $available, ['class' => 'offer-controls']);
+	}
+
+	protected function renderButton($button)
+	{
+		if (is_callable($button)) {
+			return call_user_func($button, $this->model);
+		}
+
+		return $button;
 	}
 
 }

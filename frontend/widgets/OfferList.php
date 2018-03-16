@@ -114,12 +114,13 @@ class OfferList extends Widget
      */
     protected function renderList()
     {
+        $itemClass = class_exists('cms\catalog\frontend\widgets\OfferItemOrder') ? OfferItemOrder::className() : OfferItem::className();
         $config = array_replace([
             'dataProvider' => $this->model->getDataProvider(['pagination' => ['defaultPageSize' => $this->pageSize]]),
             'layout' => '<div class="row">{items}</div>{pager}',
             'itemOptions' => $this->listItemOptions,
-            'itemView' => function($model, $key, $index, $widget) {
-                return OfferItem::widget(['model' => $model]);
+            'itemView' => function($model, $key, $index, $widget) use ($itemClass) {
+                return $itemClass::widget(['model' => $model]);
             },
         ], $this->listConfig);
 
