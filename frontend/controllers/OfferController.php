@@ -2,6 +2,7 @@
 
 namespace cms\catalog\frontend\controllers;
 
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use cms\catalog\common\models\Category;
@@ -25,6 +26,10 @@ class OfferController extends Controller
 		$model = new OfferFilter;
 		$model->category = $category;
 
+		if ($model->getQuery()->count() == 0) {
+			throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
+		}
+
 		return $this->render('index', [
 			'category' => $category,
 			'model' => $model,
@@ -39,8 +44,9 @@ class OfferController extends Controller
 	public function actionView($alias)
 	{
 		$model = Offer::findByAlias($alias);
-		if ($model === null)
+		if ($model === null) {
 			throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
+		}
 
 		return $this->render('view', [
 			'model' => $model,

@@ -17,10 +17,10 @@
 .offer-price {
 	color: #ddd;
 	font-size: 36px;
-	font-weight: bold;
 }
 .offer-price span {
 	color: #333;
+	font-weight: bold;
 }
 .offer-old-price {
 	font-size: 20px;

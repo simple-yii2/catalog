@@ -77,7 +77,7 @@ class OfferFilter extends Model
 	 * Active query getter
 	 * @return ActiveQuery
 	 */
-	private function getQuery()
+	public function getQuery()
 	{
 		if ($this->_query !== null)
 			return $this->_query;
