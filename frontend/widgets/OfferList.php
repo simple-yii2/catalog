@@ -114,7 +114,7 @@ class OfferList extends Widget
      */
     protected function renderList()
     {
-        $itemClass = 'cms\order\frontend\widgets\OfferItem';
+        $itemClass = 'cms\purchase\frontend\widgets\OfferItem';
         if (!class_exists($itemClass)) {
             $itemClass = OfferItem::className();
         }
