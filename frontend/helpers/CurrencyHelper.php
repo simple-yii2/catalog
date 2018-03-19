@@ -100,14 +100,17 @@ class CurrencyHelper {
      * Calculate amount into application currency
      * @param float $value 
      * @param Currency|null $currency currency of value
+     * @param Currency|null $destCurrency application currency. Application currency used if not set.
      * @return float
      */
-    public static function calc($value, $currency = null)
+    public static function calc($value, $currency = null, $destCurrency = null)
     {
-        $appCurrency = self::getApplicationCurrency();
+        if ($destCurrency === null) {
+            $destCurrency = self::getApplicationCurrency();
+        }
 
-        if ($appCurrency !== null && $currency !== null && $appCurrency->id != $currency->id) {
-            $value = round($value * $currency->rate / $appCurrency->rate, $appCurrency->precision);
+        if ($destCurrency !== null && $currency !== null && $destCurrency->id != $currency->id) {
+            $value = round($value * $currency->rate / $destCurrency->rate, $destCurrency->precision);
         }
 
         return $value;
