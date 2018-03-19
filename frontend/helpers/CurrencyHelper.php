@@ -3,6 +3,8 @@
 namespace cms\catalog\frontend\helpers;
 
 use Yii;
+use yii\helpers\ArrayHelper;
+use yii\web\Cookie;
 use cms\catalog\common\models\Currency;
 use cms\catalog\common\models\Settings;
 
@@ -11,69 +13,104 @@ use cms\catalog\common\models\Settings;
  */
 class CurrencyHelper {
 
-	/**
-	 * @var integer currency model id
-	 */
-	private static $_currency_id;
+    //name for currency in cookies
+    const COOKIE_NAME = 'currency';
 
-	/**
-	 * @var Currency currency model
-	 */
-	private static $_currency;
+    /**
+     * @var integer application currency model id
+     */
+    private static $_currency_id;
 
-	/**
-	 * Currency id getter
-	 * @return integer
-	 */
-	public static function getCurrency_id()
-	{
-		if (self::$_currency_id !== null) {
-			return self::$_currency_id;
-		}
+    /**
+     * @var Currency[]
+     */
+    private static $_currencies;
 
-		//try to get it from cookies
-		$cookies = Yii::$app->getRequest()->getCookies();
-		$id = $cookies->getValue('currency_id');
-		if ($id !== null) {
-			return self::$_currency_id = $id;
-		}
+    /**
+     * Get application currency id
+     * @return integer|null
+     */
+    public static function getApplicationCurrencyId()
+    {
+        if (self::$_currency_id !== null) {
+            return self::$_currency_id;
+        }
 
-		//try to get it from settings
-		$settings = Settings::find()->one();
-		if ($settings !== null) {
-			return self::$_currency_id = $settings->defaultCurrency_id;
-		}
+        //try to get it from cookies
+        $cookies = Yii::$app->getRequest()->getCookies();
+        $id = $cookies->getValue(self::COOKIE_NAME);
+        if ($id !== null) {
+            return self::$_currency_id = $id;
+        }
 
-		return null;
-	}
+        //try to get it from settings
+        $settings = Settings::find()->one();
+        if ($settings !== null) {
+            return self::$_currency_id = $settings->defaultCurrency_id;
+        }
 
-	/**
-	 * Currency getter
-	 * @return Currency
-	 */
-	public static function getCurrency()
-	{
-		if (self::$_currency !== null) {
-			return self::$_currency;
-		}
+        return null;
+    }
 
-		return self::$_currency = Currency::findOne(self::getCurrency_id());
-	}
+    /**
+     * Get currency
+     * @param integer|null $id currency id
+     * @return Currency
+     */
+    public static function getCurrency($id)
+    {
+        //init currencies if needed
+        if (self::$_currencies === null) {
+            $items = [];
+            foreach (Currency::find()->all() as $item) {
+                $items[$item->id] = $item;
+            }
+            self::$_currencies = $items;
+        }
 
-	/**
-	 * Currency setter
-	 * @param Currency $value 
-	 * @return void
-	 */
-	public function setCurrency(Currency $value)
-	{
-		self::$_currency = $value;
+        return ArrayHelper::getValue(self::$_currencies, $id);
+    }
 
-		$cookies = Yii::$app->getResponse()->getCookies();
-		$cookies->add(new \yii\web\Cookie([
-			'name' => 'currency_id',
-			'value' => $value->id,
-		]));
-	}
+    /**
+     * Get application currency
+     * @return Currency
+     */
+    public static function getApplicationCurrency()
+    {
+        return self::getCurrency(self::getApplicationCurrencyId());
+    }
+
+    /**
+     * Set application currency
+     * @param Currency $value 
+     * @return void
+     */
+    public static function setApplicationCurrency(Currency $value)
+    {
+        self::$_currency = $value;
+
+        $cookies = Yii::$app->getResponse()->getCookies();
+        $cookies->add(new Cookie([
+            'name' => self::COOKIE_NAME,
+            'value' => $value->id,
+        ]));
+    }
+
+    /**
+     * Calculate amount into application currency
+     * @param float $value 
+     * @param Currency|null $currency currency of value
+     * @return float
+     */
+    public static function calc($value, $currency = null)
+    {
+        $appCurrency = self::getApplicationCurrency();
+
+        if ($appCurrency !== null && $currency !== null && $appCurrency->id != $currency->id) {
+            $value = round($value * $currency->rate / $appCurrency->rate, $appCurrency->precision);
+        }
+
+        return $value;
+    }
 
 }

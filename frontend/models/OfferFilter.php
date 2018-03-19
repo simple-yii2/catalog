@@ -122,7 +122,7 @@ class OfferFilter extends Model
 
 		list($from, $to) = FilterHelper::rangeItems($this->price);
 		//current rate
-		$currency = CurrencyHelper::getCurrency();
+		$currency = CurrencyHelper::getApplicationCurrency();
 		$current_rate = $currency === null ? 1 : $currency->rate;
 
 		//from
@@ -286,7 +286,7 @@ class OfferFilter extends Model
 		}
 
 		//rates
-		$currency = CurrencyHelper::getCurrency();
+		$currency = CurrencyHelper::getApplicationCurrency();
 
 		//default
 		$min = $max = null;

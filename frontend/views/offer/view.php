@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use cms\catalog\frontend\assets\OfferAsset;
+use cms\catalog\frontend\helpers\CurrencyHelper;
 use cms\catalog\frontend\helpers\PriceHelper;
 use cms\catalog\frontend\helpers\PropertyHelper;
 use dkhlystov\widgets\Lightbox;
@@ -48,7 +49,7 @@ if (!empty($thumbs))
 
 
 //price
-$currency = PriceHelper::getCurrency($model->currency_id);
+$currency = CurrencyHelper::getCurrency($model->currency_id);
 
 $s = PriceHelper::render('span', $model->price, $currency);
 $price = Html::tag('div', $s, ['class' => 'offer-price']);

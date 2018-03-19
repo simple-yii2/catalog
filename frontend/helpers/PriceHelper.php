@@ -12,28 +12,6 @@ class PriceHelper
 {
 
     /**
-     * @var Currency[]
-     */
-    private static $_currencies;
-
-    /**
-     * Calculate price in application currency
-     * @param float $value 
-     * @param Currency|null $currency 
-     * @return float
-     */
-    public static function calcPrice($value, $currency = null)
-    {
-        $appCurrency = CurrencyHelper::getCurrency();
-
-        if ($appCurrency !== null && $currency !== null && $appCurrency->id != $currency->id) {
-            $value = round($value * $currency->rate / $appCurrency->rate, $appCurrency->precision);
-        }
-
-        return $value;
-    }
-
-    /**
      * Render price
      * @param string $tag price container tag
      * @param string $value price
@@ -43,13 +21,13 @@ class PriceHelper
     public static function render($tag, $value, $currency = null)
     {
         $formatter = Yii::$app->getFormatter();
-        $c = CurrencyHelper::getCurrency();
+        $c = CurrencyHelper::getApplicationCurrency();
         if ($c === null) {
             $c = $currency;
         }
 
         //format
-        $value = self::calcPrice($value, $currency);
+        $value = CurrencyHelper::calc($value, $currency);
         $precision = ArrayHelper::getValue($c, 'precision', 0);
         $r = Html::tag($tag, $formatter->asDecimal($value, $precision));
 
@@ -62,25 +40,6 @@ class PriceHelper
         }
 
         return $r;
-    }
-
-    /**
-     * Get currency by id
-     * @param integer $id 
-     * @return Currency|null
-     */
-    public static function getCurrency($id)
-    {
-        //init currencies if needed
-        if (self::$_currencies === null) {
-            $items = [];
-            foreach (Currency::find()->all() as $item) {
-                $items[$item->id] = $item;
-            }
-            self::$_currencies = $items;
-        }
-
-        return ArrayHelper::getValue(self::$_currencies, $id);
     }
 
 }

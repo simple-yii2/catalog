@@ -8,6 +8,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use cms\catalog\common\models\Offer;
 use cms\catalog\frontend\helpers\CatalogHelper;
+use cms\catalog\frontend\helpers\CurrencyHelper;
 use cms\catalog\frontend\helpers\PriceHelper;
 use cms\catalog\frontend\widgets\assets\OfferItemAsset;
 
@@ -117,7 +118,7 @@ class OfferItem extends Widget
 	protected function renderControls($model)
 	{
 		$formatter = Yii::$app->getFormatter();
-		$currency = PriceHelper::getCurrency($model->currency_id);
+		$currency = CurrencyHelper::getCurrency($model->currency_id);
 
 		//old price
 		$s = '';
