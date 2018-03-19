@@ -11,67 +11,76 @@ use cms\catalog\common\models\Settings;
 class PriceHelper
 {
 
-	/**
-	 * @var Currency
-	 */
-	private static $_currency = false;
+    /**
+     * @var Currency[]
+     */
+    private static $_currencies;
 
-	/**
-	 * @var Currency[]
-	 */
-	private static $_currencies;
+    /**
+     * Calculate price in application currency
+     * @param float $value 
+     * @param Currency|null $currency 
+     * @return float
+     */
+    public static function calcPrice($value, $currency = null)
+    {
+        $appCurrency = CurrencyHelper::getCurrency();
 
-	/**
-	 * Render price
-	 * @param string $tag price container tag
-	 * @param string $value price
-	 * @param Currency|null $currency price currency
-	 * @return string
-	 */
-	public static function render($tag, $value, $currency = null)
-	{
-		$formatter = Yii::$app->getFormatter();
-		$appCurrency = CurrencyHelper::getCurrency();
-		$c = $appCurrency;
-		if ($c === null)
-			$c = $currency;			
-		$precision = ArrayHelper::getValue($c, 'precision', 0);
+        if ($appCurrency !== null && $currency !== null && $appCurrency->id != $currency->id) {
+            $value = round($value * $currency->rate / $appCurrency->rate, $appCurrency->precision);
+        }
 
-		//calc
-		if ($appCurrency !== null && $currency !== null && $appCurrency->id != $currency->id)
-			$value = $value * $currency->rate / $appCurrency->rate;
+        return $value;
+    }
 
-		//format
-		$r = Html::tag($tag, $formatter->asDecimal($value, $c == null ? 0 : $c->precision));
+    /**
+     * Render price
+     * @param string $tag price container tag
+     * @param string $value price
+     * @param Currency|null $currency price currency
+     * @return string
+     */
+    public static function render($tag, $value, $currency = null)
+    {
+        $formatter = Yii::$app->getFormatter();
+        $c = CurrencyHelper::getCurrency();
+        if ($c === null) {
+            $c = $currency;
+        }
 
-		//prefix/suffix
-		if ($c !== null) {
-			if (!empty($c->prefix))
-				$r = Html::encode($c->prefix) . '&nbsp;' . $r;
-			if (!empty($c->suffix))
-				$r .= '&nbsp;' . Html::encode($c->suffix);
-		}
+        //format
+        $value = self::calcPrice($value, $currency);
+        $precision = ArrayHelper::getValue($c, 'precision', 0);
+        $r = Html::tag($tag, $formatter->asDecimal($value, $precision));
 
-		return $r;
-	}
+        //prefix/suffix
+        if ($c !== null) {
+            if (!empty($c->prefix))
+                $r = Html::encode($c->prefix) . '&nbsp;' . $r;
+            if (!empty($c->suffix))
+                $r .= '&nbsp;' . Html::encode($c->suffix);
+        }
 
-	/**
-	 * Get currency by id
-	 * @param integer $id 
-	 * @return Currency|null
-	 */
-	public static function getCurrency($id)
-	{
-		//init currencies if needed
-		if (self::$_currencies === null) {
-			$items = [];
-			foreach (Currency::find()->all() as $item) {
-				$items[$item->id] = $item;
-			}
-			self::$_currencies = $items;
-		}
+        return $r;
+    }
 
-		return ArrayHelper::getValue(self::$_currencies, $id);
-	}
+    /**
+     * Get currency by id
+     * @param integer $id 
+     * @return Currency|null
+     */
+    public static function getCurrency($id)
+    {
+        //init currencies if needed
+        if (self::$_currencies === null) {
+            $items = [];
+            foreach (Currency::find()->all() as $item) {
+                $items[$item->id] = $item;
+            }
+            self::$_currencies = $items;
+        }
+
+        return ArrayHelper::getValue(self::$_currencies, $id);
+    }
 
 }
