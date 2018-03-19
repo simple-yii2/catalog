@@ -31,7 +31,7 @@ class PriceHelper
 	public static function render($tag, $value, $currency = null)
 	{
 		$formatter = Yii::$app->getFormatter();
-		$appCurrency = self::getApplicationCurrency();
+		$appCurrency = CurrencyHelper::getCurrency();
 		$c = $appCurrency;
 		if ($c === null)
 			$c = $currency;			
@@ -72,27 +72,6 @@ class PriceHelper
 		}
 
 		return ArrayHelper::getValue(self::$_currencies, $id);
-	}
-
-	/**
-	 * Get application currency
-	 * @return Currency|null
-	 */
-	private static function getApplicationCurrency()
-	{
-		if (self::$_currency !== false)
-			return self::$_currency;
-
-		//from component
-		$component = Yii::$app->get('currency', false);
-		if ($component !== null)
-			return self::$_currency = self::getCurrency($component->currency_id);
-
-		//from settings
-		$settings = Settings::find()->one();
-		if ($settings === null)
-			$settings = new Settings;
-		return self::$_currency = self::getCurrency($settings->defaultCurrency_id);
 	}
 
 }
