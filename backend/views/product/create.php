@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$title = Yii::t('catalog', 'Create goods/service');
+$title = Yii::t('catalog', 'Create product/service');
 
 $this->title = $title . ' | ' . Yii::$app->name;
 

@@ -13,7 +13,7 @@ return [
 	'Create vendor' => 'Добавить производителя',
 	'Create store' => 'Добавить магазин/склад',
 	'Create category' => 'Добавить категорию',
-	'Create goods/service' => 'Добавить товар/услугу',
+	'Create product/service' => 'Добавить товар/услугу',
 	'Common properties' => 'Общие характеристики',
 
 	'Changes saved successfully.' => 'Изменения успешно сохранены.',
