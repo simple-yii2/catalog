@@ -34,7 +34,6 @@ foreach ($query->all() as $item)
 <fieldset>
 	<?= $form->field($model, 'active')->checkbox() ?>
 	<?= $form->field($model, 'images')->label($model->getAttributeLabel('images') . $imageSize)->widget(UploadImages::className(), [
-		'id' => 'goods-images',
 		'fileKey' => 'file',
 		'thumbKey' => 'thumb',
 		'thumbWidth' => $thumbWidth,
