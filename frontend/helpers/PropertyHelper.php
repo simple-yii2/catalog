@@ -5,17 +5,17 @@ namespace cms\catalog\frontend\helpers;
 use Yii;
 use yii\helpers\ArrayHelper;
 use cms\catalog\common\models\CategoryProperty;
-use cms\catalog\common\models\OfferProperty;
+use cms\catalog\common\models\ProductProperty;
 
 class PropertyHelper
 {
 
 	/**
 	 * Render property value
-	 * @param OfferProperty $object 
+	 * @param ProductProperty $object 
 	 * @return string
 	 */
-	public static function renderValue(OfferProperty $object)
+	public static function renderValue(ProductProperty $object)
 	{
 		$categoryProperty = $object->categoryProperty;
 		if ($categoryProperty === null)

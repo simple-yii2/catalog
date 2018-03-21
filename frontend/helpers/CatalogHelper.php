@@ -6,7 +6,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Offer;
+use cms\catalog\common\models\Product;
 use cms\catalog\frontend\Module;
 
 /**
@@ -47,7 +47,7 @@ class CatalogHelper
 	}
 
 	/**
-	 * Create url to category offers
+	 * Create url to category products
 	 * @param Category $object 
 	 * @return string|array
 	 */
@@ -57,21 +57,21 @@ class CatalogHelper
 		if ($name === null)
 			return '#';
 
-		return ["/{$name}/offer/index", 'alias' => $object->alias];
+		return ["/{$name}/product/index", 'alias' => $object->alias];
 	}
 
 	/**
-	 * Create url to offer view
-	 * @param Offer $object 
+	 * Create url to product view
+	 * @param Product $object 
 	 * @return string|array
 	 */
-	public static function createOfferUrl(Offer $object)
+	public static function createProductUrl(Product $object)
 	{
 		$name = self::getModuleName();
 		if ($name === null)
 			return '#';
 
-		return ["/{$name}/offer/view", 'alias' => $object->alias];
+		return ["/{$name}/product/view", 'alias' => $object->alias];
 	}
 
 	/**
@@ -90,8 +90,8 @@ class CatalogHelper
 		$objects = array_merge([$category], $category->children()->all());
 
 		$i = 0;
-		$offerCount = 0;
-		$item = self::makeBranch($objects, $i, $offerCount);
+		$productCount = 0;
+		$item = self::makeBranch($objects, $i, $productCount);
 
 		return ArrayHelper::getValue($item, 'items', []);
 	}
@@ -100,13 +100,13 @@ class CatalogHelper
 	 * Make branch for menu
 	 * @param Category[] $objects 
 	 * @param integer &$i 
-	 * @param integer &$offerCount 
+	 * @param integer &$productCount 
 	 * @return array
 	 */
-	private static function makeBranch($objects, &$i, &$offerCount = 0)
+	private static function makeBranch($objects, &$i, &$productCount = 0)
 	{
 		$object = $objects[$i];
-		$offerCount += $object->offerCount;
+		$productCount += $object->productCount;
 
 		$result = [
 			'label' => Html::encode($object->title),
@@ -120,14 +120,14 @@ class CatalogHelper
 
 			$c = 0;
 			$item = self::makeBranch($objects, $i, $c);
-			$offerCount += $c;
+			$productCount += $c;
 
 			if ($c)
 				$items[] = $item;
 		}
 
-		if ($offerCount > 0)
-			$result['label'] .= ' ' . Html::tag('span', $offerCount, ['count']);
+		if ($productCount > 0)
+			$result['label'] .= ' ' . Html::tag('span', $productCount, ['count']);
 
 		if (!empty($items))
 			$result['items'] = $items;

@@ -64,7 +64,7 @@ class CategoryProperty extends ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'CatalogCategoryProperty';
+		return 'catalog_category_property';
 	}
 
 	/**

@@ -13,7 +13,7 @@ class Module extends FrontendModule
 	/**
 	 * @var array
 	 */
-	public $offerListConfig = [
+	public $productListConfig = [
 		'layout' => "{list}",
 		'listOptions' => ['class' => 'col-sm-12'],
 		'listItemOptions' => ['class' => 'col-sm-3'],
@@ -22,7 +22,7 @@ class Module extends FrontendModule
 	/**
 	 * @var array
 	 */
-	public $offerListWithFilterConfig = [];
+	public $productListWithFilterConfig = [];
 
 	/**
 	 * @inheritdoc

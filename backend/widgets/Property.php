@@ -156,7 +156,7 @@ class Property extends InputWidget
 	 */
 	private function renderUnit($control, $unit)
 	{
-		$unit = Html::tag('span', Html::encode($unit), ['class' => 'input-group-addon offer-property-unit']);
+		$unit = Html::tag('span', Html::encode($unit), ['class' => 'input-group-addon product-property-unit']);
 		return Html::tag('div', $control . $unit, ['class' => 'input-group']);
 	}
 

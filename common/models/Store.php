@@ -29,7 +29,7 @@ class Store extends ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'CatalogStore';
+		return 'catalog_store';
 	}
 
 	/**

@@ -22,12 +22,12 @@ class Module extends BackendModule
     /**
      * @var integer;
      */
-    public $offerThumbWidth = 360;
+    public $productThumbWidth = 360;
 
     /**
      * @var integer;
      */
-    public $offerThumbHeight = 270;
+    public $productThumbHeight = 270;
 
     /**
      * @var boolean
@@ -110,7 +110,7 @@ class Module extends BackendModule
         }
         $items[] = '<li role="separator" class="divider"></li>';
         $items[] = ['label' => Yii::t('catalog', 'Categories'), 'url' => ["$base/catalog/category/index"]];
-        $items[] = ['label' => Yii::t('catalog', 'Goods/Services'), 'url' => ["$base/catalog/offer/index"]];
+        $items[] = ['label' => Yii::t('catalog', 'Goods/Services'), 'url' => ["$base/catalog/product/index"]];
 
         return [
             ['label' => Yii::t('catalog', 'Catalog'), 'items' => $items],

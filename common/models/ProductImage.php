@@ -3,10 +3,13 @@
 namespace cms\catalog\common\models;
 
 use yii\db\ActiveRecord;
-use dkhlystov\storage\components\StoredInterface;
-use helpers\Translit;
 
-class Vendor extends ActiveRecord implements StoredInterface
+use dkhlystov\storage\components\StoredInterface;
+
+/**
+ * Product image active record
+ */
+class ProductImage extends ActiveRecord implements StoredInterface
 {
 
 	/**
@@ -14,7 +17,18 @@ class Vendor extends ActiveRecord implements StoredInterface
 	 */
 	public static function tableName()
 	{
-		return 'catalog_vendor';
+		return 'catalog_product_image';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['file', 'thumb', 'description'], 'string', 'max' => 200],
+			['title', 'string', 'max' => 100],
+		];
 	}
 
 	/**
@@ -61,15 +75,6 @@ class Vendor extends ActiveRecord implements StoredInterface
 
 		if (array_key_exists($this->thumb, $files))
 			$this->thumb = $files[$this->thumb];
-	}
-
-	/**
-	 * Making page alias from name
-	 * @return void
-	 */
-	public function makeAlias()
-	{
-		$this->alias = Translit::t($this->name);
 	}
 
 }

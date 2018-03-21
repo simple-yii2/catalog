@@ -26,7 +26,7 @@ class Category extends ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'CatalogCategory';
+		return 'catalog_category';
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Category extends ActiveRecord
 	{
 		parent::__construct(array_replace([
 			'active' => true,
-			'offerCount' => 0,
+			'productCount' => 0,
 		], $config));
 	}
 
@@ -51,12 +51,12 @@ class Category extends ActiveRecord
 	}
 
 	/**
-	 * Offers relation
+	 * Products relation
 	 * @return ActiveQuery
 	 */
-	public function getOffers()
+	public function getProducts()
 	{
-		return $this->hasMany(Offer::className(), ['category_id' => 'id'])->inverseOf('category');
+		return $this->hasMany(Product::className(), ['category_id' => 'id'])->inverseOf('category');
 	}
 
 	/**
@@ -173,15 +173,15 @@ class Category extends ActiveRecord
 	}
 
 	/**
-	 * Update offer count
+	 * Update product count
 	 * @return void
 	 */
-	public function updateOfferCount()
+	public function updateProductCount()
 	{
-		$count = $this->getOffers()->count();
-		if ($count != $this->offerCount) {
-			$this->offerCount = $count;
-			$this->update(false, ['offerCount']);
+		$count = $this->getProducts()->count();
+		if ($count != $this->productCount) {
+			$this->productCount = $count;
+			$this->update(false, ['productCount']);
 		}
 	}
 

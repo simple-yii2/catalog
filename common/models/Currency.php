@@ -13,7 +13,7 @@ class Currency extends ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'CatalogCurrency';
+		return 'catalog_currency';
 	}
 
 	/**
@@ -31,9 +31,9 @@ class Currency extends ActiveRecord
 	 */
 	public function afterSave($insert, $changedAttributes)
 	{
-		//offer price value
+		//product price value
 		if (array_key_exists('rate', $changedAttributes))
-			Offer::updateAll(['priceValue' => new Expression('price * '. $this->rate)], ['currency_id' => $this->id]);
+			Product::updateAll(['priceValue' => new Expression('price * '. $this->rate)], ['currency_id' => $this->id]);
 	}
 
 }

@@ -29,7 +29,7 @@ $maxDepth = Yii::$app->controller->module->maxCategoryDepth;
 	'moveAction' => ['move'],
 	'tableOptions' => ['class' => 'table table-condensed'],
 	'rowOptions' => function ($model, $key, $index, $grid) {
-		$options = ['data-offer-count' => $model->offerCount];
+		$options = ['data-product-count' => $model->productCount];
 
 		if (!$model->active)
 			Html::addCssClass($options, 'warning');
@@ -39,7 +39,7 @@ $maxDepth = Yii::$app->controller->module->maxCategoryDepth;
 	'pluginOptions' => [
 		'onMoveOver' => new JsExpression('function (item, helper, target, position) {
 			if (position == 1)
-				return target.data("offerCount") == 0;
+				return target.data("productCount") == 0;
 
 			return true;
 		}'),
@@ -51,8 +51,8 @@ $maxDepth = Yii::$app->controller->module->maxCategoryDepth;
 			'content' => function($model, $key, $index, $column) {
 				$result = Html::encode($model->title);
 
-				if ($model->offerCount > 0)
-					$result .= '&nbsp;' . Html::tag('span', $model->offerCount, ['class' => 'badge']);
+				if ($model->productCount > 0)
+					$result .= '&nbsp;' . Html::tag('span', $model->productCount, ['class' => 'badge']);
 
 				return $result;
 			},
@@ -74,10 +74,10 @@ $maxDepth = Yii::$app->controller->module->maxCategoryDepth;
 			],
 			'visibleButtons' => [
 				'delete' => function($model, $key, $index) {
-					return $model->offerCount == 0;
+					return $model->productCount == 0;
 				},
 				'create' => function($model, $key, $index) use ($maxDepth) {
-					if ($model->offerCount > 0)
+					if ($model->productCount > 0)
 						return false;
 
 					if ($maxDepth !== null && $model->depth >= $maxDepth)

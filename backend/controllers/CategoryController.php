@@ -11,7 +11,7 @@ use yii\web\Controller;
 use cms\catalog\backend\models\CategorySearch;
 use cms\catalog\backend\models\CategoryForm;
 use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Offer;
+use cms\catalog\common\models\Product;
 
 class CategoryController extends Controller
 {
@@ -55,7 +55,7 @@ class CategoryController extends Controller
 		if ($parent === null)
 			$parent = Category::find()->roots()->one();
 
-		if ($parent->offerCount > 0)
+		if ($parent->productCount > 0)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
 		$maxDepth = $this->module->maxCategoryDepth;
@@ -67,7 +67,7 @@ class CategoryController extends Controller
 		]);
 
 		if ($model->load(Yii::$app->getRequest()->post()) && $model->save($parent)) {
-			$this->updateOffers();
+			$this->updateProducts();
 
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
 			return $this->redirect([
@@ -122,7 +122,7 @@ class CategoryController extends Controller
 		if ($object === null || $object->isRoot())
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		if ($object->offerCount > 0)
+		if ($object->productCount > 0)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
 		$sibling = $object->prev()->one();
@@ -152,7 +152,7 @@ class CategoryController extends Controller
 		if ($t === null || $t->isRoot())
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
 
-		if ($position == 1 && $t->offerCount > 0)
+		if ($position == 1 && $t->productCount > 0)
 			throw new BadRequestHttpException(Yii::t('catalog', 'Operation not permitted.'));
 
 		switch ($position) {
@@ -172,7 +172,7 @@ class CategoryController extends Controller
 		$object->refresh();
 		$object->updatePath();
 
-		$this->updateOffers();
+		$this->updateProducts();
 	}
 
 	/**
@@ -195,11 +195,11 @@ class CategoryController extends Controller
 		]);
 	}
 
-	private function updateOffers()
+	private function updateProducts()
 	{
 		$query = Category::find()->select(['id', 'lft', 'rgt'])->asArray();
 		foreach ($query->all() as $row) {
-			Offer::updateAll([
+			Product::updateAll([
 				'category_lft' => $row['lft'],
 				'category_rgt' => $row['rgt'],
 			], [
