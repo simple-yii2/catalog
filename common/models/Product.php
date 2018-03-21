@@ -103,7 +103,7 @@ class Product extends ActiveRecord
 	 */
 	public function getRecommended()
 	{
-		return $this->hasMany(Product::className(), ['id' => 'recommended_id'])->viaTable('catalog_offer_recommended', ['product_id' => 'id']);
+		return $this->hasMany(Product::className(), ['id' => 'recommended_id'])->viaTable('catalog_product_recommended', ['product_id' => 'id']);
 	}
 
 	/**
