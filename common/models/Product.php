@@ -135,7 +135,7 @@ class Product extends ActiveRecord
 	 */
 	public function makeAlias()
 	{
-		$this->alias = Translit::t($this->name . '-' . $this->id);
+		$this->alias = Translit::t($this->name . ' ' . $this->model . '-' . $this->id);
 	}
 
 }

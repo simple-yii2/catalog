@@ -8,12 +8,12 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use cms\catalog\common\models\Currency;
 use cms\catalog\common\models\CategoryProperty;
-use cms\catalog\common\models\Product;
 use cms\catalog\common\models\ProductProperty;
 use cms\catalog\common\models\Settings;
 use cms\catalog\common\models\Vendor;
 use cms\catalog\frontend\helpers\CurrencyHelper;
 use cms\catalog\frontend\helpers\FilterHelper;
+use cms\catalog\frontend\models\Product;
 
 class ProductFilter extends Model
 {
@@ -84,6 +84,8 @@ class ProductFilter extends Model
 
 		//make new instance of active query
 		$query = Product::find()->alias('t')->groupBy(['t.id']);
+
+		// $query->andWhere(['active' => true]);
 
 		//apply conditions
 		$this->applyCategoryCondition($query);

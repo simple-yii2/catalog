@@ -6,7 +6,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Product;
+use cms\catalog\frontend\models\Product;
 use cms\catalog\frontend\models\ProductFilter;
 
 class ProductController extends Controller
