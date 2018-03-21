@@ -8,35 +8,6 @@ $(function() {
 		});
 	});
 
-	$(document).on('change', '#productform-defaultdelivery', function() {
-		if (this.checked) {
-			$('.product-delivery :checkbox').prop({'disabled': true, 'checked': true});
-			$('.product-delivery :text').prop('disabled', true).val('');
-		} else {
-			$('.product-delivery [name$="[active]"]').trigger('change').prop('disabled', false);
-		}
-	});
-
-	$(document).on('change', '.product-delivery [name$="[active]"]', function() {
-		var $active = $(this),
-			active = this.checked;
-
-		$active.closest('tr').find(':checkbox').not($active).each(function() {
-			var $check = $(this);
-			$check.prop('disabled', !active);
-			$check.closest('td').find(':text').prop('disabled', !active || this.checked);
-		});
-	});
-
-	$(document).on('change', '.product-delivery-cost :checkbox, .product-delivery-days :checkbox', function() {
-		var $td = $(this).closest('td'),
-			$text = $td.find(':text');
-		$td.find('input:hidden').val(this.checked ? '1' : '0');
-		$text.prop('disabled', this.checked);
-		if (this.checked)
-			$text.val('');
-	});
-
 	$(document).on('blur', '#recommended-add', recommendedAddBlur);
 	$(document).on('keypress', '#recommended-add', recommendedAddKeypress);
 	$(document).on('selected', '#recommended-add', recommendedAddSelected);
