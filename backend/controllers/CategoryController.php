@@ -170,7 +170,7 @@ class CategoryController extends Controller
 		}
 
 		$object->refresh();
-		$object->updatePath();
+		$object->updateAliasAndPath();
 
 		$this->updateProducts();
 	}
