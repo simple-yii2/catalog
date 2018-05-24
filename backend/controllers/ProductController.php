@@ -49,8 +49,16 @@ class ProductController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$request = Yii::$app->getRequest();
+
+		$filter = new ProductSearch;
+		if ($filter->load($request->post())) {
+			return $this->redirect(array_merge_recursive([''], $request->getQueryParams(), [$filter->formName() => $filter->getDirtyAttributes()]));
+		}
+		$filter->load($request->get());
+
 		return $this->render('index', [
-			'search' => new ProductSearch,
+			'search' => $filter,
 		]);
 	}
 
@@ -117,10 +125,6 @@ class ProductController extends Controller
 
 		//barcodes
 		foreach ($object->barcodes as $item)
-			$item->delete();
-
-		//delivery
-		foreach ($object->delivery as $item)
 			$item->delete();
 
 		//properties

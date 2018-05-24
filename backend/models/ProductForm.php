@@ -132,8 +132,13 @@ class ProductForm extends Model
 	 */
 	public function __construct(Product $object = null, $config = [])
 	{
-		if ($object === null)
-			$object = new Product;
+		if ($object === null) {
+			$object = new Product([
+				'active' => true,
+				'imageCount' => 0,
+				'currency_id' => ArrayHelper::getValue(Yii::$app->params, ['catalogSettings', 'defaultCurrency_id']),
+			]);
+		}
 
 		$this->_object = $object;
 

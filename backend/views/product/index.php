@@ -3,7 +3,7 @@
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-
+use yii\widgets\ActiveForm;
 use cms\catalog\common\models\Category;
 
 $title = Yii::t('catalog', 'Goods/Services');
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'] = [
 ];
 
 //categories
-$categories = [];
+$categories = ['' => '[' . $search->getAttributeLabel('category_id') . ']'];
 $query = Category::find()->orderBy(['lft' => SORT_ASC]);
 foreach ($query->all() as $item) {
 	if ($item->isLeaf() && $item->active)
@@ -27,6 +27,19 @@ foreach ($query->all() as $item) {
 
 <div class="btn-toolbar" role="toolbar">
 	<?= Html::a(Yii::t('catalog', 'Create'), ['create'], ['class' => 'btn btn-primary']) ?>
+</div>
+
+<div>
+	<?php $form = ActiveForm::begin([
+		'enableClientValidation' => false,
+	]) ?>
+		<div class="input-group">
+			<?= Html::activeDropDownList($search, 'category_id', $categories, ['class' => 'form-control']) ?>
+			<span class="input-group-btn">
+				<?= Html::submitButton('Применить', ['class' => 'btn btn-default']) ?>
+			</span>
+		</div>
+	<?php ActiveForm::end() ?>
 </div>
 
 <?= GridView::widget([

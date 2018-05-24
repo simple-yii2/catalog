@@ -39,8 +39,8 @@ class ProductSearch extends Product {
 	 * @return ActiveDataProvider
 	 */
 	public function getDataProvider($params = null) {
-		if ($params === null)
-			$params = Yii::$app->getRequest()->get();
+		// if ($params === null)
+		// 	$params = Yii::$app->getRequest()->get();
 
 		//ActiveQuery
 		$query = static::find()->orderBy(['modifyDate' => SORT_DESC]);
@@ -50,12 +50,16 @@ class ProductSearch extends Product {
 		]);
 
 		//return data provider if no search
-		if (!($this->load($params) && $this->validate()))
-			return $dataProvider;
+		// if (!($this->load($params) && $this->validate()))
+		// 	return $dataProvider;
 
 		//search
 		$query->andFilterWhere(['category_id' => $this->category_id]);
-		$query->andFilterWhere(['like', 'name', $this->name]);
+		// $query->andFilterWhere(['like', 'name', $this->name]);
+		$query->andFilterWhere(['or',
+			['like', 'name', $this->name],
+			['like', 'model', $this->name],
+		]);
 
 		return $dataProvider;
 	}

@@ -21,19 +21,6 @@ class Product extends ActiveRecord
 
 	/**
 	 * @inheritdoc
-	 * Default values
-	 */
-	public function __construct($config = [])
-	{
-		parent::__construct(array_replace([
-			'active' => true,
-			'imageCount' => 0,
-			'currency_id' => ArrayHelper::getValue(Yii::$app->params, ['catalogSettings', 'defaultCurrency_id']),
-		], $config));
-	}
-
-	/**
-	 * @inheritdoc
 	 */
 	public function beforeSave($insert)
 	{
