@@ -2,7 +2,8 @@
 
 use yii\helpers\Html;
 
-$title = $model->getObject()->name;
+$object = $model->getObject();
+$title = trim($object->name . ' ' . $object->model);
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
