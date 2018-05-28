@@ -6,12 +6,12 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use cms\catalog\common\helpers\CurrencyHelper;
 use cms\catalog\common\models\Currency;
 use cms\catalog\common\models\CategoryProperty;
 use cms\catalog\common\models\ProductProperty;
 use cms\catalog\common\models\Settings;
 use cms\catalog\common\models\Vendor;
-use cms\catalog\frontend\helpers\CurrencyHelper;
 use cms\catalog\frontend\helpers\FilterHelper;
 use cms\catalog\frontend\models\Product;
 

@@ -3,8 +3,13 @@
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use cms\catalog\backend\assets\ProductListAsset;
+use cms\catalog\common\helpers\PriceHelper;
 use cms\catalog\common\models\Category;
+
+ProductListAsset::register($this);
 
 $title = Yii::t('catalog', 'Goods/Services');
 
@@ -14,31 +19,33 @@ $this->params['breadcrumbs'] = [
 	$title,
 ];
 
+//create url
+$createUrl = ['create'];
+if (!empty($search->category_id)) {
+	$createUrl['category_id'] = $search->category_id;
+}
+
 //categories
 $categories = ['' => '[' . $search->getAttributeLabel('category_id') . ']'];
 $query = Category::find()->orderBy(['lft' => SORT_ASC]);
 foreach ($query->all() as $item) {
-	if ($item->isLeaf() && $item->active)
+	if ($item->isLeaf() && $item->active) {
 		$categories[$item->id] = $item->path;
+	}
 }
 
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
 <div class="btn-toolbar" role="toolbar">
-	<?= Html::a(Yii::t('catalog', 'Create'), ['create'], ['class' => 'btn btn-primary']) ?>
+	<?= Html::a(Yii::t('catalog', 'Create'), $createUrl, ['class' => 'btn btn-primary']) ?>
 </div>
 
 <div>
 	<?php $form = ActiveForm::begin([
 		'enableClientValidation' => false,
 	]) ?>
-		<div class="input-group">
-			<?= Html::activeDropDownList($search, 'category_id', $categories, ['class' => 'form-control']) ?>
-			<span class="input-group-btn">
-				<?= Html::submitButton('Применить', ['class' => 'btn btn-default']) ?>
-			</span>
-		</div>
+		<?= Html::dropDownList('category_id', $search->category_id, $categories, ['class' => 'form-control']) ?>
 	<?php ActiveForm::end() ?>
 </div>
 
@@ -78,9 +85,24 @@ foreach ($query->all() as $item) {
 			},
 		],
 		[
+			'attribute' => 'price',
+			'format' => 'html',
+			'value' => function ($model) {
+				return PriceHelper::render('span', $model->price, $model->currency);
+			},
+		],
+		[
 			'class' => 'yii\grid\ActionColumn',
 			'options' => ['style' => 'width: 50px;'],
 			'template' => '{update} {delete}',
+			'urlCreator' => function ($action, $model, $key, $index, $column) use ($search) {
+				$params = is_array($key) ? $key : ['id' => (string) $key];
+				if (!empty($search->category_id)) {
+					$params['category_id'] = $search->category_id;
+				}
+				$params[0] = $column->controller ? $column->controller . '/' . $action : $action;
+				return Url::toRoute($params);
+			},
 		],
 	],
 ]) ?>

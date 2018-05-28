@@ -50,11 +50,16 @@ class ProductController extends Controller
 	public function actionIndex()
 	{
 		$request = Yii::$app->getRequest();
+		if ($category_id = $request->post('category_id')) {
+			return $this->redirect(array_merge([''], $request->getQueryParams(), ['category_id' => $category_id]));
+		}
+		$category_id = $request->get('category_id');
 
 		$filter = new ProductSearch;
-		if ($filter->load($request->post())) {
-			return $this->redirect(array_merge_recursive([''], $request->getQueryParams(), [$filter->formName() => $filter->getDirtyAttributes()]));
-		}
+		$filter->category_id = $category_id;
+		// if ($filter->load($request->post())) {
+		// 	return $this->redirect(array_merge_recursive([''], $request->getQueryParams(), [$filter->formName() => $filter->getDirtyAttributes()]));
+		// }
 		$filter->load($request->get());
 
 		return $this->render('index', [
@@ -68,13 +73,14 @@ class ProductController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new ProductForm;
+		$request = Yii::$app->getRequest();
+		$model = new ProductForm(null, ['category_id' => $request->get('category_id')]);
 
-		if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+		if ($model->load($request->post()) && $model->save()) {
 			$model->getObject()->category->updateProductCount();
 
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
-			return $this->redirect(['index']);
+			return $this->redirect(['index', 'category_id' => $model->getObject()->category_id]);
 		}
 
 		return $this->render('create', [
@@ -90,8 +96,9 @@ class ProductController extends Controller
 	public function actionUpdate($id)
 	{
 		$object = Product::findOne($id);
-		if ($object === null)
+		if ($object === null) {
 			throw new BadRequestHttpException(Yii::t('catalog', 'Item not found.'));
+		}
 
 		$category = $object->category;
 
@@ -104,7 +111,7 @@ class ProductController extends Controller
 				$category->updateProductCount();
 
 			Yii::$app->session->setFlash('success', Yii::t('catalog', 'Changes saved successfully.'));
-			return $this->redirect(['index']);
+			return $this->redirect(['index', 'category_id' => $object->category_id]);
 		}
 
 		return $this->render('update', [

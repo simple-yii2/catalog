@@ -6,10 +6,10 @@ use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use cms\catalog\common\helpers\CurrencyHelper;
+use cms\catalog\common\helpers\PriceHelper;
 use cms\catalog\common\models\Product;
 use cms\catalog\frontend\helpers\CatalogHelper;
-use cms\catalog\frontend\helpers\CurrencyHelper;
-use cms\catalog\frontend\helpers\PriceHelper;
 use cms\catalog\frontend\widgets\assets\ProductItemAsset;
 
 class ProductItem extends Widget

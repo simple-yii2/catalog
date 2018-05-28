@@ -8,6 +8,11 @@ use cms\catalog\backend\assets\ProductFormAsset;
 
 ProductFormAsset::register($this);
 
+$cancelUrl = ['index'];
+if ($category_id = Yii::$app->getRequest()->get('category_id')) {
+	$cancelUrl['category_id'] = $category_id;
+}
+
 ?>
 <?php $form = ActiveForm::begin([
 	'layout' => 'horizontal',
@@ -22,7 +27,7 @@ ProductFormAsset::register($this);
 	<div class="form-group">
 		<div class="col-sm-offset-3 col-sm-6">
 			<?= Html::submitButton(Yii::t('catalog', 'Save'), ['class' => 'btn btn-primary']) ?>
-			<?= Html::a(Yii::t('catalog', 'Cancel'), ['index'], ['class' => 'btn btn-default']) ?>
+			<?= Html::a(Yii::t('catalog', 'Cancel'), $cancelUrl, ['class' => 'btn btn-default']) ?>
 		</div>
 	</div>
 

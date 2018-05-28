@@ -1,10 +1,11 @@
 <?php
 
-namespace cms\catalog\frontend\helpers;
+namespace cms\catalog\common\helpers;
 
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use cms\catalog\common\helpers\CurrencyHelper;
 use cms\catalog\common\models\Currency;
 use cms\catalog\common\models\Settings;
 

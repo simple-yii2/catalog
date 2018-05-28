@@ -1,9 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use cms\catalog\common\helpers\CurrencyHelper;
+use cms\catalog\common\helpers\PriceHelper;
 use cms\catalog\frontend\assets\ProductAsset;
-use cms\catalog\frontend\helpers\CurrencyHelper;
-use cms\catalog\frontend\helpers\PriceHelper;
 use cms\catalog\frontend\helpers\PropertyHelper;
 use dkhlystov\widgets\Lightbox;
 

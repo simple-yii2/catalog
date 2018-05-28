@@ -5,8 +5,8 @@ namespace cms\catalog\common\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
-
 use helpers\Translit;
+use cms\catalog\common\helpers\CurrencyHelper;
 
 class Product extends ActiveRecord
 {
@@ -123,6 +123,16 @@ class Product extends ActiveRecord
 	public function makeAlias()
 	{
 		$this->alias = Translit::t($this->name . ' ' . $this->model . '-' . $this->id);
+	}
+
+	/**
+	 * Calc price to destination currency
+	 * @param Currency|null $destCurrency destination curency. Application currency used if not set.
+	 * @return float
+	 */
+	public function calcPrice($destCurrency = null)
+	{
+		return CurrencyHelper::calc($this->price, $this->currency, $destCurrency);
 	}
 
 }

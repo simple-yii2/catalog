@@ -20,6 +20,7 @@ class ProductSearch extends Product {
 		return [
 			'category_id' => Yii::t('catalog', 'Category'),
 			'name' => Yii::t('catalog', 'Name'),
+			'price' => Yii::t('catalog', 'Price'),
 		];
 	}
 

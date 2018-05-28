@@ -1,6 +1,6 @@
 <?php
 
-namespace cms\catalog\frontend\helpers;
+namespace cms\catalog\common\helpers;
 
 use Yii;
 use yii\helpers\ArrayHelper;
