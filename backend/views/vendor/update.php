@@ -2,18 +2,18 @@
 
 use yii\helpers\Html;
 
-$title = $model->getObject()->name;
+$title = $form->getObject()->name;
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
 $this->params['breadcrumbs'] = [
-	['label' => Yii::t('catalog', 'Vendors'), 'url' => ['index']],
-	$title,
+    ['label' => Yii::t('catalog', 'Vendors'), 'url' => ['index']],
+    $title,
 ];
 
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
 <?= $this->render('form', [
-	'model' => $model,
+    'form' => $form,
 ]) ?>

@@ -3,8 +3,6 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-
-use cms\catalog\common\models\Settings;
 use dkhlystov\uploadimage\widgets\UploadImage;
 
 //thumb size
@@ -23,29 +21,29 @@ $height = $thumbHeight / $thumbWidth * $width;
 if ($height < 20) $height = 20;
 
 ?>
-<?php $form = ActiveForm::begin([
-	'layout' => 'horizontal',
-	'enableClientValidation' => false,
+<?php $activeForm = ActiveForm::begin([
+    'layout' => 'horizontal',
+    'enableClientValidation' => false,
 ]); ?>
 
-	<fieldset>
-		<?= $form->field($model, 'name') ?>
-		<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
-		<?= $form->field($model, 'url') ?>
-		<?= $form->field($model, 'file')->label($model->getAttributeLabel('file') . $imageSize)->widget(UploadImage::className(), [
-			'thumbAttribute' => 'thumb',
-			'thumbWidth' => $thumbWidth,
-			'thumbHeight' => $thumbHeight,
-			'width' => $width,
-			'height' => $height,
-		]) ?>
-	</fieldset>
+    <fieldset>
+        <?= $activeForm->field($form, 'name') ?>
+        <?= $activeForm->field($form, 'description')->textarea(['rows' => 5]) ?>
+        <?= $activeForm->field($form, 'url') ?>
+        <?= $activeForm->field($form, 'file')->label($form->getAttributeLabel('file') . $imageSize)->widget(UploadImage::className(), [
+            'thumbAttribute' => 'thumb',
+            'thumbWidth' => $thumbWidth,
+            'thumbHeight' => $thumbHeight,
+            'width' => $width,
+            'height' => $height,
+        ]) ?>
+    </fieldset>
 
-	<div class="form-group">
-		<div class="col-sm-offset-3 col-sm-6">
-			<?= Html::submitButton(Yii::t('catalog', 'Save'), ['class' => 'btn btn-primary']) ?>
-			<?= Html::a(Yii::t('catalog', 'Cancel'), ['index'], ['class' => 'btn btn-default']) ?>
-		</div>
-	</div>
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+            <?= Html::submitButton(Yii::t('catalog', 'Save'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('catalog', 'Cancel'), ['index'], ['class' => 'btn btn-default']) ?>
+        </div>
+    </div>
 
 <?php ActiveForm::end(); ?>
