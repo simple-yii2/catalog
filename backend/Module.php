@@ -47,20 +47,12 @@ class Module extends BackendModule
     /**
      * @var boolean
      */
-    public $storeEnabled = true;
+    // public $storeEnabled = true;
 
     /**
      * @var integer|null
      */
     public $maxCategoryDepth = null;
-
-    /**
-     * @inheritdoc
-     */
-    public static function moduleName()
-    {
-        return 'catalog';
-    }
 
     /**
      * @inheritdoc
@@ -93,27 +85,26 @@ class Module extends BackendModule
     /**
      * @inheritdoc
      */
-    public function cmsMenu($base)
+    public function cmsMenu()
     {
         if (!Yii::$app->getUser()->can('Catalog')) {
             return [];
         }
 
         $items = [];
-        $items[] = ['label' => Yii::t('catalog', 'Settings'), 'url' => ["$base/catalog/settings/index"]];
-        $items[] = ['label' => Yii::t('catalog', 'Currencies'), 'url' => ["$base/catalog/currency/index"]];
+        $items[] = ['label' => Yii::t('catalog', 'Categories'), 'url' => ["/catalog/category/index"]];
+        $items[] = ['label' => Yii::t('catalog', 'Goods/Services'), 'url' => ["/catalog/product/index"]];
         if ($this->vendorEnabled) {
-            $items[] = ['label' => Yii::t('catalog', 'Vendors'), 'url' => ["$base/catalog/vendor/index"]];
+            $items[] = ['label' => Yii::t('catalog', 'Vendors'), 'url' => ["/catalog/vendor/index"]];
         }
-        if ($this->storeEnabled) {
-            $items[] = ['label' => Yii::t('catalog', 'Stores'), 'url' => ["$base/catalog/store/index"]];
-        }
-        $items[] = '<li role="separator" class="divider"></li>';
-        $items[] = ['label' => Yii::t('catalog', 'Categories'), 'url' => ["$base/catalog/category/index"]];
-        $items[] = ['label' => Yii::t('catalog', 'Goods/Services'), 'url' => ["$base/catalog/product/index"]];
+        $items[] = ['label' => Yii::t('catalog', 'Currencies'), 'url' => ["/catalog/currency/index"]];
+        // if ($this->storeEnabled) {
+        //     $items[] = ['label' => Yii::t('catalog', 'Stores'), 'url' => ["/catalog/store/index"]];
+        // }
 
         return [
-            ['label' => Yii::t('catalog', 'Catalog'), 'items' => $items],
+            'label' => Yii::t('catalog', 'Catalog'),
+            'items' => $items,
         ];
     }
 

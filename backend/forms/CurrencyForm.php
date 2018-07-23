@@ -1,6 +1,6 @@
 <?php
 
-namespace cms\catalog\backend\models;
+namespace cms\catalog\backend\forms;
 
 use Yii;
 use yii\base\Model;
@@ -14,22 +14,22 @@ class CurrencyForm extends Model
 {
 
 	/**
-	 * @var string name
+	 * @var string
 	 */
 	public $name;
 
 	/**
-	 * @var string Code
+	 * @var string
 	 */
 	public $code;
 
 	/**
-	 * @var float Rate
+	 * @var float
 	 */
 	public $rate;
 
 	/**
-	 * @var integer precision
+	 * @var integer
 	 */
 	public $precision;
 
@@ -42,6 +42,11 @@ class CurrencyForm extends Model
 	 * @var string
 	 */
 	public $suffix;
+
+	/**
+	 * @var boolean
+	 */
+	public $default;
 
 	/**
 	 * @var Currency
@@ -60,13 +65,14 @@ class CurrencyForm extends Model
 		$this->_object = $object;
 
 		//attributes
-		parent::__construct(array_merge([
+		parent::__construct(array_replace([
 			'name' => $object->name,
 			'code' => $object->code,
 			'rate' => $object->rate,
 			'precision' => $object->precision,
 			'prefix' => $object->prefix,
 			'suffix' => $object->suffix,
+			'default' => $object->default ? 1 : 0,
 		], $config));
 	}
 
@@ -91,6 +97,7 @@ class CurrencyForm extends Model
 			'precision' => Yii::t('catalog', 'Precision'),
 			'prefix' => Yii::t('catalog', 'Prefix'),
 			'suffix' => Yii::t('catalog', 'Suffix'),
+			'default' => Yii::t('catalog', 'Default'),
 		];
 	}
 
@@ -104,6 +111,7 @@ class CurrencyForm extends Model
 			[['code', 'prefix', 'suffix'], 'string', 'max' => 10],
 			['rate', 'double', 'min' => 0.01],
 			['precision', 'in', 'range' => [0, 1, 2]],
+			['default', 'boolean'],
 			[['name', 'code', 'rate', 'precision'], 'required'],
 		];
 	}
@@ -125,11 +133,20 @@ class CurrencyForm extends Model
 		$object->precision = (integer) $this->precision;
 		$object->prefix = $this->prefix;
 		$object->suffix = $this->suffix;
+		$object->default = $this->default == 1;
 
-		if (!$object->save(false))
-			return false;
+		$transaction = $object->db->beginTransaction();
+		try {
+			$success = $object->save(false);
+			if ($success && $object->default) {
+				$object->updateAll(['default' => false], ['<>', 'id', $object->id]);
+			}
+			$transaction->commit();
+		} catch (\Exception $e) {
+			$transaction->rollBack();
+		}
 
-		return true;
+		return $success;
 	}
 
 }

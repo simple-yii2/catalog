@@ -1,10 +1,3 @@
-create table if not exists `catalog_settings`
-(
-	`id` int(10) not null auto_increment,
-	`defaultCurrency_id` int(10) default null,
-	primary key (`id`)
-) engine InnoDB;
-
 create table if not exists `catalog_currency`
 (
 	`id` int(10) not null auto_increment,
@@ -14,6 +7,7 @@ create table if not exists `catalog_currency`
 	`precision` integer default 2,
 	`prefix` varchar(10) not null,
 	`suffix` varchar(10) not null,
+	`default` tinyint(1) default 0,
 	primary key (`id`)
 ) engine InnoDB;
 
@@ -29,14 +23,6 @@ create table if not exists `catalog_vendor`
 	primary key (`id`),
 	key `alias` (`alias`),
 	key `name` (`name`)
-) engine InnoDB;
-
-create table if not exists `catalog_store`
-(
-	`id` int(10) not null auto_increment,
-	`type` int(10) not null,
-	`name` varchar(100) not null,
-	primary key (`id`)
 ) engine InnoDB;
 
 create table if not exists `catalog_category`
@@ -140,6 +126,16 @@ create table if not exists `catalog_product_recommended`
 	primary key (`id`),
 	foreign key (`product_id`) references `catalog_product` (`id`) on delete cascade on update cascade,
 	foreign key (`recommended_id`) references `catalog_product` (`id`) on delete cascade on update cascade
+) engine InnoDB;
+
+
+
+create table if not exists `catalog_store`
+(
+	`id` int(10) not null auto_increment,
+	`type` int(10) not null,
+	`name` varchar(100) not null,
+	primary key (`id`)
 ) engine InnoDB;
 
 create table if not exists `catalog_store_product`

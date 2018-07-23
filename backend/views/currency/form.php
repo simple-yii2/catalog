@@ -4,18 +4,19 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 ?>
-<?php $form = ActiveForm::begin([
+<?php $activeForm = ActiveForm::begin([
 	'layout' => 'horizontal',
 	'enableClientValidation' => false,
 ]); ?>
 
 	<fieldset>
-		<?= $form->field($model, 'name') ?>
-		<?= $form->field($model, 'code') ?>
-		<?= $form->field($model, 'rate') ?>
-		<?= $form->field($model, 'precision')->dropDownList([0 => '1', 1 => '0.1', 2 => '0.01']) ?>
-		<?= $form->field($model, 'prefix') ?>
-		<?= $form->field($model, 'suffix') ?>
+		<?= $activeForm->field($form, 'name') ?>
+		<?= $activeForm->field($form, 'code') ?>
+		<?= $activeForm->field($form, 'rate') ?>
+		<?= $activeForm->field($form, 'precision')->dropDownList([0 => '1', 1 => '0.1', 2 => '0.01']) ?>
+		<?= $activeForm->field($form, 'prefix') ?>
+		<?= $activeForm->field($form, 'suffix') ?>
+		<?= $activeForm->field($form, 'default')->checkbox() ?>
 	</fieldset>
 
 	<div class="form-group">
