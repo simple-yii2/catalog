@@ -6,7 +6,6 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\Cookie;
 use cms\catalog\common\models\Currency;
-use cms\catalog\common\models\Settings;
 
 /**
  * Currency helper
@@ -43,10 +42,10 @@ class CurrencyHelper {
             return self::$_currency_id = $id;
         }
 
-        //try to get it from settings
-        $settings = Settings::find()->one();
-        if ($settings !== null) {
-            return self::$_currency_id = $settings->defaultCurrency_id;
+        //try to get it from database
+        $currency = Currency::find()->andWhere(['default' => true])->one();
+        if ($currency !== null) {
+            return self::$_currency_id = $currency->id;
         }
 
         return null;

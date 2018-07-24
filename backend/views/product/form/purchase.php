@@ -9,7 +9,7 @@ foreach (Currency::find()->all() as $item)
 
 ?>
 <fieldset>
-	<?= $form->field($model, 'currency_id')->dropDownList($currencies) ?>
-	<?= $form->field($model, 'price')->textInput() ?>
-	<?= $form->field($model, 'oldPrice')->textInput() ?>
+	<?= $activeForm->field($form, 'currency_id')->dropDownList($currencies) ?>
+	<?= $activeForm->field($form, 'price')->textInput() ?>
+	<?= $activeForm->field($form, 'oldPrice')->textInput() ?>
 </fieldset>
