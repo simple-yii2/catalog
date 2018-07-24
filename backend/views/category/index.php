@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use yii\web\JsExpression;
-
 use dkhlystov\widgets\NestedTreeGrid;
 
 $title = Yii::t('catalog', 'Categories');
@@ -24,10 +23,9 @@ $maxDepth = Yii::$app->controller->module->maxCategoryDepth;
 </div>
 
 <?= NestedTreeGrid::widget([
-	'dataProvider' => $search->getDataProvider(),
+	'dataProvider' => $filter->getDataProvider(),
 	'initialNode' => $initial,
 	'moveAction' => ['move'],
-	'tableOptions' => ['class' => 'table table-condensed'],
 	'rowOptions' => function ($model, $key, $index, $grid) {
 		$options = ['data-product-count' => $model->productCount];
 
