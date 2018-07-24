@@ -133,7 +133,7 @@ class CurrencyForm extends Model
 		$object->precision = (integer) $this->precision;
 		$object->prefix = $this->prefix;
 		$object->suffix = $this->suffix;
-		$object->default = $this->default == 1;
+		$object->default = $this->default == 0 ? false : true;
 
 		$transaction = $object->db->beginTransaction();
 		try {

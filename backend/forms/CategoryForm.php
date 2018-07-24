@@ -173,7 +173,7 @@ class CategoryForm extends Model
         $object = $this->_object;
 
         //attributes
-        $object->active = $this->active == 1;
+        $object->active = $this->active == 0 ? false : true;
         $object->title = $this->title;
 
         //save
