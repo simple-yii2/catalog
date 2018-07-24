@@ -72,7 +72,7 @@ class CurrencyForm extends Model
 			'precision' => $object->precision,
 			'prefix' => $object->prefix,
 			'suffix' => $object->suffix,
-			'default' => $object->default ? 1 : 0,
+			'default' => $object->default == 0 ? '0' : '1',
 		], $config));
 	}
 

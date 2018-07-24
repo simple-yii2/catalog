@@ -9,7 +9,8 @@ use cms\catalog\common\models\Currency;
 /**
  * Search model
  */
-class CurrencyFilter extends Currency {
+class CurrencyFilter extends Currency
+{
 
     /**
      * @inheritdoc
@@ -26,7 +27,8 @@ class CurrencyFilter extends Currency {
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             ['code', 'string'],
         ];
@@ -37,7 +39,8 @@ class CurrencyFilter extends Currency {
      * @param array|null $config Data provider config
      * @return ActiveDataProvider
      */
-    public function getDataProvider($config = []) {
+    public function getDataProvider($config = [])
+    {
         $query = self::find();
         $query->andFilterWhere(['like', 'code', $this->code]);
 

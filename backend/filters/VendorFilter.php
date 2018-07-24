@@ -9,7 +9,8 @@ use cms\catalog\common\models\Vendor;
 /**
  * Search model
  */
-class VendorFilter extends Vendor {
+class VendorFilter extends Vendor
+{
 
 	/**
 	 * @inheritdoc
@@ -25,7 +26,8 @@ class VendorFilter extends Vendor {
 	/**
 	 * @inheritdoc
 	 */
-	public function rules() {
+	public function rules()
+    {
 		return [
 			['name', 'string'],
 		];
@@ -36,7 +38,8 @@ class VendorFilter extends Vendor {
      * @param array|null $config Data provider config
 	 * @return ActiveDataProvider
 	 */
-    public function getDataProvider($config = []) {
+    public function getDataProvider($config = [])
+    {
         $query = self::find();
         $query->andFilterWhere(['like', 'name', $this->name]);
 
