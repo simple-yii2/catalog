@@ -339,7 +339,7 @@ class ProductForm extends Model
             [['category_id', 'vendor_id', 'currency_id'], 'integer'],
             ['active', 'boolean'],
             [['name', 'model', 'countryOfOrigin'], 'string', 'max' => 100],
-            ['description', 'string', 'max' => 1000],
+            ['description', 'string', 'max' => 65535],
             [['price', 'oldPrice'], 'double'],
             ['oldPrice', 'compare', 'compareAttribute' => 'price', 'operator' => '>', 'type' => 'number'],
             [['length', 'width', 'height'], 'integer', 'min' => 1],

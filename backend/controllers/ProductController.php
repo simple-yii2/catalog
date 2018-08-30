@@ -142,7 +142,12 @@ class ProductController extends Controller
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Item deleted successfully.'));
         }
 
-        return $this->redirect(['index']);
+        $url = ['index'];
+        $category_id = Yii::$app->getRequest()->get('category_id');
+        if ($category_id) {
+            $url['category_id'] = $category_id;
+        }
+        return $this->redirect($url);
     }
 
     /**

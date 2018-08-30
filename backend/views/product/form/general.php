@@ -50,7 +50,15 @@ foreach ($query->all() as $item)
     ]) ?>
     <?= $activeForm->field($form, 'name') ?>
     <?= $activeForm->field($form, 'model') ?>
-    <?= $activeForm->field($form, 'description')->textarea(['rows' => 5]) ?>
+    <?= $activeForm->field($form, 'description')->widget(\vova07\imperavi\Widget::className(), ['settings' => [
+        'minHeight' => 200,
+        'toolbarFixedTopOffset' => 50,
+        'plugins' => [
+            'fullscreen',
+            'video',
+            'table',
+        ],
+    ]]) ?>
     <?php if (Yii::$app->controller->module->vendorEnabled) echo $activeForm->field($form, 'vendor_id')->widget(Chosen::className(), [
         'items' => $vendors,
         'placeholder' => ' ',

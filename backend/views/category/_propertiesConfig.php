@@ -47,6 +47,7 @@ return [
     'addLabel' => Yii::t('catalog', 'Add'),
     'removeLabel' => Yii::t('catalog', 'Remove'),
     'readOnlyAttribute' => 'readOnly',
+    'movingEnabled' => true,
     'options' => [
         'class' => 'category-properties',
         'data-types-with-values' => $typesWithValues,

@@ -114,7 +114,8 @@ class ProductList extends Widget
      */
     protected function renderList()
     {
-        $itemClass = 'cms\purchase\frontend\widgets\ProductItem';
+        $itemClass = 'cms\purchase\frontend\widgets\ProductItem1';
+        // $itemClass = 'cms\purchase\frontend\widgets\ProductItem';
         if (!class_exists($itemClass)) {
             $itemClass = ProductItem::className();
         }

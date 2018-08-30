@@ -31,6 +31,11 @@ class CategoryPropertyForm extends Model
     public $unit;
 
     /**
+     * @var boolean Search by property enabled
+     */
+    public $search;
+
+    /**
      * @var string[] Values
      */
     private $_values = [];
@@ -53,11 +58,12 @@ class CategoryPropertyForm extends Model
         $this->_object = $object;
 
         //attributes
-        parent::__construct(array_merge([
+        parent::__construct(array_replace([
             'name' => $object->name,
             'type' => $object->type,
             'values' => $object->values,
             'unit' => $object->unit,
+            'search' => $object->search,
         ], $config));
     }
 
@@ -120,6 +126,7 @@ class CategoryPropertyForm extends Model
             'type' => Yii::t('catalog', 'Type'),
             'values' => Yii::t('catalog', 'Values'),
             'unit' => Yii::t('catalog', 'Unit'),
+            'search' => Yii::t('catalog', 'Search'),
         ];
     }
 
@@ -133,6 +140,7 @@ class CategoryPropertyForm extends Model
             ['type', 'in', 'range' => CategoryProperty::getTypes()],
             ['values', 'safe'],
             ['unit', 'string', 'max' => 10],
+            ['search', 'boolean'],
             ['name', 'required'],
         ];
     }
@@ -160,6 +168,7 @@ class CategoryPropertyForm extends Model
         $object->type = $this->type;
         $object->values = $this->values;
         $object->unit = $this->unit;
+        $object->search = $this->search;
 
         $object->makeAlias();
 

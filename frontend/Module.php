@@ -24,12 +24,4 @@ class Module extends FrontendModule
 	 */
 	public $productListWithFilterConfig = [];
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function moduleName()
-	{
-		return 'catalog';
-	}
-
 }
