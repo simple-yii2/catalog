@@ -5,6 +5,7 @@ namespace cms\catalog\backend\forms;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
+use cms\catalog\common\helpers\CurrencyHelper;
 use cms\catalog\common\models\Currency;
 use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Delivery;
@@ -135,7 +136,7 @@ class ProductForm extends Model
             $object = new Product([
                 'active' => true,
                 'imageCount' => 0,
-                'currency_id' => ArrayHelper::getValue(Yii::$app->params, ['catalogSettings', 'defaultCurrency_id']),
+                'currency_id' => CurrencyHelper::getApplicationCurrencyId(),
             ]);
         }
 
