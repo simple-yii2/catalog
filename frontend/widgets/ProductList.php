@@ -21,7 +21,7 @@ class ProductList extends ListView
     /**
      * @inheritdoc
      */
-    public $itemOptions = ['class' => 'col-xs-6 col-sm-4 col-lg-3'];
+    public $itemOptions = ['class' => 'col-xs-6 col-sm-4'];
 
     /**
      * @var string class name of item widget
