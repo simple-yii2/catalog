@@ -10,18 +10,4 @@ use cms\components\FrontendModule;
 class Module extends FrontendModule
 {
 
-	/**
-	 * @var array
-	 */
-	public $productListConfig = [
-		'layout' => "{list}",
-		'listOptions' => ['class' => 'col-sm-12'],
-		'listItemOptions' => ['class' => 'col-sm-3'],
-	];
-
-	/**
-	 * @var array
-	 */
-	public $productListWithFilterConfig = [];
-
 }

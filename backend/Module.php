@@ -22,12 +22,12 @@ class Module extends BackendModule
     /**
      * @var integer;
      */
-    public $productThumbWidth = 360;
+    public $productThumbWidth = 300;
 
     /**
      * @var integer;
      */
-    public $productThumbHeight = 270;
+    public $productThumbHeight = 300;
 
     /**
      * @var boolean

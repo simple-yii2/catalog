@@ -4,7 +4,6 @@ namespace cms\catalog\frontend\widgets;
 
 use Yii;
 use yii\base\Widget;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use cms\catalog\common\helpers\CurrencyHelper;
 use cms\catalog\common\helpers\PriceHelper;
@@ -15,143 +14,90 @@ use cms\catalog\frontend\widgets\assets\ProductItemAsset;
 class ProductItem extends Widget
 {
 
-	/**
-	 * @var Product
-	 */
-	public $model;
+    /**
+     * @var Product
+     */
+    public $model;
 
-	/**
-	 * @var array
-	 */
-	public $options = ['class' => 'product-item'];
+    /**
+     * @var array
+     */
+    public $options = ['class' => 'product-item'];
 
-	/**
-	 * @var array of string or Closure
-	 */
-	public $buttons = [];
+    /**
+     * @var array
+     */
+    protected $_url;
 
-	/**
-	 * @var array
-	 */
-	protected $_url;
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
 
-	/**
-	 * @inheritdoc
-	 */
-	public function init()
-	{
-		parent::init();
-		ProductItemAsset::register($this->getView());
-	}
+        ProductItemAsset::register($this->getView());
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function run()
-	{
-		$model = $this->model;
+    /**
+     * @inheritdoc
+     */
+    public function run()
+    {
+        $model = $this->model;
 
-		$thumb = $this->renderThumb($model);
-		$caption = $this->renderCaption($model);
-		$controls = $this->renderControls($model);
+        $image = $this->renderImage($model);
+        $title = $this->renderTitle($model);
+        $price = $this->renderPrice($model);
 
-		echo Html::tag('div', $thumb . $caption . $controls, ['class' => $this->options]);
-	}
+        $header = Html::tag('span', $image, ['class' => 'product-header']);
+        $caption = Html::tag('span', $title . $price, ['class' => 'product-caption']);
 
-	/**
-	 * Create url for product view
-	 * @param Product $model 
-	 * @return array
-	 */
-	protected function createUrl($model)
-	{
-		if ($this->_url !== null)
-			return $this->_url;
+        echo Html::a($header . $caption, CatalogHelper::createProductUrl($model), ['class' => $this->options]);
+    }
 
-		return $this->_url = CatalogHelper::createProductUrl($model);
-	}
+    /**
+     * Render product image
+     * @param Product $model 
+     * @return string
+     */
+    protected function renderImage($model)
+    {
+        $image = '';
+        if (!empty($model->thumb)) {
+            $image = Html::img($model->thumb, ['alt' => $model->getTitle()]);
+        }
 
-	/**
-	 * Render product thumb
-	 * @param Product $model 
-	 * @return string
-	 */
-	protected function renderThumb($model)
-	{
-		//image
-		$image = '';
-		if (!empty($model->thumb))
-			$image = Html::a(Html::img($model->thumb), $this->createUrl($model));
+        return Html::tag('span', $image, ['class' => 'product-image']);
+    }
 
-		return Html::tag('div', $image, ['class' => 'product-thumb']);
-	}
+    /**
+     * Render item caption (name, rating and notice)
+     * @param Product $model 
+     * @return string
+     */
+    protected function renderTitle($model)
+    {
+        $name = Html::tag('span', Html::encode($model->name));
+        $name .= Html::tag('span', Html::encode($model->model));
 
-	/**
-	 * Render item caption (name, rating and notice)
-	 * @param Product $model 
-	 * @return string
-	 */
-	protected function renderCaption($model)
-	{
-		//name
-		$s = $model->name;
-		if (!empty($model->model)) {
-			$s .= ' ' . $model->model;
-		}
-		$name = Html::tag('div', Html::a(Html::encode($s), $this->createUrl($model)), ['class'=>'product-name']);
+        return Html::tag('span', $name, ['class' => 'product-title', 'title' => $model->getTitle()]);
+    }
 
-		//rating
-		$rating = '';
+    /**
+     * Render price and buttons
+     * @param Product $model 
+     * @return string
+     */
+    protected function renderPrice($model)
+    {
+        $currency = CurrencyHelper::getCurrency($model->currency_id);
 
-		//notice
-		$notice = '';
-		// $notice = Html::tag('div', Html::a(Html::encode($model->notice), $url), ['product-notice']);
+        //price
+        $s = PriceHelper::render('strong', $model->price, $currency);
+        $price = Html::tag('span', $s, ['class' => 'product-price']);
 
-		return Html::tag('div', $name . $rating . $notice, ['class' => 'product-caption']);
-	}
-
-	/**
-	 * Render price and buttons
-	 * @param Product $model 
-	 * @return string
-	 */
-	protected function renderControls($model)
-	{
-		$formatter = Yii::$app->getFormatter();
-		$currency = CurrencyHelper::getCurrency($model->currency_id);
-
-		//old price
-		$s = '';
-		if (!empty($model->oldPrice))
-			$s = PriceHelper::render('s', $model->oldPrice, $currency);
-		$oldPrice = Html::tag('div', $s, ['class' => 'product-old-price']);
-
-		//price
-		$s = PriceHelper::render('span', $model->price, $currency);
-		$price = Html::tag('div', $s, ['class' => 'product-price']);
-
-		//buttons
-		$buttons = '';
-		foreach ($this->buttons as $button) {
-			$buttons .= $this->renderButton($button);
-		}
-		if (!empty($buttons)) {
-			$buttons = Html::tag('div', $buttons, ['class' => 'product-buttons']);
-		}
-
-		//available
-		$available = '';
-
-		return Html::tag('div', $oldPrice . $price . $buttons . $available, ['class' => 'product-controls']);
-	}
-
-	protected function renderButton($button)
-	{
-		if (is_callable($button)) {
-			return call_user_func($button, $this->model);
-		}
-
-		return $button;
-	}
+        return Html::tag('span', $price, ['class' => 'product-price-block']);
+    }
 
 }

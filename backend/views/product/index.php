@@ -69,11 +69,7 @@ foreach ($query->all() as $item) {
                     $result .= Html::img($model->thumb, ['align' => 'left', 'height' => 40, 'hspace' => 10]);
                 }
 
-                $result .= Html::encode($model->name);
-
-                if (!empty($model->model)) {
-                    $result .= ' ' . $model->model;
-                }
+                $result .= Html::encode($model->getTitle());
 
                 if ($model->imageCount > 0) {
                     $result .= '&nbsp;' . Html::tag('span', '<span class="glyphicon glyphicon-picture"></span>&nbsp;' . $model->imageCount, ['class' => 'badge']);

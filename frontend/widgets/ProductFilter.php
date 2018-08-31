@@ -14,375 +14,380 @@ use cms\catalog\frontend\widgets\assets\ProductFilterAsset;
 class ProductFilter extends Widget
 {
 
-	/**
-	 * @var cms\catalog\frontend\models\ProductFilter filter model
-	 */
-	public $model;
+    /**
+     * @var cms\catalog\frontend\models\ProductFilter filter model
+     */
+    public $model;
 
-	/**
-	 * @var array
-	 */
-	public $options = ['class' => 'product-filter'];
+    /**
+     * @var array
+     */
+    public $options = ['class' => 'product-filter'];
 
-	/**
-	 * @var string
-	 */
-	public $formName = '';
+    /**
+     * @var string
+     */
+    public $formName = '';
 
-	/**
-	 * @var string
-	 */
-	public $buttonText = 'Apply';
+    /**
+     * @var string
+     */
+    public $resetButtonText = 'Reset';
 
-	/**
-	 * @var array
-	 */
-	public $buttonOptions = ['class' => 'btn btn-primary'];
+    /**
+     * @var string
+     */
+    public $applyButtonText = 'Apply';
 
-	/**
-	 * @var string
-	 */
-	public $trueText = 'Yes';
+    /**
+     * @var array
+     */
+    public $buttonOptions = ['class' => 'btn btn-primary'];
 
-	/**
-	 * @var string
-	 */
-	public $falseText = 'No';
+    /**
+     * @var string
+     */
+    public $trueText = 'Yes';
 
-	/**
-	 * @var CategoryProperty[]
-	 */
-	private $_items;
+    /**
+     * @var string
+     */
+    public $falseText = 'No';
 
-	/**
-	 * @var array
-	 */
-	private $_queryParams;
+    /**
+     * @var CategoryProperty[]
+     */
+    private $_items;
 
-	/**
-	 * @inheritdoc
-	 */
-	public function init()
-	{
-		parent::init();
-		$this->prepareItems();
-		$this->registerScripts();
+    /**
+     * @var array
+     */
+    private $_queryParams;
 
-		$this->_queryParams = Yii::$app->getRequest()->getQueryParams();
-	}
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+        $this->prepareItems();
+        $this->registerScripts();
 
-	/**
-	 * @inheritdoc
-	 */
-	public function run()
-	{
-		//do not render filter if there are no items
-		if ($this->model->getPropertyCount() == 0) {
-			return '';
-		}
+        $this->_queryParams = Yii::$app->getRequest()->getQueryParams();
+    }
 
-		//price
-		$items = $this->renderPrice();
+    /**
+     * @inheritdoc
+     */
+    public function run()
+    {
+        //do not render filter if there are no items
+        if ($this->model->getPropertyCount() == 0) {
+            return '';
+        }
 
-		//vendor
-		$items .= $this->renderVendor();
+        //price
+        $items = $this->renderPrice();
 
-		//properties
-		foreach ($this->_items as $item)
-			$items .= $this->renderProperty($item);
+        //vendor
+        $items .= $this->renderVendor();
 
-		//render
-		// var_dump($this->_queryParams); die();
-		ActiveForm::begin([
-			'action' => array_replace([''], $this->_queryParams),
-			'enableClientValidation' => false,
-			'method' => 'get',
-			'options' => $this->options,
-		]);
-		echo $items;
-		echo $this->renderSubmitButton();
-		ActiveForm::end();
-	}
+        //properties
+        foreach ($this->_items as $item)
+            $items .= $this->renderProperty($item);
 
-	/**
-	 * Register client scripts
-	 * @return void
-	 */
-	public function registerScripts()
-	{
-		ProductFilterAsset::register($this->getView());
-	}
+        //render
+        // var_dump($this->_queryParams); die();
+        ActiveForm::begin([
+            'action' => array_replace([''], $this->_queryParams),
+            'enableClientValidation' => false,
+            'method' => 'get',
+            'options' => $this->options,
+        ]);
+        echo $items;
+        echo $this->renderSubmitButton();
+        ActiveForm::end();
+    }
 
-	/**
-	 * Prepare category properties
-	 * @return void
-	 */
-	private function prepareItems()
-	{
-		$this->_items = $this->model->getProperties();
-	}
+    /**
+     * Register client scripts
+     * @return void
+     */
+    public function registerScripts()
+    {
+        ProductFilterAsset::register($this->getView());
+    }
 
-	/**
-	 * Generate form name from property name
-	 * @param string $name 
-	 * @return string
-	 */
-	protected function generateFormName($name)
-	{
-		if (empty($this->formName))
-			return $name;
+    /**
+     * Prepare category properties
+     * @return void
+     */
+    private function prepareItems()
+    {
+        $this->_items = $this->model->getProperties();
+    }
 
-		return $this->formName . "[$name]";
-	}
+    /**
+     * Generate form name from property name
+     * @param string $name 
+     * @return string
+     */
+    protected function generateFormName($name)
+    {
+        if (empty($this->formName))
+            return $name;
 
-	/**
-	 * Render property title
-	 * @param string $title 
-	 * @param boolean $expanded 
-	 * @return string
-	 */
-	protected function renderPropertyTitle($title)
-	{
-		return Html::a('<span class="glyphicon glyphicon-menu-down"></span> ' . Html::encode($title), '#', ['class' => 'filter-title']);
-	}
+        return $this->formName . "[$name]";
+    }
 
-	/**
-	 * Render price range
-	 * @return string
-	 */
-	protected function renderPrice()
-	{
-		$model = $this->model;
-		list($min, $max) = $model->getPriceRange();
-		return $this->renderRange($model->getAttributeLabel('price'), 'price', $model->price, $min, $max, true);
-	}
+    /**
+     * Render property title
+     * @param string $title 
+     * @param boolean $expanded 
+     * @return string
+     */
+    protected function renderPropertyTitle($title)
+    {
+        return Html::a('<span class="glyphicon glyphicon-menu-down"></span> ' . Html::encode($title), '#', ['class' => 'filter-title']);
+    }
 
-	/**
-	 * Render vendor select
-	 * @return string
-	 */
-	protected function renderVendor()
-	{
-		$model = $this->model;
+    /**
+     * Render price range
+     * @return string
+     */
+    protected function renderPrice()
+    {
+        $model = $this->model;
+        list($min, $max) = $model->getPriceRange();
+        return $this->renderRange($model->getAttributeLabel('price'), 'price', $model->price, $min, $max, true);
+    }
 
-		return $this->renderSelect($model->getAttributeLabel('vendor'), 'vendor', $model->vendor, $model->getVendorItems(), true);
-	}
+    /**
+     * Render vendor select
+     * @return string
+     */
+    protected function renderVendor()
+    {
+        $model = $this->model;
 
-	/**
-	 * Render property field
-	 * @param CategoryProperty $property 
-	 * @return string
-	 */
-	protected function renderProperty($property)
-	{
-		$model = $this->model;
+        return $this->renderSelect($model->getAttributeLabel('vendor'), 'vendor', $model->vendor, $model->getVendorItems(), true);
+    }
 
-		switch ($property->type) {
-			case CategoryProperty::TYPE_BOOLEAN:
-				return $this->renderBoolean($property->name, $property->alias, $model->getPropertyValue($property), $model->getPropertyItems($property));
+    /**
+     * Render property field
+     * @param CategoryProperty $property 
+     * @return string
+     */
+    protected function renderProperty($property)
+    {
+        $model = $this->model;
 
-			case CategoryProperty::TYPE_INTEGER:
-			case CategoryProperty::TYPE_FLOAT:
-				list($min, $max) = $model->getPropertyRange($property);
-				return $this->renderRange($property->name, $property->alias, $model->getPropertyValue($property), $min, $max);
+        switch ($property->type) {
+            case CategoryProperty::TYPE_BOOLEAN:
+                return $this->renderBoolean($property->name, $property->alias, $model->getPropertyValue($property), $model->getPropertyItems($property));
 
-			case CategoryProperty::TYPE_SELECT:
-				return $this->renderSelect($property->name, $property->alias, $model->getPropertyValue($property), $model->getPropertyItems($property));
-		}
+            case CategoryProperty::TYPE_INTEGER:
+            case CategoryProperty::TYPE_FLOAT:
+                list($min, $max) = $model->getPropertyRange($property);
+                return $this->renderRange($property->name, $property->alias, $model->getPropertyValue($property), $min, $max);
 
-		return '';
-	}
+            case CategoryProperty::TYPE_SELECT:
+                return $this->renderSelect($property->name, $property->alias, $model->getPropertyValue($property), $model->getPropertyItems($property));
+        }
 
-	/**
-	 * Render range filter field
-	 * @param string $title 
-	 * @param string $name 
-	 * @param string $value 
-	 * @param float $min 
-	 * @param float $max 
-	 * @param boolean|null $expanded 
-	 * @return string
-	 */
-	protected function renderRange($title, $name, $value, $min, $max, $expanded = null)
-	{
-		$formName = $this->generateFormName($name);
-		unset($this->_queryParams[$formName]);
+        return '';
+    }
 
-		if (empty($value) && $min >= $max)
-			return '';
+    /**
+     * Render range filter field
+     * @param string $title 
+     * @param string $name 
+     * @param string $value 
+     * @param float $min 
+     * @param float $max 
+     * @param boolean|null $expanded 
+     * @return string
+     */
+    protected function renderRange($title, $name, $value, $min, $max, $expanded = null)
+    {
+        $formName = $this->generateFormName($name);
+        unset($this->_queryParams[$formName]);
 
-		//title
-		if ($expanded === null)
-			$expanded = $value != '';
-		$titleBlock = $this->renderPropertyTitle($title, $expanded);
+        if (empty($value) && $min >= $max)
+            return '';
 
-		//input
-		$options = [];
-		if ($value == '')
-			$options['disabled'] = true;
-		$input = Html::hiddenInput($formName, $value, $options);
+        //title
+        if ($expanded === null)
+            $expanded = $value != '';
+        $titleBlock = $this->renderPropertyTitle($title, $expanded);
 
-		//controls
-		list($from, $to) = FilterHelper::rangeItems($value);
-		$inputFrom = Html::textInput('', $from, ['class' => 'form-control', 'placeholder' => $min]);
-		$inputTo = Html::textInput('', $to, ['class' => 'form-control', 'placeholder' => $max]);
-		$controls = Html::tag('div', $inputFrom . $inputTo, ['class' => 'filter-controls']);
+        //input
+        $options = [];
+        if ($value == '')
+            $options['disabled'] = true;
+        $input = Html::hiddenInput($formName, $value, $options);
 
-		$options = ['class' => 'filter-item filter-range'];
-		if ($expanded)
-			Html::addCssClass($options, 'expanded');
+        //controls
+        list($from, $to) = FilterHelper::rangeItems($value);
+        $inputFrom = Html::textInput('', $from, ['class' => 'form-control', 'placeholder' => $min]);
+        $inputTo = Html::textInput('', $to, ['class' => 'form-control', 'placeholder' => $max]);
+        $controls = Html::tag('div', $inputFrom . $inputTo, ['class' => 'filter-controls']);
 
-		return Html::tag('div', $titleBlock . $input . $controls, $options);
-	}
+        $options = ['class' => 'filter-item filter-range'];
+        if ($expanded)
+            Html::addCssClass($options, 'expanded');
 
-	/**
-	 * Render selection filter field
-	 * @param string $title 
-	 * @param string $name 
-	 * @param string $value 
-	 * @param array $items title, value, count keys. If value is not set, title uses as value.
-	 * @param boolean|null $expanded 
-	 * @return string
-	 */
-	protected function renderSelect($title, $name, $value, $items, $expanded = null)
-	{
-		$formName = $this->generateFormName($name);
-		unset($this->_queryParams[$formName]);
+        return Html::tag('div', $titleBlock . $input . $controls, $options);
+    }
 
-		if (empty($items))
-			return '';
+    /**
+     * Render selection filter field
+     * @param string $title 
+     * @param string $name 
+     * @param string $value 
+     * @param array $items title, value, count keys. If value is not set, title uses as value.
+     * @param boolean|null $expanded 
+     * @return string
+     */
+    protected function renderSelect($title, $name, $value, $items, $expanded = null)
+    {
+        $formName = $this->generateFormName($name);
+        unset($this->_queryParams[$formName]);
 
-		//title
-		if ($expanded === null)
-			$expanded = $value != '';
-		$titleBlock = $this->renderPropertyTitle($title, $expanded);
+        if (empty($items))
+            return '';
 
-		//input
-		$options = [];
-		if ($value == '')
-			$options['disabled'] = true;
-		$input = Html::hiddenInput($formName, $value, $options);
+        //title
+        if ($expanded === null)
+            $expanded = $value != '';
+        $titleBlock = $this->renderPropertyTitle($title, $expanded);
 
-		//controls
-		$selected = FilterHelper::selectItems($value);
-		$listItems = [];
-		$selectedItems = [];
-		foreach ($items as $key => $item) {
-			if (is_string($item)) {
-				$listItems[$key] = $item;
-				continue;
-			}
+        //input
+        $options = [];
+        if ($value == '')
+            $options['disabled'] = true;
+        $input = Html::hiddenInput($formName, $value, $options);
 
-			$t = ArrayHelper::getValue($item, 'title');
-			if (empty($t))
-				continue;
+        //controls
+        $selected = FilterHelper::selectItems($value);
+        $listItems = [];
+        $selectedItems = [];
+        foreach ($items as $key => $item) {
+            if (is_string($item)) {
+                $listItems[$key] = $item;
+                continue;
+            }
 
-			$v = ArrayHelper::getValue($item, 'value', $t);
+            $t = ArrayHelper::getValue($item, 'title');
+            if (empty($t))
+                continue;
 
-			$t = Html::encode($t);
-			$c = ArrayHelper::getValue($item, 'count');
-			if (!empty($c))
-				$t .= ' ' . Html::tag('span', '(' . $c . ')', ['class' => 'text-muted']);
+            $v = ArrayHelper::getValue($item, 'value', $t);
 
-			if (in_array($v, $selected)) {
-				$selectedItems[$v] = $t;
-			} else {
-				$listItems[$v] = $t;
-			}
-		}
-		$inputList = Html::checkboxList('', $selected, array_replace($selectedItems, $listItems), [
-			'class' => 'filter-select-items',
-			'item' => function($index, $label, $name, $checked, $value) {
-				$s = Html::checkbox('', $checked, ['value' => $value]);
-				$s = Html::tag('label', $s . ' ' . $label);
-				return Html::tag('div', $s);
-			},
-		]);
-		$controls = Html::tag('div', $inputList, ['class' => 'filter-controls']);
+            $t = Html::encode($t);
+            $c = ArrayHelper::getValue($item, 'count');
+            if (!empty($c))
+                $t .= ' ' . Html::tag('span', '(' . $c . ')', ['class' => 'text-muted']);
 
-		$options = ['class' => 'filter-item filter-select'];
-		if ($expanded)
-			Html::addCssClass($options, 'expanded');
+            if (in_array($v, $selected)) {
+                $selectedItems[$v] = $t;
+            } else {
+                $listItems[$v] = $t;
+            }
+        }
+        $inputList = Html::checkboxList('', $selected, array_replace($selectedItems, $listItems), [
+            'class' => 'filter-select-items',
+            'item' => function($index, $label, $name, $checked, $value) {
+                $s = Html::checkbox('', $checked, ['value' => $value]);
+                $s = Html::tag('label', $s . ' ' . $label);
+                return Html::tag('div', $s);
+            },
+        ]);
+        $controls = Html::tag('div', $inputList, ['class' => 'filter-controls']);
 
-		return Html::tag('div', $titleBlock . $input . $controls, $options);
-	}
+        $options = ['class' => 'filter-item filter-select'];
+        if ($expanded)
+            Html::addCssClass($options, 'expanded');
 
-	/**
-	 * Render boolean filter field
-	 * @param string $title 
-	 * @param string $name 
-	 * @param string $value 
-	 * @param array $items title, value, count keys. If value is not set, title uses as value.
-	 * @param boolean|null $expanded 
-	 * @return string
-	 */
-	protected function renderBoolean($title, $name, $value, $items, $expanded = null)
-	{
-		$formName = $this->generateFormName($name);
-		unset($this->_queryParams[$formName]);
+        return Html::tag('div', $titleBlock . $input . $controls, $options);
+    }
 
-		//title
-		if ($expanded === null)
-			$expanded = $value != '';
-		$titleBlock = $this->renderPropertyTitle($title, $expanded);
+    /**
+     * Render boolean filter field
+     * @param string $title 
+     * @param string $name 
+     * @param string $value 
+     * @param array $items title, value, count keys. If value is not set, title uses as value.
+     * @param boolean|null $expanded 
+     * @return string
+     */
+    protected function renderBoolean($title, $name, $value, $items, $expanded = null)
+    {
+        $formName = $this->generateFormName($name);
+        unset($this->_queryParams[$formName]);
 
-		//input
-		$options = [];
-		if ($value == '')
-			$options['disabled'] = true;
-		$input = Html::hiddenInput($formName, $value, $options);
+        //title
+        if ($expanded === null)
+            $expanded = $value != '';
+        $titleBlock = $this->renderPropertyTitle($title, $expanded);
 
-		//controls
-		$selected = FilterHelper::selectItems($value);
-		$listItems = [];
-		foreach ($items as $key => $item) {
-			if (is_string($item)) {
-				$listItems[$key] = $item;
-				continue;
-			}
+        //input
+        $options = [];
+        if ($value == '')
+            $options['disabled'] = true;
+        $input = Html::hiddenInput($formName, $value, $options);
 
-			$v = ArrayHelper::getValue($item, 'title');
-			if ($v === null)
-				continue;
+        //controls
+        $selected = FilterHelper::selectItems($value);
+        $listItems = [];
+        foreach ($items as $key => $item) {
+            if (is_string($item)) {
+                $listItems[$key] = $item;
+                continue;
+            }
 
-			$t = $v == 1 ? $this->trueText : $this->falseText;
+            $v = ArrayHelper::getValue($item, 'title');
+            if ($v === null)
+                continue;
 
-			$t = Html::encode($t);
-			$c = ArrayHelper::getValue($item, 'count');
-			if (!empty($c))
-				$t .= ' ' . Html::tag('span', '(' . $c . ')', ['class' => 'text-muted']);
+            $t = $v == 1 ? $this->trueText : $this->falseText;
 
-			$listItems[$v] = $t;
-		}
-		if (sizeof($listItems) != 2)
-			return '';
-		krsort($listItems);
-		$inputList = Html::checkboxList('', $selected, $listItems, [
-			'class' => 'filter-select-items',
-			'item' => function($index, $label, $name, $checked, $value) {
-				$s = Html::checkbox('', $checked, ['value' => $value]);
-				$s = Html::tag('label', $s . ' ' . $label);
-				return Html::tag('div', $s);
-			},
-		]);
-		$controls = Html::tag('div', $inputList, ['class' => 'filter-controls']);
+            $t = Html::encode($t);
+            $c = ArrayHelper::getValue($item, 'count');
+            if (!empty($c))
+                $t .= ' ' . Html::tag('span', '(' . $c . ')', ['class' => 'text-muted']);
 
-		$options = ['class' => 'filter-item filter-select'];
-		if ($expanded)
-			Html::addCssClass($options, 'expanded');
+            $listItems[$v] = $t;
+        }
+        if (sizeof($listItems) != 2)
+            return '';
+        krsort($listItems);
+        $inputList = Html::checkboxList('', $selected, $listItems, [
+            'class' => 'filter-select-items',
+            'item' => function($index, $label, $name, $checked, $value) {
+                $s = Html::checkbox('', $checked, ['value' => $value]);
+                $s = Html::tag('label', $s . ' ' . $label);
+                return Html::tag('div', $s);
+            },
+        ]);
+        $controls = Html::tag('div', $inputList, ['class' => 'filter-controls']);
 
-		return Html::tag('div', $titleBlock . $input . $controls, $options);
-	}
+        $options = ['class' => 'filter-item filter-select'];
+        if ($expanded)
+            Html::addCssClass($options, 'expanded');
 
-	/**
-	 * Render submit button
-	 * @return string
-	 */
-	protected function renderSubmitButton()
-	{
-		$button = Html::submitButton($this->buttonText, $this->buttonOptions);
+        return Html::tag('div', $titleBlock . $input . $controls, $options);
+    }
 
-		return Html::tag('div', $button, ['class' => 'filter-submit']);
-	}
+    /**
+     * Render submit button
+     * @return string
+     */
+    protected function renderSubmitButton()
+    {
+        $button = Html::submitButton($this->applyButtonText, $this->buttonOptions);
+
+        return Html::tag('div', $button, ['class' => 'filter-submit']);
+    }
 
 }

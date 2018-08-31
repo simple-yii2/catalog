@@ -47,6 +47,8 @@ class ProductFilter extends Product {
             ['like', 'model', $this->name],
         ]);
 
+        $query->orderBy(['category_lft' => SORT_ASC]);
+
         $config['query'] = $query;
         return new ActiveDataProvider($config);
     }
