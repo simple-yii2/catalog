@@ -7,22 +7,22 @@ use yii\web\AssetBundle;
 class ProductFilterAsset extends AssetBundle
 {
 
-	public $css = [
-		'product-filter.css',
-	];
+    public $css = [
+        'product-filter' . (YII_DEBUG ? '' : '.min') . '.css',
+    ];
 
-	public $js = [
-		'product-filter.js',
-	];
+    public $js = [
+        'product-filter' . (YII_DEBUG ? '' : '.min') . '.js',
+    ];
 
-	public $depends = [
-		'yii\web\JqueryAsset',
-	];
+    public $depends = [
+        'yii\web\JqueryAsset',
+    ];
 
-	public function init()
-	{
-		$this->sourcePath = __DIR__ . '/product-filter';
-		parent::init();
-	}
+    public function init()
+    {
+        $this->sourcePath = __DIR__ . '/product-filter';
+        parent::init();
+    }
 
 }

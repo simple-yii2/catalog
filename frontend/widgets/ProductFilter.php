@@ -70,6 +70,7 @@ class ProductFilter extends Widget
     public function init()
     {
         parent::init();
+
         $this->prepareItems();
         $this->registerScripts();
 
@@ -93,11 +94,11 @@ class ProductFilter extends Widget
         $items .= $this->renderVendor();
 
         //properties
-        foreach ($this->_items as $item)
+        foreach ($this->_items as $item) {
             $items .= $this->renderProperty($item);
+        }
 
         //render
-        // var_dump($this->_queryParams); die();
         ActiveForm::begin([
             'action' => array_replace([''], $this->_queryParams),
             'enableClientValidation' => false,
@@ -134,8 +135,9 @@ class ProductFilter extends Widget
      */
     protected function generateFormName($name)
     {
-        if (empty($this->formName))
+        if (empty($this->formName)) {
             return $name;
+        }
 
         return $this->formName . "[$name]";
     }
@@ -213,18 +215,21 @@ class ProductFilter extends Widget
         $formName = $this->generateFormName($name);
         unset($this->_queryParams[$formName]);
 
-        if (empty($value) && $min >= $max)
+        if (empty($value) && $min >= $max) {
             return '';
+        }
 
         //title
-        if ($expanded === null)
+        if ($expanded === null) {
             $expanded = $value != '';
+        }
         $titleBlock = $this->renderPropertyTitle($title, $expanded);
 
         //input
         $options = [];
-        if ($value == '')
+        if ($value == '') {
             $options['disabled'] = true;
+        }
         $input = Html::hiddenInput($formName, $value, $options);
 
         //controls
@@ -234,8 +239,9 @@ class ProductFilter extends Widget
         $controls = Html::tag('div', $inputFrom . $inputTo, ['class' => 'filter-controls']);
 
         $options = ['class' => 'filter-item filter-range'];
-        if ($expanded)
+        if ($expanded) {
             Html::addCssClass($options, 'expanded');
+        }
 
         return Html::tag('div', $titleBlock . $input . $controls, $options);
     }
@@ -254,18 +260,21 @@ class ProductFilter extends Widget
         $formName = $this->generateFormName($name);
         unset($this->_queryParams[$formName]);
 
-        if (empty($items))
+        if (empty($items)) {
             return '';
+        }
 
         //title
-        if ($expanded === null)
+        if ($expanded === null) {
             $expanded = $value != '';
+        }
         $titleBlock = $this->renderPropertyTitle($title, $expanded);
 
         //input
         $options = [];
-        if ($value == '')
+        if ($value == '') {
             $options['disabled'] = true;
+        }
         $input = Html::hiddenInput($formName, $value, $options);
 
         //controls
@@ -279,15 +288,17 @@ class ProductFilter extends Widget
             }
 
             $t = ArrayHelper::getValue($item, 'title');
-            if (empty($t))
+            if (empty($t)) {
                 continue;
+            }
 
             $v = ArrayHelper::getValue($item, 'value', $t);
 
             $t = Html::encode($t);
             $c = ArrayHelper::getValue($item, 'count');
-            if (!empty($c))
+            if (!empty($c)) {
                 $t .= ' ' . Html::tag('span', '(' . $c . ')', ['class' => 'text-muted']);
+            }
 
             if (in_array($v, $selected)) {
                 $selectedItems[$v] = $t;
@@ -306,8 +317,9 @@ class ProductFilter extends Widget
         $controls = Html::tag('div', $inputList, ['class' => 'filter-controls']);
 
         $options = ['class' => 'filter-item filter-select'];
-        if ($expanded)
+        if ($expanded) {
             Html::addCssClass($options, 'expanded');
+        }
 
         return Html::tag('div', $titleBlock . $input . $controls, $options);
     }
@@ -327,14 +339,16 @@ class ProductFilter extends Widget
         unset($this->_queryParams[$formName]);
 
         //title
-        if ($expanded === null)
+        if ($expanded === null) {
             $expanded = $value != '';
+        }
         $titleBlock = $this->renderPropertyTitle($title, $expanded);
 
         //input
         $options = [];
-        if ($value == '')
+        if ($value == '') {
             $options['disabled'] = true;
+        }
         $input = Html::hiddenInput($formName, $value, $options);
 
         //controls
@@ -347,20 +361,23 @@ class ProductFilter extends Widget
             }
 
             $v = ArrayHelper::getValue($item, 'title');
-            if ($v === null)
+            if ($v === null) {
                 continue;
+            }
 
             $t = $v == 1 ? $this->trueText : $this->falseText;
 
             $t = Html::encode($t);
             $c = ArrayHelper::getValue($item, 'count');
-            if (!empty($c))
+            if (!empty($c)) {
                 $t .= ' ' . Html::tag('span', '(' . $c . ')', ['class' => 'text-muted']);
+            }
 
             $listItems[$v] = $t;
         }
-        if (sizeof($listItems) != 2)
+        if (sizeof($listItems) != 2) {
             return '';
+        }
         krsort($listItems);
         $inputList = Html::checkboxList('', $selected, $listItems, [
             'class' => 'filter-select-items',
@@ -373,8 +390,9 @@ class ProductFilter extends Widget
         $controls = Html::tag('div', $inputList, ['class' => 'filter-controls']);
 
         $options = ['class' => 'filter-item filter-select'];
-        if ($expanded)
+        if ($expanded) {
             Html::addCssClass($options, 'expanded');
+        }
 
         return Html::tag('div', $titleBlock . $input . $controls, $options);
     }

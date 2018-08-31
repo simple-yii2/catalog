@@ -1,9 +1,9 @@
 .product-filter {
-	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
 	background-color: #fff;
 	border: 1px solid #ddd;
-	border-radius: 4px;
+	border-radius: 2px;
 	box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	font-size: 0.9em;
 	margin-bottom: 30px;
 }
 .filter-item {
@@ -18,12 +18,18 @@
 .filter-title:active {
 	color: inherit;
 	display: block;
-	padding: 10px;
+	padding: 10px 15px;
 	text-decoration: inherit;
+}
+.filter-title span.glyphicon {
+	font-size: 10px;
+	margin-right: 5px;
+	vertical-align: 1px;
 }
 .filter-controls {
 	display: none;
-	padding: 0 10px 10px;
+	padding: 0 15px 10px;
+	position: relative;
 }
 .filter-range input[type="text"] {
 	display: inline-block;
