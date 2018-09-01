@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use cms\catalog\backend\forms\ProductBarcodeForm;
 use cms\catalog\common\models\Category;
 use cms\catalog\common\models\Vendor;
@@ -22,6 +23,21 @@ foreach ($query->all() as $item) {
     if ($item->isLeaf() && $item->active)
         $categories[$item->id] = $item->path;
 }
+
+//description settings
+$settings = [
+    'minHeight' => 200,
+    'toolbarFixedTopOffset' => 50,
+    'plugins' => [
+        'video',
+        'table',
+    ],
+];
+if (isset(Yii::$app->storage) && (Yii::$app->storage instanceof dkhlystov\storage\components\StorageInterface)) {
+    $settings['imageUpload'] = Url::toRoute('image');
+    $settings['fileUpload'] = Url::toRoute('file');
+}
+
 
 //vendors
 $vendors = ['' => ''];
@@ -50,15 +66,7 @@ foreach ($query->all() as $item)
     ]) ?>
     <?= $activeForm->field($form, 'name') ?>
     <?= $activeForm->field($form, 'model') ?>
-    <?= $activeForm->field($form, 'description')->widget(\vova07\imperavi\Widget::className(), ['settings' => [
-        'minHeight' => 200,
-        'toolbarFixedTopOffset' => 50,
-        'plugins' => [
-            'fullscreen',
-            'video',
-            'table',
-        ],
-    ]]) ?>
+    <?= $activeForm->field($form, 'description')->widget(\vova07\imperavi\Widget::className(), ['settings' => $settings]) ?>
     <?php if (Yii::$app->controller->module->vendorEnabled) echo $activeForm->field($form, 'vendor_id')->widget(Chosen::className(), [
         'items' => $vendors,
         'placeholder' => ' ',

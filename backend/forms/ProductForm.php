@@ -5,6 +5,7 @@ namespace cms\catalog\backend\forms;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
+use yii\helpers\HtmlPurifier;
 use cms\catalog\common\helpers\CurrencyHelper;
 use cms\catalog\common\models\Currency;
 use cms\catalog\common\models\Category;
@@ -141,6 +142,9 @@ class ProductForm extends Model
         }
 
         $this->_object = $object;
+
+        //file caching
+        Yii::$app->storage->cacheObject($object);
 
         //attributes
         parent::__construct(array_replace([
@@ -390,7 +394,11 @@ class ProductForm extends Model
         $object->name = $this->name;
         $object->model = $this->model;
         $object->currency_id = $currency === null ? null : $currency->id;
-        $object->description = $this->description;
+        $object->description = HtmlPurifier::process($this->description, function($config) {
+            $config->set('Attr.EnableID', true);
+            $config->set('HTML.SafeIframe', true);
+            $config->set('URI.SafeIframeRegexp', '%^(?:http:)?//(?:www.youtube.com/embed/|player.vimeo.com/video/)%');
+        });
         $object->price = empty($this->price) ? null : (float) $this->price;
         $object->oldPrice = empty($this->oldPrice) ? null : (float) $this->oldPrice;
         $object->vendor_id = $vendor === null ? null : $vendor->id;
@@ -406,6 +414,8 @@ class ProductForm extends Model
         $object->quantity = array_sum(array_map(function($v) {
             return (integer) $v->quantity;
         }, $this->getStores()));
+
+        Yii::$app->storage->storeObject($object);
 
         if (!$object->save(false)) {
             return false;

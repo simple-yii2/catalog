@@ -7,8 +7,9 @@ use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use helpers\Translit;
 use cms\catalog\common\helpers\CurrencyHelper;
+use dkhlystov\storage\components\StoredInterface;
 
-class Product extends ActiveRecord
+class Product extends ActiveRecord implements StoredInterface
 {
 
     /**
@@ -141,6 +142,49 @@ class Product extends ActiveRecord
     public function calcPrice($destCurrency = null)
     {
         return CurrencyHelper::calc($this->price, $this->currency, $destCurrency);
+    }
+
+    /**
+     * Parsing html for files in <img> and <a>.
+     * @param string $content 
+     * @return string[]
+     */
+    protected function getFilesFromContent($content)
+    {
+        if (preg_match_all('/(?:src|href)="([^"]+)"/i', $content, $matches)) {
+            return $matches[1];
+        }
+
+        return [];      
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOldFiles()
+    {
+        return $this->getFilesFromContent($this->getOldAttribute('description'));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFiles()
+    {
+        return $this->getFilesFromContent($this->description);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setFiles($files)
+    {
+        $description = $this->description;
+        foreach ($files as $from => $to) {
+            $description = str_replace($from, $to, $description);
+        }
+
+        $this->description = $description;
     }
 
 }

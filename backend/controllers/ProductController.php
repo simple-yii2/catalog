@@ -31,6 +31,19 @@ class ProductController extends Controller
     }
 
     /**
+     * @inheritdoc
+     * Disable csrf validation for image and file uploading
+     */
+    public function beforeAction($action)
+    {
+        if ($action->id == 'image' || $action->id == 'file') {
+            $this->enableCsrfValidation = false;
+        }
+
+        return parent::beforeAction($action);
+    }
+
+    /**
      * List
      * @return string
      */
@@ -211,6 +224,46 @@ class ProductController extends Controller
 
         return Json::encode([
             'content' => $this->renderAjax('form', ['model' => $model]),
+        ]);
+    }
+
+    /**
+     * Image upload
+     * @return string
+     */
+    public function actionImage()
+    {
+        $name = Yii::$app->storage->prepare('file', [
+            'image/png',
+            'image/jpg',
+            'image/gif',
+            'image/jpeg',
+            'image/pjpeg',
+        ]);
+
+        if ($name === false) {
+            throw new BadRequestHttpException(Yii::t('cms', 'Error occurred while image uploading.'));
+        }
+
+        return Json::encode([
+            ['filelink' => $name],
+        ]);
+    }
+
+    /**
+     * File upload
+     * @return string
+     */
+    public function actionFile()
+    {
+        $name = Yii::$app->storage->prepare('file');
+
+        if ($name === false) {
+            throw new BadRequestHttpException(Yii::t('cms', 'Error occurred while file uploading.'));
+        }
+
+        return Json::encode([
+            ['filelink' => $name, 'filename' => urldecode(basename($name))],
         ]);
     }
 
