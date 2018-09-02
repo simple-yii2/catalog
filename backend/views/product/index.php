@@ -29,7 +29,7 @@ if (!empty($filter->category_id)) {
 $categories = [-1 => '[' . $filter->getAttributeLabel('category_id') . ']'];
 $query = Category::find()->orderBy(['lft' => SORT_ASC]);
 foreach ($query->all() as $item) {
-    if ($item->isLeaf() && $item->active) {
+    if ($item->isLeaf()) {
         $categories[$item->id] = $item->path;
     }
 }
