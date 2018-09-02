@@ -1,8 +1,4 @@
 .product-item {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 2px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.05);
     display: block;
     overflow: hidden;
     text-decoration: none!important;
@@ -33,13 +29,13 @@
 
 .product-caption {
     display: block;
-    padding: 10px;
+    padding: 10px 0;
 }
 
 
 
 .product-title {
-    color: #888;
+    color: #333;
     display: block;
     font-size: 0.9em;
     line-height: 1.2;
@@ -55,7 +51,7 @@
 
 
 .product-price-block {
-    color: #888;
+    color: #777;
     display: block;
     font-size: 1.4em;
 }
@@ -66,6 +62,13 @@
 
 
 @media (min-width: 768px) {
+    .product-item {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 2px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    }
+
     .product-image {
         height: 220px;
     }
@@ -73,6 +76,7 @@
         padding: 15px;
     }
     .product-title {
+        color: inherit;
         margin-bottom: 10px;
     }
 }
