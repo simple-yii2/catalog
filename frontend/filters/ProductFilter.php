@@ -204,33 +204,6 @@ class ProductFilter extends Model
     }
 
     /**
-     * Count of properties
-     * @return integer;
-     */
-    public function getPropertyCount()
-    {
-        if ($this->_propertyCount !== null) {
-            return $this->_propertyCount;
-        }
-
-        $count = sizeof($this->getProperties());
-
-        //price
-        list($min, $max) = $this->getPriceRange();
-        if ($min < $max) {
-            $count++;
-        }
-
-        //vendor
-        $items = $this->getVendorItems();
-        if (!empty($items)) {
-            $count++;
-        }
-
-        return $this->_propertyCount = $count;
-    }
-
-    /**
      * Checked vendors ids getter
      * @return integer[]
      */

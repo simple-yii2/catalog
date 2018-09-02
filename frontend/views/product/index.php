@@ -20,7 +20,7 @@ $this->params['breadcrumbs'] = $breadcrumbs;
 
 //product categories
 $categories = [];
-foreach ($category->children(1)->all() as $item) {
+foreach ($category->getActiveChildren() as $item) {
     $categories[] = Html::a(Html::encode($item->title), CatalogHelper::createCategoryUrl($item), ['class' => 'btn btn-default']);
 }
 
