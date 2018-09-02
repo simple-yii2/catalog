@@ -7,12 +7,12 @@ use yii\db\ActiveRecord;
 class ProductRecommended extends ActiveRecord
 {
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName()
-	{
-		return 'catalog_product_recommended';
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'catalog_product_recommended';
+    }
 
 }
