@@ -12,6 +12,17 @@ use dkhlystov\storage\components\StoredInterface;
 class Product extends ActiveRecord implements StoredInterface
 {
 
+    // Availability
+    const INSTOCK = 0;
+    const UNDERTHEORDER = 1;
+    const OUTOFSTOCK = 2;
+
+    private static $availabilityNames = [
+        self::INSTOCK => 'In stock',
+        self::UNDERTHEORDER => 'Under the order',
+        self::OUTOFSTOCK => 'Out of stock',
+    ];
+
     /**
      * @inheritdoc
      */
@@ -42,6 +53,33 @@ class Product extends ActiveRecord implements StoredInterface
         return true;
     }
 
+    /**
+     * Availability values
+     * @return array
+     */
+    public static function getAvailabilityValues()
+    {
+        return array_keys(self::$availabilityNames);
+    }
+
+    /**
+     * Availability names with translation
+     * @return array
+     */
+    public static function getAvailabilityNames()
+    {
+        $names = [];
+        foreach (self::$availabilityNames as $key => $name) {
+            $names[$key] = Yii::t('catalog', $name);
+        }
+
+        return $names;
+    }
+
+    /**
+     * Product title from name and model
+     * @return string
+     */
     public function getTitle()
     {
         return trim($this->name . ' ' . $this->model);

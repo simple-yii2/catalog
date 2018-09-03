@@ -98,6 +98,11 @@ class ProductForm extends Model
     public $weight;
 
     /**
+     * @var integer Product availability (in stock, under the order, out of stock)
+     */
+    public $availability;
+
+    /**
      * @var ProductBarcodeForm[] Barcodes
      */
     private $_barcodes = [];
@@ -162,10 +167,11 @@ class ProductForm extends Model
             'width' => $object->width,
             'height' => $object->height,
             'weight' => $object->weight,
+            'availability' => $object->availability,
             'barcodes' => $object->barcodes,
             'images' => $object->images,
             'properties' => $object->properties,
-            'stores' => $object->stores,
+            // 'stores' => $object->stores,
             'recommended' => $object->recommended,
         ], $config));
     }
@@ -330,6 +336,7 @@ class ProductForm extends Model
             'width' => Yii::t('catalog', 'Width'),
             'height' => Yii::t('catalog', 'Height'),
             'weight' => Yii::t('catalog', 'Weight'),
+            'availability' => Yii::t('catalog', 'Availability'),
             'barcodes' => Yii::t('catalog', 'Barcodes'),
             'images' => Yii::t('catalog', 'Images'),
         ];
@@ -349,6 +356,7 @@ class ProductForm extends Model
             ['oldPrice', 'compare', 'compareAttribute' => 'price', 'operator' => '>', 'type' => 'number'],
             [['length', 'width', 'height'], 'integer', 'min' => 1],
             ['weight', 'double', 'min' => 0.001],
+            ['availability', 'in', 'range' => Product::getAvailabilityValues()],
             [['category_id', 'name', 'price'], 'required'],
             [['barcodes', 'images', 'properties', 'stores', 'recommended'], function($attribute, $params) {
                 $hasError = false;
@@ -408,6 +416,7 @@ class ProductForm extends Model
         $object->width = empty($this->width) ? null : (int) $this->width;
         $object->height = empty($this->height) ? null : (int) $this->height;
         $object->weight = empty($this->weight) ? null : (float) $this->weight;
+        $object->availability = (integer) $this->availability;
         $object->modifyDate = gmdate('Y-m-d H:i:s');
         $object->thumb = null;
         $object->imageCount = sizeof($this->_images);
