@@ -51,7 +51,7 @@ return [
     'Width' => 'Ширина',
     'Height' => 'Высота',
     'Weight' => 'Вес',
-    'Availability' => 'Доступность',
+    'Availability' => 'Наличие товара',
     'Quantity' => 'Остатки',
     'Recommended' => 'Рекомендации',
 
@@ -67,7 +67,7 @@ return [
 
     'In stock' => 'В наличии',
     'Under the order' => 'Под заказ',
-    'Out of stock' => 'Нет в наличии',
+    'Not available' => 'Нет в наличии',
 
     'mm' => 'мм',
     'kg' => 'кг',

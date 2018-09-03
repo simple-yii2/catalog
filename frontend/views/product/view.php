@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use cms\catalog\common\helpers\CurrencyHelper;
 use cms\catalog\common\helpers\PriceHelper;
@@ -63,6 +64,14 @@ $oldPrice = Html::tag('div', $s, ['class' => 'product-old-price']);
 
 
 
+//availability
+$s = Html::encode(ArrayHelper::getValue($model::getAvailabilityNames(), $model->availability));
+$availability = Html::tag('div', $s, ['class' => 'product-availability availability-' . $model->availability]);
+
+
+
+
+
 //properties
 $properties = [];
 foreach ($model->getProperties()->with(['categoryProperty'])->all() as $item) {
@@ -104,6 +113,7 @@ if (!empty($model->weight)) {
         <?= $price ?>
         <?= $oldPrice ?>
         <div class="product-title h5"><?= Html::encode($title) ?></div>
+        <?= $availability ?>
         <?php if (!empty($model->description)) echo $this->render('view/description', ['model' => $model]) ?>
     </div>
 </div>

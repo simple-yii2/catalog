@@ -15,12 +15,12 @@ class Product extends ActiveRecord implements StoredInterface
     // Availability
     const INSTOCK = 0;
     const UNDERTHEORDER = 1;
-    const OUTOFSTOCK = 2;
+    const NOTAVAILABLE = 2;
 
     private static $availabilityNames = [
         self::INSTOCK => 'In stock',
         self::UNDERTHEORDER => 'Under the order',
-        self::OUTOFSTOCK => 'Out of stock',
+        self::NOTAVAILABLE => 'Not available',
     ];
 
     /**
