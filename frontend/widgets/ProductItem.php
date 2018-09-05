@@ -49,9 +49,10 @@ class ProductItem extends Widget
         $image = $this->renderImage($model);
         $title = $this->renderTitle($model);
         $price = $this->renderPrice($model);
+        $availability = $this->renderAvailability($model);
 
-        $header = Html::tag('span', $image, ['class' => 'product-header']);
-        $caption = Html::tag('span', $title . $price, ['class' => 'product-caption']);
+        $header = Html::tag('span', $image, ['class' => 'product-item-header']);
+        $caption = Html::tag('span', $title . $availability . $price, ['class' => 'product-item-caption']);
 
         echo Html::a($header . $caption, CatalogHelper::createProductUrl($model), ['class' => $this->options]);
     }
@@ -68,7 +69,7 @@ class ProductItem extends Widget
             $image = Html::img($model->thumb, ['alt' => $model->getTitle()]);
         }
 
-        return Html::tag('span', $image, ['class' => 'product-image']);
+        return Html::tag('span', $image, ['class' => 'product-item-image']);
     }
 
     /**
@@ -81,7 +82,7 @@ class ProductItem extends Widget
         $name = Html::tag('span', Html::encode($model->name));
         $name .= Html::tag('span', Html::encode($model->model));
 
-        return Html::tag('span', $name, ['class' => 'product-title', 'title' => $model->getTitle()]);
+        return Html::tag('span', $name, ['class' => 'product-item-title', 'title' => $model->getTitle()]);
     }
 
     /**
@@ -95,9 +96,20 @@ class ProductItem extends Widget
 
         //price
         $s = PriceHelper::render('strong', $model->price, $currency);
-        $price = Html::tag('span', $s, ['class' => 'product-price']);
+        $price = Html::tag('span', $s, ['class' => 'product-item-price']);
 
-        return Html::tag('span', $price, ['class' => 'product-price-block']);
+        return Html::tag('span', $price, ['class' => 'product-item-price-block']);
+    }
+
+    /**
+     * Render availability
+     * @param Product $model 
+     * @return string
+     */
+    protected function renderAvailability($model)
+    {
+        $s = Html::encode($model->getAvailabilityName());
+        return Html::tag('span', $s, ['class' => 'product-item-availability availability' . $model->availability]);
     }
 
 }

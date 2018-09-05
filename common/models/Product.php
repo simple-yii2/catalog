@@ -24,6 +24,11 @@ class Product extends ActiveRecord implements StoredInterface
     ];
 
     /**
+     * @var array Availability names with translation
+     */
+    private static $_availabilityNames;
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -68,12 +73,25 @@ class Product extends ActiveRecord implements StoredInterface
      */
     public static function getAvailabilityNames()
     {
+        if (self::$_availabilityNames !== null) {
+            return self::$_availabilityNames;
+        }
+
         $names = [];
         foreach (self::$availabilityNames as $key => $name) {
             $names[$key] = Yii::t('catalog', $name);
         }
 
-        return $names;
+        return self::$_availabilityNames = $names;
+    }
+
+    /**
+     * Availability name for model
+     * @return string
+     */
+    public function getAvailabilityName()
+    {
+        return ArrayHelper::getValue(self::getAvailabilityNames(), $this->availability, '');
     }
 
     /**

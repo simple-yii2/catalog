@@ -1,6 +1,5 @@
 <?php
 
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use cms\catalog\common\helpers\CurrencyHelper;
 use cms\catalog\common\helpers\PriceHelper;
@@ -65,7 +64,7 @@ $oldPrice = Html::tag('div', $s, ['class' => 'product-old-price']);
 
 
 //availability
-$s = Html::encode(ArrayHelper::getValue($model::getAvailabilityNames(), $model->availability));
+$s = Html::encode($model->getAvailabilityName());
 $availability = Html::tag('div', $s, ['class' => 'product-availability availability-' . $model->availability]);
 
 
