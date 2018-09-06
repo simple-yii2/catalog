@@ -20,8 +20,9 @@ $imageSize = '<br><span class="label label-default">' . $thumbWidth . '&times' .
 $categories = ['' => ''];
 $query = Category::find()->orderBy(['lft' => SORT_ASC]);
 foreach ($query->all() as $item) {
-    if ($item->isLeaf() && $item->active)
+    if ($item->isLeaf()) {
         $categories[$item->id] = $item->path;
+    }
 }
 
 //description settings
@@ -42,8 +43,9 @@ if (isset(Yii::$app->storage) && (Yii::$app->storage instanceof dkhlystov\storag
 //vendors
 $vendors = ['' => ''];
 $query = Vendor::find()->orderBy(['name' => SORT_ASC]);
-foreach ($query->all() as $item)
+foreach ($query->all() as $item) {
     $vendors[$item->id] = $item->name;
+}
 
 ?>
 <fieldset>
