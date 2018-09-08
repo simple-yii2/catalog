@@ -17,16 +17,16 @@ if ($category_id = Yii::$app->getRequest()->get('category_id')) {
     'layout' => 'horizontal',
     'enableClientValidation' => false,
     'options' => [
-        'data-properties-url' => Url::toRoute(['properties', 'id' => $form->getObject()->id]),
+        'data-properties-url' => Url::toRoute(['properties', 'id' => $model->getObject()->id]),
     ],
 ]); ?>
 
-    <?= $this->render('form/tabs', ['activeForm' => $activeForm, 'form' => $form]) ?>
+    <?= $this->render('form/tabs', ['activeForm' => $activeForm, 'model' => $model]) ?>
 
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-6">
-            <?= Html::submitButton(Yii::t('catalog', 'Save'), ['class' => 'btn btn-primary']) ?>
-            <?= Html::a(Yii::t('catalog', 'Cancel'), $cancelUrl, ['class' => 'btn btn-default']) ?>
+            <?= Html::submitButton(Yii::t('cms', 'Save'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('cms', 'Cancel'), $cancelUrl, ['class' => 'btn btn-default']) ?>
         </div>
     </div>
 

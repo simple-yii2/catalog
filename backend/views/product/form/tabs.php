@@ -13,7 +13,7 @@ $tabFields = [
 
 //active tab (if there are errors, make tab with first error active)
 $active = '';
-$errorFields = array_keys($form->getFirstErrors());
+$errorFields = array_keys($model->getFirstErrors());
 foreach ($tabFields as $tab => $fields) {
     foreach ($fields as $field) {
         if (in_array($field, $errorFields)) {
@@ -31,19 +31,19 @@ if (empty($active))
 $tabs = [];
 $tabs[] = [
     'label' => Yii::t('catalog', 'General'),
-    'content' => $this->render('general', ['activeForm' => $activeForm, 'form' => $form]),
+    'content' => $this->render('general', ['activeForm' => $activeForm, 'model' => $model]),
     'active' => $active == 'general',
 ];
 if (Yii::$app->controller->module->propertiesEnabled) {
     $tabs[] = [
         'label' => Yii::t('catalog', 'Properties'),
-        'content' => $this->render('properties', ['activeForm' => $activeForm, 'form' => $form]),
+        'content' => $this->render('properties', ['activeForm' => $activeForm, 'model' => $model]),
         'active' => $active == 'properties',
     ];
 }
 $tabs[] = [
     'label' => Yii::t('catalog', 'Purchase'),
-    'content' => $this->render('purchase', ['activeForm' => $activeForm, 'form' => $form]),
+    'content' => $this->render('purchase', ['activeForm' => $activeForm, 'model' => $model]),
     'active' => $active == 'purchase',
 ];
 // $tabs[] = [

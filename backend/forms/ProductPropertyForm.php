@@ -27,7 +27,7 @@ class ProductPropertyForm extends Model
     public $values;
 
     /**
-     * @var string Value
+     * @var string|array Value
      */
     public $value;
 

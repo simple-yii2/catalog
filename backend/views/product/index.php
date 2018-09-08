@@ -38,7 +38,7 @@ foreach ($query->all() as $item) {
 <h1><?= Html::encode($title) ?></h1>
 
 <div class="btn-toolbar" role="toolbar">
-    <?= Html::a(Yii::t('catalog', 'Create'), $createUrl, ['class' => 'btn btn-primary']) ?>
+    <?= Html::a(Yii::t('cms', 'Create'), $createUrl, ['class' => 'btn btn-primary']) ?>
 </div>
 
 <div>

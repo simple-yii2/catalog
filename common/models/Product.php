@@ -39,6 +39,18 @@ class Product extends ActiveRecord implements StoredInterface
     /**
      * @inheritdoc
      */
+    public function __construct($config = [])
+    {
+        parent::__construct(array_replace([
+            'active' => true,
+            'imageCount' => 0,
+            'currency_id' => CurrencyHelper::getApplicationCurrencyId(),
+        ], $config));
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert) === false) {

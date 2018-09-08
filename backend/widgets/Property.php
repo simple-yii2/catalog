@@ -5,7 +5,6 @@ namespace cms\catalog\backend\widgets;
 use Yii;
 use yii\widgets\InputWidget;
 use yii\helpers\Html;
-
 use cms\catalog\common\models\CategoryProperty;
 use cms\catalog\backend\widgets\assets\PropertyAsset;
 
@@ -52,6 +51,10 @@ class Property extends InputWidget
 
             case CategoryProperty::TYPE_SELECT:
                 echo $this->renderSelect();
+                break;
+
+            case CategoryProperty::TYPE_MULTIPLE:
+                echo $this->renderMultiple();
                 break;
         }
     }
@@ -146,6 +149,25 @@ class Property extends InputWidget
         if (!empty($unit)) {
             $control = $this->renderUnit($control, $unit);
         }
+
+        return $control;
+    }
+
+    /**
+     * Render multiple property
+     * @return string
+     */
+    private function renderMultiple()
+    {
+        $model = $this->model;
+        $unit = $model->getTemplate()->unit;
+
+        $items = [];
+        foreach ($model->values as $value) {
+            $items[$value] = trim($value . ' ' . $unit);
+        }
+
+        $control = Html::checkboxList($this->getInputName(), $model->value, $items, ['class' => 'property-multiple']);
 
         return $control;
     }

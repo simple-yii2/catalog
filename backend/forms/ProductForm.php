@@ -139,11 +139,7 @@ class ProductForm extends Model
     public function __construct(Product $object = null, $config = [])
     {
         if ($object === null) {
-            $object = new Product([
-                'active' => true,
-                'imageCount' => 0,
-                'currency_id' => CurrencyHelper::getApplicationCurrencyId(),
-            ]);
+            $object = new Product;
         }
 
         $this->_object = $object;

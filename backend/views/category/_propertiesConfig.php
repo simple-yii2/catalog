@@ -44,16 +44,16 @@ return [
             return $options;
         }],
     ],
-    'addLabel' => Yii::t('catalog', 'Add'),
-    'removeLabel' => Yii::t('catalog', 'Remove'),
+    'addLabel' => Yii::t('cms', 'Add'),
+    'removeLabel' => Yii::t('cms', 'Remove'),
     'readOnlyAttribute' => 'readOnly',
     'movingEnabled' => true,
     'options' => [
         'class' => 'category-properties',
         'data-types-with-values' => $typesWithValues,
         'data-modal-title' => Yii::t('catalog', 'Values'),
-        'data-modal-add' => Yii::t('catalog', 'Add'),
+        'data-modal-add' => Yii::t('cms', 'Add'),
         'data-modal-ok' => Yii::t('catalog', 'OK'),
-        'data-modal-cancel' => Yii::t('catalog', 'Cancel'),
+        'data-modal-cancel' => Yii::t('cms', 'Cancel'),
     ],
 ];

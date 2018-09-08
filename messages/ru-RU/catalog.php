@@ -15,7 +15,6 @@ return [
     'Common properties' => 'Общие характеристики',
 
     'The value is incorrect.' => 'Значение указано неверно.',
-    'Operation not permitted.' => 'Операция недопустима.',
     'No results matched' => 'Нет результатов, соответствующих',
 
     'Code' => 'Код',
@@ -64,6 +63,7 @@ return [
     'Integer' => 'Целый',
     'Decimal' => 'Дробный',
     'Select' => 'Выбор',
+    'Multiple' => 'Множественный',
 
     'In stock' => 'В наличии',
     'Under the order' => 'Под заказ',
@@ -76,12 +76,7 @@ return [
     'Yes' => 'Есть',
     'No' => 'Нет',
 
-    'Add' => 'Добавтиь',
-    'Remove' => 'Удалить',
     'OK' => 'OK',
-    'Cancel' => 'Отмена',
-    'Save' => 'Сохранить',
-    'Create' => 'Добавить',
     'Search' => 'Поиск',
     'Delete' => 'Удалить',
     'Apply' => 'Применить',

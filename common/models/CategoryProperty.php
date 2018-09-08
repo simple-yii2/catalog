@@ -13,11 +13,17 @@ class CategoryProperty extends ActiveRecord
     const TYPE_INTEGER = 1;
     const TYPE_FLOAT = 2;
     const TYPE_SELECT = 3;
+    const TYPE_MULTIPLE = 4;
 
     /**
      * @var boolean properties from parent categories is read-only
      */
     public $readOnly = false;
+
+    /**
+     * @var array
+     */
+    private static $_typeNames;
 
     /**
      * @var string[] type names
@@ -27,6 +33,7 @@ class CategoryProperty extends ActiveRecord
         self::TYPE_INTEGER => 'Integer',
         self::TYPE_FLOAT => 'Decimal',
         self::TYPE_SELECT => 'Select',
+        self::TYPE_MULTIPLE => 'Multiple',
     ];
 
     /**
@@ -44,7 +51,11 @@ class CategoryProperty extends ActiveRecord
      */ 
     public static function getTypeNames()
     {
-        return array_map(function($name) {
+        if (self::$_typeNames !== null) {
+            return self::$_typeNames;
+        }
+
+        return self::$_typeNames = array_map(function($name) {
             return Yii::t('catalog', $name);
         }, self::$typeNames);
     }
@@ -55,7 +66,7 @@ class CategoryProperty extends ActiveRecord
      */
     public static function getTypesWithValues()
     {
-        return [self::TYPE_SELECT];
+        return [self::TYPE_SELECT, self::TYPE_MULTIPLE];
     }
 
     /**
@@ -94,11 +105,11 @@ class CategoryProperty extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function init()
+    public function __construct($config = [])
     {
-        parent::init();
-
-        $this->type = self::TYPE_INTEGER;
+        return parent::__construct(array_replace([
+            'type' => self::TYPE_INTEGER,
+        ], $config));
     }
 
     /**
@@ -119,19 +130,23 @@ class CategoryProperty extends ActiveRecord
     {
         switch ($this->type) {
             case self::TYPE_BOOLEAN:
-                return $this->validateBoolean($value);
+                return $this->validateBooleanValue($value);
                 break;
 
             case self::TYPE_INTEGER:
-                return $this->validateInteger($value);
+                return $this->validateIntegerValue($value);
                 break;
 
             case self::TYPE_FLOAT:
-                return $this->validateFloat($value);
+                return $this->validateFloatValue($value);
                 break;
 
             case self::TYPE_SELECT:
-                return $this->validateSelect($value);
+                return $this->validateSelectValue($value);
+                break;
+
+            case self::TYPE_MULTIPLE:
+                return $this->validateMultipleValue($value);
                 break;
         }
     }
@@ -141,7 +156,7 @@ class CategoryProperty extends ActiveRecord
      * @param string $value 
      * @return boolean
      */
-    private function validateBoolean($value)
+    private function validateBooleanValue($value)
     {
         return $value == '0' || $value == '1';
     }
@@ -151,7 +166,7 @@ class CategoryProperty extends ActiveRecord
      * @param string $value 
      * @return boolean
      */
-    private function validateInteger($value)
+    private function validateIntegerValue($value)
     {
         return preg_match('/^\s*[+-]?\d+\s*$/', "$value");
     }
@@ -161,7 +176,7 @@ class CategoryProperty extends ActiveRecord
      * @param string $value 
      * @return boolean
      */
-    private function validateFloat($value)
+    private function validateFloatValue($value)
     {
         return preg_match('/^\s*[+-]?\d+(?:\.\d+)?\s*$/', "$value");
     }
@@ -171,9 +186,27 @@ class CategoryProperty extends ActiveRecord
      * @param string $value 
      * @return boolean
      */
-    private function validateSelect($value)
+    private function validateSelectValue($value)
     {
         return in_array($value, $this->getValues());
+    }
+
+    /**
+     * Multiple validation
+     * @param array $value 
+     * @return boolean
+     */
+    private function validateMultipleValue($value)
+    {
+        $values = $this->getValues();
+
+        foreach ($value as $v) {
+            if (!in_array($v, $values)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -198,6 +231,10 @@ class CategoryProperty extends ActiveRecord
 
             case self::TYPE_SELECT:
                 return $this->formatSelect($value);
+                break;
+
+            case self::TYPE_MULTIPLE:
+                return $this->formatMultiple($value);
                 break;
         }
     }
@@ -247,7 +284,21 @@ class CategoryProperty extends ActiveRecord
      */
     private function formatSelect($value)
     {
-        return $value;
+        return (string) $value;
+    }
+
+    /**
+     * Multiple formatting
+     * @param mixed $value 
+     * @return string
+     */
+    private function formatMultiple($value, $separator = '/')
+    {
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+
+        return array_map(function ($v) {return (string) $v;}, $value);
     }
 
 }

@@ -71,15 +71,15 @@ class ProductController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->getRequest();
-        $form = new ProductForm(null, ['category_id' => $request->get('category_id')]);
+        $model = new ProductForm(null, ['category_id' => $request->get('category_id')]);
 
-        if ($form->load($request->post()) && $form->save()) {
-            $form->getObject()->category->updateProductCount();
+        if ($model->load($request->post()) && $model->save()) {
+            $model->getObject()->category->updateProductCount();
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
-            return $this->redirect(['index', 'category_id' => $form->getObject()->category_id]);
+            return $this->redirect(['index', 'category_id' => $model->getObject()->category_id]);
         }
 
-        return $this->render('create', ['form' => $form]);
+        return $this->render('create', ['model' => $model]);
     }
 
     /**
@@ -96,9 +96,9 @@ class ProductController extends Controller
 
         $category = $object->category;
 
-        $form = new ProductForm($object);
+        $model = new ProductForm($object);
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             $object->category->updateProductCount();
             if ($category->id != $object->category->id) {
                 $category->updateProductCount();
@@ -107,7 +107,7 @@ class ProductController extends Controller
             return $this->redirect(['index', 'category_id' => $object->category_id]);
         }
 
-        return $this->render('update', ['form' => $form]);
+        return $this->render('update', ['model' => $model]);
     }
 
     /**

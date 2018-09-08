@@ -1,15 +1,26 @@
 .property-boolean .btn {
-	outline: none !important;
+    outline: none !important;
 }
 .property-boolean .btn:active,
 .property-boolean .btn.active {
-	background-color: #286090 !important;
-	border-color: #204d74 !important;
-	color: #fff !important;
+    background-color: #286090 !important;
+    border-color: #204d74 !important;
+    color: #fff !important;
 }
 .property-boolean .btn.active:hover,
 .property-boolean .btn.active:focus,
 .property-boolean .btn.active.focus {
-	background-color: #204d74 !important;
-	border-color: #122b40 !important;
+    background-color: #204d74 !important;
+    border-color: #122b40 !important;
+}
+
+
+
+.property-multiple {
+    height: 34px;
+    padding-top: 5px;
+}
+.property-multiple > label {
+    font-weight: inherit;
+    margin-right: 10px;
 }
