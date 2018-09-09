@@ -36,6 +36,7 @@ create table if not exists `catalog_category`
 	`title` varchar(100),
 	`path` text,
 	`productCount` int(10) not null,
+	`activeProductCount` int(10) not null,
 	primary key (`id`),
 	key `alias` (`alias`)
 ) engine InnoDB;

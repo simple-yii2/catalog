@@ -193,6 +193,12 @@ class Category extends ActiveRecord
             $this->productCount = $count;
             $this->update(false, ['productCount']);
         }
+
+        $count = $this->getProducts()->andWhere(['active' => true])->count();
+        if ($count != $this->activeProductCount) {
+            $this->activeProductCount = $count;
+            $this->update(false, ['activeProductCount']);
+        }
     }
 
     /**
@@ -210,7 +216,7 @@ class Category extends ActiveRecord
         $skip = 0;
         foreach ($this->children()->all() as $value) {
             if ($value->depth == $this->depth + 1) {
-                if ($item !== null && $item->active && $item->productCount > 0) {
+                if ($item !== null && $item->active && $item->activeProductCount > 0) {
                     $children[] = $item;
                 }
                 $item = $value;
@@ -221,9 +227,9 @@ class Category extends ActiveRecord
             if ($value->rgt <= $skip) {
                 continue;
             }
-            $item->productCount += $value->productCount;
+            $item->activeProductCount += $value->activeProductCount;
         }
-        if ($item !== null && $item->active && $item->productCount > 0) {
+        if ($item !== null && $item->active && $item->activeProductCount > 0) {
             $children[] = $item;
         }
 
