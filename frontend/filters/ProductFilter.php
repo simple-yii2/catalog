@@ -386,8 +386,16 @@ class ProductFilter extends Model
                 unset($query->where[$key]);
             }
         }
+        if (is_array($query->join)) {
+            foreach ($query->join as $key => $value) {
+                $table = 'catalog_product_property p' . $property->id;
+                if (is_array($value) && ArrayHelper::getValue($value, 1) == $table) {
+                    unset($query->join[$key]);
+                }
+            }
+        }
 
-        $query->select(['MIN(p.value) AS min_value', 'MAX(p.value) AS max_value'])->leftJoin(ProductProperty::tableName() . ' p', 'p.product_id = t.id')->andWhere(['p.property_id' => $property->id])->groupBy(['p.property_id'])->asArray();
+        $query->select(['MIN(CAST(p.value AS DECIMAL)) AS min_value', 'MAX(CAST(p.value AS DECIMAL)) AS max_value'])->leftJoin(ProductProperty::tableName() . ' p', 'p.product_id = t.id')->andWhere(['p.property_id' => $property->id])->groupBy(['p.property_id'])->asArray();
 
         $row = $query->one();
 
