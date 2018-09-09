@@ -80,7 +80,7 @@ foreach ($query->all() as $item) {
         'columns' => [
             'barcode',
         ],
-        'addLabel' => Yii::t('catalog', 'Add'),
-        'removeLabel' => Yii::t('catalog', 'Remove'),
+        'addLabel' => Yii::t('cms', 'Add'),
+        'removeLabel' => Yii::t('cms', 'Remove'),
     ]) ?>
 </fieldset>
