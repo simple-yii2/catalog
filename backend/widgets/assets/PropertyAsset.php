@@ -7,20 +7,22 @@ use yii\web\AssetBundle;
 class PropertyAsset extends AssetBundle
 {
 
-	/**
-	 * @inheritdoc
-	 */
-	public function init()
-	{
-		$this->sourcePath = __DIR__ . '/property';
+    public $js = [
+        'property' . (YII_DEBUG ? '' : '.min') . '.js',
+    ];
 
-		$this->js = ['property.js'];
+    public $css = [
+        'property' . (YII_DEBUG ? '' : '.min') . '.css',
+    ];
 
-		$this->css = ['property.css'];
+    public $depends = [
+        'yii\web\JqueryAsset',
+    ];
 
-		$this->depends = ['yii\web\JqueryAsset'];
-
-		parent::init();
-	}
+    public function init()
+    {
+        $this->sourcePath = __DIR__ . '/property';
+        parent::init();
+    }
 
 }

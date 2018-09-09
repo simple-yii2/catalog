@@ -17,8 +17,7 @@
 
 
 .property-multiple {
-    height: 34px;
-    padding-top: 5px;
+    padding-top: 7px;
 }
 .property-multiple > label {
     font-weight: inherit;
