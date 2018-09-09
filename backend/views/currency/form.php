@@ -21,8 +21,8 @@ use yii\helpers\Html;
 
 	<div class="form-group">
 		<div class="col-sm-offset-3 col-sm-6">
-			<?= Html::submitButton(Yii::t('catalog', 'Save'), ['class' => 'btn btn-primary']) ?>
-			<?= Html::a(Yii::t('catalog', 'Cancel'), ['index'], ['class' => 'btn btn-default']) ?>
+			<?= Html::submitButton(Yii::t('cms', 'Save'), ['class' => 'btn btn-primary']) ?>
+			<?= Html::a(Yii::t('cms', 'Cancel'), ['index'], ['class' => 'btn btn-default']) ?>
 		</div>
 	</div>
 
