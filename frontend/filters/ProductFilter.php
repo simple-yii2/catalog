@@ -343,10 +343,12 @@ class ProductFilter extends Model
                 unset($query->where[$key]);
             }
         }
-        foreach ($query->join as $key => $value) {
-            $table = 'catalog_product_property p' . $property->id;
-            if (is_array($value) && ArrayHelper::getValue($value, 1) == $table) {
-                unset($query->join[$key]);
+        if (is_array($query->join)) {
+            foreach ($query->join as $key => $value) {
+                $table = 'catalog_product_property p' . $property->id;
+                if (is_array($value) && ArrayHelper::getValue($value, 1) == $table) {
+                    unset($query->join[$key]);
+                }
             }
         }
 
