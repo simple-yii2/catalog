@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use cms\catalog\common\helpers\CurrencyHelper;
 use cms\catalog\common\helpers\PriceHelper;
+use cms\catalog\common\models\CategoryProperty;
 use cms\catalog\frontend\assets\ProductViewAsset;
 use cms\catalog\frontend\helpers\PropertyHelper;
 use dkhlystov\widgets\Lightbox;
@@ -72,9 +73,20 @@ $availability = Html::tag('div', $s, ['class' => 'product-availability availabil
 
 
 //properties
+$items = $model->properties;
+$ids = array_map(function ($v) {return $v->property_id;}, $items);
+$categoryProperties = [];
+foreach (CategoryProperty::find()->andWhere(['id' => $ids])->all() as $item) {
+    $categoryProperties[$item->id] = $item;
+}
+
 $properties = [];
-foreach ($model->getProperties()->with(['categoryProperty'])->all() as $item) {
-    $properties[] = ['label' => $item->categoryProperty->name, 'value' => PropertyHelper::renderValue($item)];
+foreach ($items as $item) {
+    if (!array_key_exists($item->property_id, $categoryProperties)) {
+        continue;
+    }
+    $item->populateRelation('categoryProperty', $categoryProperties[$item->property_id]);
+    $properties[] = ['label' => $categoryProperties[$item->property_id]->name, 'value' => PropertyHelper::renderValue($item)];
 }
 $formatter = Yii::$app->getFormatter();
 if (!empty($model->length)) {
