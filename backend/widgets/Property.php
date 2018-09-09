@@ -167,7 +167,9 @@ class Property extends InputWidget
             $items[$value] = trim($value . ' ' . $unit);
         }
 
-        $control = Html::checkboxList($this->getInputName(), $model->value, $items, ['class' => 'property-multiple']);
+        $name = $this->getInputName();
+        $default = Html::hiddenInput($name, '');
+        $control = $default . Html::checkboxList($name, $model->value, $items, ['class' => 'property-multiple']);
 
         return $control;
     }

@@ -200,6 +200,10 @@ class CategoryProperty extends ActiveRecord
     {
         $values = $this->getValues();
 
+        if (!is_array($value)) {
+            $value = empty($value) ? [] : [$value];
+        }
+
         foreach ($value as $v) {
             if (!in_array($v, $values)) {
                 return false;
