@@ -19,9 +19,13 @@ class ProductController extends Controller
      */
     public function actionIndex($alias = null)
     {
-        $category = Category::findByAlias($alias);
-        if ($category === null) {
+        if ($alias === null) {
             $category = Category::find()->roots()->one();
+        } else {
+            $category = Category::findByAlias($alias);
+        }
+        if ($category === null) {
+            throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
         }
 
         $filterModel = new ProductFilter;
