@@ -194,6 +194,7 @@ class ProductFilter extends Widget
                 return $this->renderRange($property->name, $property->alias, $model->getPropertyValue($property), $min, $max);
 
             case CategoryProperty::TYPE_SELECT:
+            case CategoryProperty::TYPE_MULTIPLE:
                 return $this->renderSelect($property->name, $property->alias, $model->getPropertyValue($property), $model->getPropertyItems($property));
         }
 

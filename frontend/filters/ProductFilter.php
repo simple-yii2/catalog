@@ -178,6 +178,7 @@ class ProductFilter extends Model
                         break;
                     case CategoryProperty::TYPE_BOOLEAN:
                     case CategoryProperty::TYPE_SELECT:
+                    case CategoryProperty::TYPE_MULTIPLE:
                         $query->andWhere(['in', "{$alias}.value", FilterHelper::selectItems($value)]);
                         break;
                 }
@@ -340,6 +341,12 @@ class ProductFilter extends Model
             $field = 'p' . $property->id . '.value';
             if (is_array($value) && ArrayHelper::getValue($value, 1) == $field) {
                 unset($query->where[$key]);
+            }
+        }
+        foreach ($query->join as $key => $value) {
+            $table = 'catalog_product_property p' . $property->id;
+            if (is_array($value) && ArrayHelper::getValue($value, 1) == $table) {
+                unset($query->join[$key]);
             }
         }
 
