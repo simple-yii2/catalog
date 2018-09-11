@@ -85,4 +85,5 @@ return [
     'By price ascending' => 'По возрастанию цены',
     'By price descending' => 'По убыванию цены',
     'By name' => 'По наименованию',
+    'Hide filters' => 'Скрыть фильтры',
 ];

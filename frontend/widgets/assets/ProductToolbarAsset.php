@@ -11,6 +11,14 @@ class ProductToolbarAsset extends AssetBundle
         'product-toolbar' . (YII_DEBUG ? '' : '.min') . '.css',
     ];
 
+    public $js = [
+        'product-toolbar' . (YII_DEBUG ? '' : '.min') . '.js',
+    ];
+
+    public $depends = [
+        'yii\web\JqueryAsset',
+    ];
+
     public function init()
     {
         $this->sourcePath = __DIR__ . '/product-toolbar';

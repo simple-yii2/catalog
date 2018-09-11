@@ -4,6 +4,7 @@ namespace cms\catalog\frontend\widgets;
 
 use yii\base\Widget;
 use yii\bootstrap\ButtonDropdown;
+use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use cms\catalog\frontend\widgets\assets\ProductToolbarAsset;
@@ -52,6 +53,26 @@ class ProductToolbar extends Widget
     public $sortOptions = ['class' => 'product-toolbar-sort'];
 
     /**
+     * @var string
+     */
+    public $filterButtonIcon = '<span class="glyphicon glyphicon-filter"></span>';
+
+    /**
+     * @var string
+     */
+    public $filterTarget = '.product-filter';
+
+    /**
+     * @var string
+     */
+    public $filterHideLabel = 'Hide filters';
+
+    /**
+     * @var array
+     */
+    public $filterOptions = ['class' => 'product-toolbar-filter'];
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -67,8 +88,11 @@ class ProductToolbar extends Widget
     public function run()
     {
         $sort = $this->renderSort();
+        $filter = $this->renderFilter();
 
-        return Html::tag('div', $sort, $this->options);
+        $right = Html::tag('div', $filter, ['class' => 'pull-right']);
+
+        return Html::tag('div', $right . $sort, $this->options);
     }
 
     /**
@@ -134,6 +158,21 @@ class ProductToolbar extends Widget
             'dropdown' => ['items' => $items],
             'options' => ['class' => 'btn btn-default'],
         ]), $this->sortOptions);
+    }
+
+    /**
+     * Render filter toggle block
+     * @return string
+     */
+    protected function renderFilter()
+    {
+        $button = Html::button($this->filterButtonIcon, ['class' => 'btn btn-default']);
+        $modal = Modal::widget([
+            'header' => $this->filterHideLabel,
+            'options' => ['class' => 'product-toolbar-filter-modal', 'data-target' => $this->filterTarget],
+        ]);
+
+        return Html::tag('div', $button . $modal, $this->filterOptions);
     }
 
 }
