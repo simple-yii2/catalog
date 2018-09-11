@@ -258,6 +258,19 @@ class ProductFilter extends Model
                 'defaultPageSize' => 24,
                 'pageParam' => 'p',
             ],
+            'sort' => [
+                'attributes' => [
+                    'name' => [
+                        'asc' => ['name' => SORT_ASC, 'model' => SORT_ASC],
+                        'desc' => ['name' => SORT_DESC, 'model' => SORT_DESC],
+                    ],
+                    'price' => [
+                        'asc' => ['priceValue' => SORT_ASC],
+                        'desc' => ['priceValue' => SORT_DESC],
+                    ],
+                ],
+                'defaultOrder' => ['price' => SORT_ASC],
+            ],
         ], $config));
     }
 

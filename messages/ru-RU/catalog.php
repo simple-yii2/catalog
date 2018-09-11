@@ -80,4 +80,9 @@ return [
     'Search' => 'Поиск',
     'Delete' => 'Удалить',
     'Apply' => 'Применить',
+
+    'Sort' => 'Сортировать',
+    'By price ascending' => 'По возрастанию цены',
+    'By price descending' => 'По убыванию цены',
+    'By name' => 'По наименованию',
 ];
