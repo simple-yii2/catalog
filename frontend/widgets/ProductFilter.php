@@ -105,7 +105,7 @@ class ProductFilter extends Widget
             'method' => 'get',
             'options' => $this->options,
         ]);
-        echo $items;
+        echo Html::tag('div', $items, ['class' => 'filter-content']);
         echo $this->renderSubmitButton();
         ActiveForm::end();
     }
