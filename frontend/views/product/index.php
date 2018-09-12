@@ -39,6 +39,7 @@ $dataProvider = $filterModel->getDataProvider();
             'sortPriceAscendingText' => Yii::t('catalog', 'By price ascending'),
             'sortPriceDescendingText' => Yii::t('catalog', 'By price descending'),
             'sortNameText' => Yii::t('catalog', 'By name'),
+            'filterButtonText' => Yii::t('catalog', 'Filters'),
             'filterHideLabel' => Yii::t('catalog', 'Hide filters'),
         ]) ?>
         <?php if (!empty($categories)) echo Html::tag('div', implode(' ', $categories), ['class' => 'product-categories']) ?>

@@ -55,12 +55,12 @@ class ProductToolbar extends Widget
     /**
      * @var string
      */
-    public $filterButtonIcon = '<span class="glyphicon glyphicon-filter"></span>';
+    public $filterTarget = '.product-filter';
 
     /**
      * @var string
      */
-    public $filterTarget = '.product-filter';
+    public $filterButtonText = 'Filters';
 
     /**
      * @var string
@@ -166,7 +166,7 @@ class ProductToolbar extends Widget
      */
     protected function renderFilter()
     {
-        $button = Html::button($this->filterButtonIcon, ['class' => 'btn btn-default']);
+        $button = Html::button($this->filterButtonText . '<span class="glyphicon glyphicon-menu-right"></span>', ['class' => 'btn btn-default']);
         $modal = Modal::widget([
             'header' => $this->filterHideLabel,
             'options' => ['class' => 'product-toolbar-filter-modal', 'data-target' => $this->filterTarget],
