@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use cms\catalog\frontend\helpers\CatalogHelper;
+use cms\catalog\frontend\widgets\Categories;
 use cms\catalog\frontend\widgets\ProductFilter;
 use cms\catalog\frontend\widgets\ProductList;
 use cms\catalog\frontend\widgets\ProductToolbar;
@@ -18,12 +19,6 @@ foreach ($category->getParents() as $object) {
 }
 $breadcrumbs[] = $title;
 $this->params['breadcrumbs'] = $breadcrumbs;
-
-//product categories
-$categories = [];
-foreach ($category->getActiveChildren() as $item) {
-    $categories[] = Html::a(Html::encode($item->title), CatalogHelper::createCategoryUrl($item), ['class' => 'btn btn-default']);
-}
 
 //data provider
 $dataProvider = $filterModel->getDataProvider();
@@ -42,7 +37,9 @@ $dataProvider = $filterModel->getDataProvider();
             'filterButtonText' => Yii::t('catalog', 'Filters'),
             'filterHideLabel' => Yii::t('catalog', 'Hide filters'),
         ]) ?>
-        <?php if (!empty($categories)) echo Html::tag('div', implode(' ', $categories), ['class' => 'product-categories']) ?>
+        <?= Categories::widget([
+            'filter' => $filterModel,
+        ]) ?>
         <?= ProductList::widget([
             'dataProvider' => $dataProvider,
         ]) ?>

@@ -1,0 +1,1 @@
+.categories{list-style:none;margin-bottom:20px;padding:0}.categories-count:before{content:'('}.categories-count:after{content:')'}@media (min-width:768px){.categories>li{display:inline-block;margin-right:20px}}
