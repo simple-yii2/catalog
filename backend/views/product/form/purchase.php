@@ -11,8 +11,8 @@ foreach (Currency::find()->all() as $item) {
 
 ?>
 <fieldset>
-    <?= $activeForm->field($model, 'currency_id')->dropDownList($currencies) ?>
-    <?= $activeForm->field($model, 'price') ?>
-    <?= $activeForm->field($model, 'oldPrice') ?>
-    <?= $activeForm->field($model, 'availability')->dropDownList(Product::getAvailabilityNames()) ?>
+    <?= $form->field($model, 'currency_id')->dropDownList($currencies) ?>
+    <?= $form->field($model, 'price') ?>
+    <?= $form->field($model, 'oldPrice') ?>
+    <?= $form->field($model, 'availability')->dropDownList(Product::getAvailabilityNames()) ?>
 </fieldset>

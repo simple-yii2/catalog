@@ -49,8 +49,8 @@ foreach ($query->all() as $item) {
 
 ?>
 <fieldset>
-    <?= $activeForm->field($model, 'active')->checkbox() ?>
-    <?= $activeForm->field($model, 'images')->label($model->getAttributeLabel('images') . $imageSize)->widget(UploadImages::className(), [
+    <?= $form->field($model, 'active')->checkbox() ?>
+    <?= $form->field($model, 'images')->label($model->getAttributeLabel('images') . $imageSize)->widget(UploadImages::className(), [
         'fileKey' => 'file',
         'thumbKey' => 'thumb',
         'thumbWidth' => $thumbWidth,
@@ -61,21 +61,21 @@ foreach ($query->all() as $item) {
             ];
         },
     ]) ?>
-    <?= $activeForm->field($model, 'category_id')->widget(Chosen::className(), [
+    <?= $form->field($model, 'category_id')->widget(Chosen::className(), [
         'items' => $categories,
         'placeholder' => ' ',
         'noResultText' => Yii::t('catalog', 'No results matched'),
     ]) ?>
-    <?= $activeForm->field($model, 'name') ?>
-    <?= $activeForm->field($model, 'model') ?>
-    <?= $activeForm->field($model, 'description')->widget(\vova07\imperavi\Widget::className(), ['settings' => $settings]) ?>
-    <?php if (Yii::$app->controller->module->vendorEnabled) echo $activeForm->field($model, 'vendor_id')->widget(Chosen::className(), [
+    <?= $form->field($model, 'name') ?>
+    <?= $form->field($model, 'model') ?>
+    <?= $form->field($model, 'description')->widget(\vova07\imperavi\Widget::className(), ['settings' => $settings]) ?>
+    <?php if (Yii::$app->controller->module->vendorEnabled) echo $form->field($model, 'vendor_id')->widget(Chosen::className(), [
         'items' => $vendors,
         'placeholder' => ' ',
         'noResultText' => Yii::t('catalog', 'No results matched'),
     ]) ?>
-    <?= $activeForm->field($model, 'countryOfOrigin') ?>
-    <?php if (Yii::$app->controller->module->barcodeEnabled) echo $activeForm->field($model, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
+    <?= $form->field($model, 'countryOfOrigin') ?>
+    <?php if (Yii::$app->controller->module->barcodeEnabled) echo $form->field($model, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
         'itemClass' => ProductBarcodeForm::className(),
         'columns' => [
             'barcode',

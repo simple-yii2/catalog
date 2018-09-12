@@ -18,13 +18,13 @@ $templateWeight = '<div class="input-group">{input}<span class="input-group-addo
     <div class="properties">
         <?= Html::hiddenInput($propertiesName, '') ?>
         <?php foreach ($model->properties as $property) {
-            echo $activeForm->field($property, 'value')->label($property->name)->widget(Property::className(), [
+            echo $form->field($property, 'value')->label($property->name)->widget(Property::className(), [
                 'name' => $propertiesName,
             ]);
         } ?>
     </div>
-    <?= $activeForm->field($model, 'length', ['inputTemplate' => $templateLength]) ?>
-    <?= $activeForm->field($model, 'width', ['inputTemplate' => $templateLength]) ?>
-    <?= $activeForm->field($model, 'height', ['inputTemplate' => $templateLength]) ?>
-    <?= $activeForm->field($model, 'weight', ['inputTemplate' => $templateWeight]) ?>
+    <?= $form->field($model, 'length', ['inputTemplate' => $templateLength]) ?>
+    <?= $form->field($model, 'width', ['inputTemplate' => $templateLength]) ?>
+    <?= $form->field($model, 'height', ['inputTemplate' => $templateLength]) ?>
+    <?= $form->field($model, 'weight', ['inputTemplate' => $templateWeight]) ?>
 </fieldset>

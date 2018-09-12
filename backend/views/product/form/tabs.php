@@ -7,7 +7,7 @@ $tabFields = [
     'general' => ['active', 'images[]', 'category_id', 'name', 'model', 'description', 'vendor_id', 'countryOfOrigin', 'barcodes[]'],
     'properties' => ['category_id', 'properties[]', 'length', 'width', 'height', 'weight'],
     'purchase' => ['currency_id', 'price', 'oldPrice'],
-    'recommended' => ['recommended[]'],
+    // 'recommended' => ['recommended[]'],
     // 'quantity' => ['stores[]'],
 ];
 
@@ -21,40 +21,42 @@ foreach ($tabFields as $tab => $fields) {
             break;
         }
     }
-    if (!empty($active))
+    if (!empty($active)) {
         break;
+    }
 }
-if (empty($active))
+if (empty($active)) {
     $active = 'general';
+}
 
 //tabs
 $tabs = [];
 $tabs[] = [
     'label' => Yii::t('catalog', 'General'),
-    'content' => $this->render('general', ['activeForm' => $activeForm, 'model' => $model]),
+    'content' => $this->render('general', ['form' => $form, 'model' => $model]),
     'active' => $active == 'general',
 ];
 if (Yii::$app->controller->module->propertiesEnabled) {
     $tabs[] = [
         'label' => Yii::t('catalog', 'Properties'),
-        'content' => $this->render('properties', ['activeForm' => $activeForm, 'model' => $model]),
+        'content' => $this->render('properties', ['form' => $form, 'model' => $model]),
         'active' => $active == 'properties',
     ];
 }
 $tabs[] = [
     'label' => Yii::t('catalog', 'Purchase'),
-    'content' => $this->render('purchase', ['activeForm' => $activeForm, 'model' => $model]),
+    'content' => $this->render('purchase', ['form' => $form, 'model' => $model]),
     'active' => $active == 'purchase',
 ];
 // $tabs[] = [
 //     'label' => Yii::t('catalog', 'Recommended'),
-//     'content' => $this->render('recommended', ['activeForm' => $activeForm, 'form' => $form]),
+//     'content' => $this->render('recommended', ['form' => $form, 'form' => $form]),
 //     'active' => $active == 'recommended',
 // ];
 // if (Yii::$app->controller->module->storeEnabled) {
 //     $tabs[] = [
 //         'label' => Yii::t('catalog', 'Quantity'),
-//         'content' => $this->render('quantity', ['activeForm' => $activeForm, 'form' => $form]),
+//         'content' => $this->render('quantity', ['form' => $form, 'form' => $form]),
 //         'active' => $active == 'quantity',
 //     ];
 // }

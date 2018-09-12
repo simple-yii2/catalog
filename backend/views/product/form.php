@@ -13,7 +13,7 @@ if ($category_id = Yii::$app->getRequest()->get('category_id')) {
 }
 
 ?>
-<?php $activeForm = ActiveForm::begin([
+<?php $form = ActiveForm::begin([
     'layout' => 'horizontal',
     'enableClientValidation' => false,
     'options' => [
@@ -21,7 +21,7 @@ if ($category_id = Yii::$app->getRequest()->get('category_id')) {
     ],
 ]); ?>
 
-    <?= $this->render('form/tabs', ['activeForm' => $activeForm, 'model' => $model]) ?>
+    <?= $this->render('form/tabs', ['form' => $form, 'model' => $model]) ?>
 
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-6">
