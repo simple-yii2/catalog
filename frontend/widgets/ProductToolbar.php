@@ -25,7 +25,7 @@ class ProductToolbar extends Widget
     /**
      * @var string
      */
-    public $sortButtonIcon = '<span class="glyphicon glyphicon-sort-by-attributes-alt"></span>';
+    public $sortButtonIcon = '<span class="glyphicon glyphicon-sort-by-attributes"></span>';
 
     /**
      * @var string
