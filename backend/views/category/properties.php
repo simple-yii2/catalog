@@ -28,7 +28,7 @@ $this->params['breadcrumbs'] = [
     <fieldset>
         <div class="form-group">
             <div class="col-sm-9">
-                <?= ArrayInput::widget(array_merge(['model' => $model, 'attribute' => 'properties'], require(__DIR__ . '/_propertiesConfig.php'))) ?>
+                <?= ArrayInput::widget(array_merge(['model' => $model, 'attribute' => 'properties'], require(__DIR__ . '/config.php'))) ?>
             </div>
         </div>
     </fieldset>

@@ -16,7 +16,7 @@ CategoryFormAsset::register($this);
     <fieldset>
         <?= $form->field($model, 'active')->checkbox() ?>
         <?= $form->field($model, 'title') ?>
-        <?php if (Yii::$app->controller->module->propertiesEnabled) echo $form->field($model, 'properties')->widget(ArrayInput::className(), require(__DIR__ . '/_propertiesConfig.php')) ?>
+        <?php if (Yii::$app->controller->module->propertiesEnabled) echo $form->field($model, 'properties')->widget(ArrayInput::className(), require(__DIR__ . '/config.php')) ?>
     </fieldset>
 
     <div class="form-group">

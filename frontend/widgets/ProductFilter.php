@@ -125,7 +125,12 @@ class ProductFilter extends Widget
      */
     private function prepareItems()
     {
-        $this->_items = $this->model->getProperties();
+        $this->_items = [];
+        foreach ($this->model->getProperties() as $item) {
+            if ($item->search) {
+                $this->_items[] = $item;
+            }
+        }
     }
 
     /**

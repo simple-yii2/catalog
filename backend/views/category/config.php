@@ -43,6 +43,7 @@ return [
 
             return $options;
         }],
+        ['attribute' => 'search', 'class' => 'dkhlystov\grid\BooleanInputColumn'],
     ],
     'addLabel' => Yii::t('cms', 'Add'),
     'removeLabel' => Yii::t('cms', 'Remove'),
