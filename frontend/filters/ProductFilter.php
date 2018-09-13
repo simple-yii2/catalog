@@ -292,6 +292,11 @@ class ProductFilter extends Model
 
         if ($currency !== null) {
             $query = clone $this->getQuery();
+            foreach ($query->where as $key => $value) {
+                if (is_array($value) && ArrayHelper::getValue($value, 1) == 'priceValue') {
+                    unset($query->where[$key]);
+                }
+            }
             $query->groupBy = [];
 
             $row = $query->select(['MIN(priceValue) AS min', 'MAX(priceValue) AS max'])->asArray()->one();
