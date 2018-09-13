@@ -105,10 +105,12 @@ create table if not exists `catalog_product_property`
 	`product_id` int(10) not null,
 	`property_id` int(10) not null,
 	`value` varchar(30) not null,
+	`numericValue` double not null,
 	primary key (`id`),
 	foreign key (`product_id`) references `catalog_product` (`id`) on delete cascade on update cascade,
 	foreign key (`property_id`) references `catalog_category_property` (`id`) on delete cascade on update cascade,
-	key `filter` (`product_id`, `property_id`, `value`)
+	key `filter` (`product_id`, `property_id`, `value`),
+	key `numericFilter` (`product_id`, `property_id`, `numericValue`)
 ) engine InnoDB;
 
 create table if not exists `catalog_product_image`

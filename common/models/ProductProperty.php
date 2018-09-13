@@ -36,6 +36,20 @@ class ProductProperty extends ActiveRecord
     /**
      * @inheritdoc
      */
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        $this->numericValue = (float) $this->value;
+
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function save($runValidation = true, $attributeNames = null)
     {
         if ($this->categoryProperty->type == CategoryProperty::TYPE_MULTIPLE) {

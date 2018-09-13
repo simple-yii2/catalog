@@ -170,10 +170,10 @@ class ProductFilter extends Model
                     case CategoryProperty::TYPE_FLOAT:
                         list($from, $to) = FilterHelper::rangeItems($value);
                         if ($from !== null) {
-                            $query->andWhere(['>=', "{$alias}.value", $from]);
+                            $query->andWhere(['>=', "{$alias}.numericValue", $from]);
                         }
                         if ($to !== null) {
-                            $query->andWhere(['<=', "{$alias}.value", $to]);
+                            $query->andWhere(['<=', "{$alias}.numericValue", $to]);
                         }
                         break;
                     case CategoryProperty::TYPE_BOOLEAN:
@@ -394,7 +394,7 @@ class ProductFilter extends Model
     {
         $query = clone $this->getQuery();
         foreach ($query->where as $key => $value) {
-            $field = 'p' . $property->id . '.value';
+            $field = 'p' . $property->id . '.numericValue';
             if (is_array($value) && ArrayHelper::getValue($value, 1) == $field) {
                 unset($query->where[$key]);
             }
@@ -408,7 +408,7 @@ class ProductFilter extends Model
             }
         }
 
-        $query->select(['MIN(CAST(p.value AS DECIMAL)) AS min_value', 'MAX(CAST(p.value AS DECIMAL)) AS max_value'])->leftJoin(ProductProperty::tableName() . ' p', 'p.product_id = t.id')->andWhere(['p.property_id' => $property->id])->groupBy(['p.property_id'])->asArray();
+        $query->select(['MIN(p.numericValue) AS min_value', 'MAX(p.numericValue) AS max_value'])->leftJoin(ProductProperty::tableName() . ' p', 'p.product_id = t.id')->andWhere(['p.property_id' => $property->id])->groupBy(['p.property_id'])->asArray();
 
         $row = $query->one();
 
