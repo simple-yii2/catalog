@@ -19,8 +19,8 @@ $this->params['breadcrumbs'] = [
 </div>
 
 <?= GridView::widget([
-    'dataProvider' => $filter->getDataProvider(),
-    'filterModel' => $filter,
+    'dataProvider' => $model->getDataProvider(),
+    'filterModel' => $model,
     'summary' => '',
     'columns' => [
         [

@@ -34,10 +34,10 @@ class VendorController extends Controller
      */
     public function actionIndex()
     {
-        $filter = new VendorFilter;
-        $filter->load(Yii::$app->getRequest()->get());
+        $model = new VendorFilter;
+        $model->load(Yii::$app->getRequest()->get());
 
-        return $this->render('index', ['filter' => $filter]);
+        return $this->render('index', ['model' => $model]);
     }
 
     /**
