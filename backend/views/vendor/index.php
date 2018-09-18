@@ -1,13 +1,14 @@
 <?php
 
-use yii\grid\GridView;
 use yii\helpers\Html;
+use dkhlystov\grid\GridView;
 
 $title = Yii::t('catalog', 'Vendors');
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
 $this->params['breadcrumbs'] = [
+    Yii::t('catalog', 'Catalog'),
     $title,
 ];
 
@@ -29,8 +30,9 @@ $this->params['breadcrumbs'] = [
             'content' => function($model, $key, $index, $column) {
                 $result = '';
 
-                if (!empty($model->thumb))
+                if (!empty($model->thumb)) {
                     $result .= Html::img($model->thumb, ['height' => 20]) . '&nbsp;';
+                }
 
                 $result .= Html::encode($model->name);
 
@@ -41,8 +43,9 @@ $this->params['breadcrumbs'] = [
             'attribute' => 'url',
             'format' => 'html',
             'content' => function($model, $key, $index, $column) {
-                if (empty($model->url))
+                if (empty($model->url)) {
                     return null;
+                }
 
                 return Html::a($model->url);
             },

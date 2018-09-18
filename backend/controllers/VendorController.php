@@ -46,14 +46,14 @@ class VendorController extends Controller
      */
     public function actionCreate()
     {
-        $form = new VendorForm;
+        $model = new VendorForm;
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
             return $this->redirect(['index']);
         }
 
-        return $this->render('create', ['form' => $form]);
+        return $this->render('create', ['model' => $model]);
     }
 
     /**
@@ -68,14 +68,14 @@ class VendorController extends Controller
             throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
         }
 
-        $form = new VendorForm($object);
+        $model = new VendorForm($object);
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
             return $this->redirect(['index']);
         }
 
-        return $this->render('update', ['form' => $form]);
+        return $this->render('update', ['model' => $model]);
     }
 
     /**

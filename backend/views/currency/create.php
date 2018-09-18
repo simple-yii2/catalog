@@ -2,18 +2,19 @@
 
 use yii\helpers\Html;
 
-$title = Yii::t('catalog', 'Create currency');
+$title = Yii::t('cms', 'Create');
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
 $this->params['breadcrumbs'] = [
-	['label' => Yii::t('catalog', 'Currencies'), 'url' => ['index']],
-	$title,
+    Yii::t('catalog', 'Catalog'),
+    ['label' => Yii::t('catalog', 'Currencies'), 'url' => ['index']],
+    $title,
 ];
 
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
 <?= $this->render('form', [
-	'form' => $form,
+    'model' => $model,
 ]) ?>

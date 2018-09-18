@@ -48,7 +48,7 @@ return [
     'addLabel' => Yii::t('cms', 'Add'),
     'removeLabel' => Yii::t('cms', 'Remove'),
     'readOnlyAttribute' => 'readOnly',
-    'movingEnabled' => true,
+    'canMove' => true,
     'options' => [
         'class' => 'category-properties',
         'data-types-with-values' => $typesWithValues,

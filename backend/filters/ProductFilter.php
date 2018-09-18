@@ -18,8 +18,10 @@ class ProductFilter extends Product {
     {
         return [
             'category_id' => Yii::t('catalog', 'Category'),
+            'sku' => Yii::t('catalog', 'SKU'),
             'name' => Yii::t('catalog', 'Name'),
             'price' => Yii::t('catalog', 'Price'),
+            'availability' => Yii::t('catalog', 'Availability'),
         ];
     }
 
@@ -29,7 +31,8 @@ class ProductFilter extends Product {
     public function rules() {
         return [
             ['category_id', 'integer'],
-            ['name', 'string'],
+            [['sku', 'name'], 'string'],
+            ['availability', 'integer'],
         ];
     }
 
@@ -42,10 +45,12 @@ class ProductFilter extends Product {
     {
         $query = self::find();
         $query->andFilterWhere(['category_id' => $this->category_id]);
+        $query->andFilterWhere(['sku' => $this->sku]);
         $query->andFilterWhere(['or',
             ['like', 'name', $this->name],
             ['like', 'model', $this->name],
         ]);
+        $query->andFilterWhere(['availability' => $this->availability]);
 
         $query->orderBy(['category_lft' => SORT_ASC]);
 

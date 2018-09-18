@@ -2,12 +2,13 @@
 
 use yii\helpers\Html;
 
-$title = Yii::t('catalog', 'Create product/service');
+$title = Yii::t('cms', 'Create');
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
 $this->params['breadcrumbs'] = [
-    ['label' => Yii::t('catalog', 'Goods/Services'), 'url' => ['index']],
+    Yii::t('catalog', 'Catalog'),
+    ['label' => Yii::t('catalog', 'Products/services'), 'url' => ['index']],
     $title,
 ];
 

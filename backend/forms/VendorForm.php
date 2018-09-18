@@ -48,8 +48,9 @@ class VendorForm extends Model
      */
     public function __construct(Vendor $object = null, $config = [])
     {
-        if ($object === null)
+        if ($object === null) {
             $object = new Vendor;
+        }
 
         $this->_object = $object;
 
@@ -57,7 +58,7 @@ class VendorForm extends Model
         Yii::$app->storage->cacheObject($object);
 
         //attributes
-        parent::__construct(array_merge([
+        parent::__construct(array_replace([
             'name' => $object->name,
             'description' => $object->description,
             'url' => $object->url,
@@ -108,8 +109,9 @@ class VendorForm extends Model
      */
     public function save()
     {
-        if (!$this->validate())
+        if (!$this->validate()) {
             return false;
+        }
 
         $object = $this->_object;
 
@@ -124,8 +126,9 @@ class VendorForm extends Model
         //files
         Yii::$app->storage->storeObject($object);
 
-        if (!$object->save(false))
+        if (!$object->save(false)) {
             return false;
+        }
 
         return true;
     }

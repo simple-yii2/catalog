@@ -1,21 +1,23 @@
 <?php
 
-use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use dkhlystov\grid\GridView;
 use cms\catalog\backend\assets\ProductListAsset;
 use cms\catalog\common\helpers\PriceHelper;
 use cms\catalog\common\models\Category;
+use cms\catalog\common\models\Product;
 
 ProductListAsset::register($this);
 
-$title = Yii::t('catalog', 'Goods/Services');
+$title = Yii::t('catalog', 'Products/services');
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
 $this->params['breadcrumbs'] = [
+    Yii::t('catalog', 'Catalog'),
     $title,
 ];
 
@@ -59,10 +61,11 @@ foreach ($query->all() as $item) {
         return !$model->active ? ['class' => 'warning'] : [];
     },
     'columns' => [
+        'sku',
         [
             'attribute' => 'name',
             'format' => 'html',
-            'content' => function($model, $key, $index, $column) {
+            'content' => function ($model, $key, $index, $column) {
                 $result = '';
 
                 if (!empty($model->thumb)) {
@@ -79,6 +82,15 @@ foreach ($query->all() as $item) {
                     $result .= '&nbsp;' . Html::tag('span', Html::encode($model->vendor), ['class' => 'label label-info']);
                 }
 
+                // if ($model->availability == $model::INSTOCK) {
+                //     $cssClass = 'label label-success';
+                // } elseif ($model->availability == $model::UNDERTHEORDER) {
+                //     $cssClass = 'label label-warning';
+                // } elseif ($model->availability == $model::NOTAVAILABLE) {
+                //     $cssClass = 'label label-danger';
+                // }
+                // $result .= '&nbsp;' . Html::tag('span', Html::encode($model->getAvailabilityName()), ['class' => $cssClass]);
+
                 if ($model->category !== null) {
                     $result .= '<br>' . Html::tag('span', $model->category->path, ['class' => 'text-muted']);
                 }
@@ -92,6 +104,13 @@ foreach ($query->all() as $item) {
             'value' => function ($model) {
                 return PriceHelper::render('span', $model->price, $model->currency);
             },
+        ],
+        [
+            'attribute' => 'availability',
+            'filter' => Product::getAvailabilityNames(),
+            'value' => function ($model, $key, $index, $column) {
+                return $model->getAvailabilityName();
+            }
         ],
         [
             'class' => 'yii\grid\ActionColumn',

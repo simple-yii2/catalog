@@ -66,6 +66,7 @@ foreach ($query->all() as $item) {
         'placeholder' => ' ',
         'noResultText' => Yii::t('catalog', 'No results matched'),
     ]) ?>
+    <?= $form->field($model, 'sku') ?>
     <?= $form->field($model, 'name') ?>
     <?= $form->field($model, 'model') ?>
     <?= $form->field($model, 'description')->widget(\vova07\imperavi\Widget::className(), ['settings' => $settings]) ?>

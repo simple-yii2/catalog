@@ -34,10 +34,10 @@ class CurrencyController extends Controller
      */
     public function actionIndex()
     {
-        $filter = new CurrencyFilter;
-        $filter->load(Yii::$app->getRequest()->get());
+        $model = new CurrencyFilter;
+        $model->load(Yii::$app->getRequest()->get());
 
-        return $this->render('index', ['filter' => $filter]);
+        return $this->render('index', ['model' => $model]);
     }
 
     /**
@@ -46,14 +46,14 @@ class CurrencyController extends Controller
      */
     public function actionCreate()
     {
-        $form = new CurrencyForm;
+        $model = new CurrencyForm;
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
             return $this->redirect(['index']);
         }
 
-        return $this->render('create', ['form' => $form]);
+        return $this->render('create', ['model' => $model]);
     }
 
     /**
@@ -68,14 +68,14 @@ class CurrencyController extends Controller
             throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
         }
 
-        $form = new CurrencyForm($object);
+        $model = new CurrencyForm($object);
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
             return $this->redirect(['index']);
         }
 
-        return $this->render('update', ['form' => $form]);
+        return $this->render('update', ['model' => $model]);
     }
 
     /**

@@ -48,6 +48,11 @@ class ProductForm extends Model
     public $active;
 
     /**
+     * @var string sku
+     */
+    public $sku;
+
+    /**
      * @var string Name
      */
     public $name;
@@ -151,6 +156,7 @@ class ProductForm extends Model
         parent::__construct(array_replace([
             'category_id' => $object->category_id,
             'active' => $object->active == 0 ? '0' : '1',
+            'sku' => $object->sku,
             'name' => $object->name,
             'model' => $object->model,
             'description' => $object->description,
@@ -168,7 +174,7 @@ class ProductForm extends Model
             'images' => $object->images,
             'properties' => $object->properties,
             // 'stores' => $object->stores,
-            'recommended' => $object->recommended,
+            // 'recommended' => $object->recommended,
         ], $config));
     }
 
@@ -248,61 +254,61 @@ class ProductForm extends Model
      * Stores getter
      * @return ProductStoreForm[]
      */
-    public function getStores()
-    {
-        return $this->_stores;
-    }
+    // public function getStores()
+    // {
+    //     return $this->_stores;
+    // }
 
     /**
      * Stores setter
      * @param StoreProduct[]|array[] $value 
      * @return void
      */
-    public function setStores($value)
-    {
-        $templates = Store::find()->all();
+    // public function setStores($value)
+    // {
+    //     $templates = Store::find()->all();
 
-        $this->SetArrayAttributeWithTemplate('_stores', StoreProduct::className(), ProductStoreForm::className(), $value, $templates, 'store_id');
-    }
+    //     $this->SetArrayAttributeWithTemplate('_stores', StoreProduct::className(), ProductStoreForm::className(), $value, $templates, 'store_id');
+    // }
 
     /**
      * Recommended getter
      * @return ProductRecommendedForm[]
      */
-    public function getRecommended()
-    {
-        return $this->_recommended;
-    }
+    // public function getRecommended()
+    // {
+    //     return $this->_recommended;
+    // }
 
     /**
      * Recommended setter
      * @param ProductRecommended[]|array[] $value 
      * @return void
      */
-    public function setRecommended($value)
-    {
-        //if there are arrays to set, preload objects
-        $items = [];
-        $ids = [];
-        if (is_array($value)) {
-            foreach ($value as $item) {
-                $id = ArrayHelper::getValue($item, 'id');
-                if ($id !== null) {
-                    $items[$id] = $item;
-                    if (is_array($item)) {
-                        $ids[] = $id;
-                    }
-                }
-            }
-        }
-        if (!empty($ids)) {
-            foreach (Product::findAll($ids) as $object) {
-                $items[$object->id] = $object;
-            }
-        }
+    // public function setRecommended($value)
+    // {
+    //     //if there are arrays to set, preload objects
+    //     $items = [];
+    //     $ids = [];
+    //     if (is_array($value)) {
+    //         foreach ($value as $item) {
+    //             $id = ArrayHelper::getValue($item, 'id');
+    //             if ($id !== null) {
+    //                 $items[$id] = $item;
+    //                 if (is_array($item)) {
+    //                     $ids[] = $id;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     if (!empty($ids)) {
+    //         foreach (Product::findAll($ids) as $object) {
+    //             $items[$object->id] = $object;
+    //         }
+    //     }
 
-        $this->setArrayAttribute('_recommended', Product::className(), ProductRecommendedForm::className(), $items);
-    }
+    //     $this->setArrayAttribute('_recommended', Product::className(), ProductRecommendedForm::className(), $items);
+    // }
 
     /**
      * @inheritdoc
@@ -320,6 +326,7 @@ class ProductForm extends Model
         return [
             'category_id' => Yii::t('catalog', 'Category'),
             'active' => Yii::t('catalog', 'Active'),
+            'sku' => Yii::t('catalog', 'SKU'),
             'name' => Yii::t('catalog', 'Name'),
             'model' => Yii::t('catalog', 'Model'),
             'description' => Yii::t('catalog', 'Description'),
@@ -346,6 +353,8 @@ class ProductForm extends Model
         return [
             [['category_id', 'vendor_id', 'currency_id'], 'integer'],
             ['active', 'boolean'],
+            ['sku', 'string', 'max' => 50],
+            ['sku', 'unique', 'targetClass' => Product::className()],
             [['name', 'model', 'countryOfOrigin'], 'string', 'max' => 100],
             ['description', 'string', 'max' => 65535],
             [['price', 'oldPrice'], 'double'],
@@ -353,8 +362,9 @@ class ProductForm extends Model
             [['length', 'width', 'height'], 'integer', 'min' => 1],
             ['weight', 'double', 'min' => 0.001],
             ['availability', 'in', 'range' => Product::getAvailabilityValues()],
-            [['category_id', 'name', 'price'], 'required'],
-            [['barcodes', 'images', 'properties', 'stores', 'recommended'], function($attribute, $params) {
+            [['category_id', 'sku', 'name', 'price'], 'required'],
+            // [['barcodes', 'images', 'properties', 'stores', 'recommended'], function($attribute, $params) {
+            [['barcodes', 'images', 'properties'], function($attribute, $params) {
                 $hasError = false;
                 foreach ($this->$attribute as $model) {
                     if (!$model->validate()) {
@@ -395,6 +405,7 @@ class ProductForm extends Model
         $object->category_lft = $category->lft;
         $object->category_rgt = $category->rgt;
         $object->active = $this->active == 0 ? false : true;
+        $object->sku = $this->sku;
         $object->name = $this->name;
         $object->model = $this->model;
         $object->currency_id = $currency === null ? null : $currency->id;
@@ -416,9 +427,9 @@ class ProductForm extends Model
         $object->modifyDate = gmdate('Y-m-d H:i:s');
         $object->thumb = null;
         $object->imageCount = sizeof($this->_images);
-        $object->quantity = array_sum(array_map(function($v) {
-            return (integer) $v->quantity;
-        }, $this->getStores()));
+        // $object->quantity = array_sum(array_map(function($v) {
+        //     return (integer) $v->quantity;
+        // }, $this->getStores()));
 
         Yii::$app->storage->storeObject($object);
 
@@ -435,8 +446,8 @@ class ProductForm extends Model
         $this->saveBarcodes();
         $this->saveImages();
         $this->saveProperties();
-        $this->saveStores();
-        $this->saveRecommended();
+        // $this->saveStores();
+        // $this->saveRecommended();
 
         return true;
     }
@@ -529,56 +540,56 @@ class ProductForm extends Model
      * Save stores
      * @return void
      */
-    private function saveStores()
-    {
-        $object = $this->_object;
+    // private function saveStores()
+    // {
+    //     $object = $this->_object;
 
-        $old = [];
-        foreach ($object->stores as $item) {
-            $old[$item->store_id] = $item;
-        }
+    //     $old = [];
+    //     foreach ($object->stores as $item) {
+    //         $old[$item->store_id] = $item;
+    //     }
 
-        //insert/update
-        foreach ($this->_stores as $model) {
-            if (!empty($model->quantity)) {
-                $model->save($object, false);
-                unset($old[$model->getTemplate()->id]);
-            }
-        }
+    //     //insert/update
+    //     foreach ($this->_stores as $model) {
+    //         if (!empty($model->quantity)) {
+    //             $model->save($object, false);
+    //             unset($old[$model->getTemplate()->id]);
+    //         }
+    //     }
 
-        //delete
-        foreach ($old as $item) {
-            $item->delete();
-        }
-    }
+    //     //delete
+    //     foreach ($old as $item) {
+    //         $item->delete();
+    //     }
+    // }
 
     /**
      * Save recommended
      * @return void
      */
-    private function saveRecommended()
-    {
-        $object = $this->_object;
+    // private function saveRecommended()
+    // {
+    //     $object = $this->_object;
 
-        $old = [];
-        foreach ($object->recommended as $item) {
-            $old[$item->id] = $item;
-        }
+    //     $old = [];
+    //     foreach ($object->recommended as $item) {
+    //         $old[$item->id] = $item;
+    //     }
 
-        //insert/update
-        foreach ($this->_recommended as $model) {
-            $item = $model->getObject();
-            if (array_key_exists($item->id, $old)) {
-                unset($old[$item->id]);
-            } else {
-                $object->link('recommended', $item);
-            }
-        }
+    //     //insert/update
+    //     foreach ($this->_recommended as $model) {
+    //         $item = $model->getObject();
+    //         if (array_key_exists($item->id, $old)) {
+    //             unset($old[$item->id]);
+    //         } else {
+    //             $object->link('recommended', $item);
+    //         }
+    //     }
 
-        //delete
-        foreach ($old as $item) {
-            $object->unlink('recommended', $item, true);
-        }
-    }
+    //     //delete
+    //     foreach ($old as $item) {
+    //         $object->unlink('recommended', $item, true);
+    //     }
+    // }
 
 }

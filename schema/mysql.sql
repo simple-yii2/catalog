@@ -65,6 +65,7 @@ create table if not exists `catalog_product`
 	`vendor_id` int(10) default null,
 	`currency_id` int(10) default null,
 	`active` tinyint(1) default 1,
+	`sku` varchar(50) not null,
 	`alias` varchar(100) default null,
 	`name` varchar(100) default null,
 	`model` varchar(100) default null,
@@ -85,6 +86,7 @@ create table if not exists `catalog_product`
 	`quantity` int(10) default 0,
 	primary key (`id`),
 	foreign key (`category_id`) references `catalog_category` (`id`) on delete cascade on update cascade,
+    unique key `sku` (`sku`),
 	key `alias` (`alias`),
 	key `filter` (`category_lft`, `category_rgt`, `vendor_id`, `price`)
 ) engine InnoDB;

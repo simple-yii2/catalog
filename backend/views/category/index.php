@@ -9,6 +9,7 @@ $title = Yii::t('catalog', 'Categories');
 $this->title = $title . ' | ' . Yii::$app->name;
 
 $this->params['breadcrumbs'] = [
+    Yii::t('catalog', 'Catalog'),
 	$title,
 ];
 

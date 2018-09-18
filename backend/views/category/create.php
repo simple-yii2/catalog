@@ -2,11 +2,12 @@
 
 use yii\helpers\Html;
 
-$title = Yii::t('catalog', 'Create category');
+$title = Yii::t('cms', 'Create');
 
 $this->title = $title . ' | ' . Yii::$app->name;
 
 $breadcrumbs = [
+    Yii::t('catalog', 'Catalog'),
     ['label' => Yii::t('catalog', 'Categories'), 'url' => ['index']],
 ];
 foreach ($parents as $object) {

@@ -12,32 +12,32 @@ use cms\catalog\common\models\Vendor;
 class VendorFilter extends Vendor
 {
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'name' => Yii::t('catalog', 'Name'),
-			'url' => Yii::t('catalog', 'Url'),
-		];
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function rules()
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
     {
-		return [
-			['name', 'string'],
-		];
-	}
+        return [
+            'name' => Yii::t('catalog', 'Name'),
+            'url' => Yii::t('catalog', 'Url'),
+        ];
+    }
 
-	/**
-	 * Search function
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            ['name', 'string'],
+        ];
+    }
+
+    /**
+     * Search function
      * @param array|null $config Data provider config
-	 * @return ActiveDataProvider
-	 */
+     * @return ActiveDataProvider
+     */
     public function getDataProvider($config = [])
     {
         $query = self::find();
@@ -45,6 +45,6 @@ class VendorFilter extends Vendor
 
         $config['query'] = $query;
         return new ActiveDataProvider($config);
-	}
+    }
 
 }

@@ -1,7 +1,7 @@
 <?php
 
-use yii\grid\GridView;
 use yii\helpers\Html;
+use dkhlystov\grid\GridView;
 
 $title = Yii::t('catalog', 'Currencies');
 
@@ -19,7 +19,7 @@ $this->params['breadcrumbs'] = [
 </div>
 
 <?= GridView::widget([
-    'dataProvider' => $filter->getDataProvider(),
+    'dataProvider' => $model->getDataProvider(),
     'summary' => '',
     'columns' => [
         [
