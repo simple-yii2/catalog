@@ -240,8 +240,8 @@ class ProductFilter extends Widget
 
         //controls
         list($from, $to) = FilterHelper::rangeItems($value);
-        $inputFrom = Html::textInput('', $from, ['class' => 'form-control', 'placeholder' => $min]);
-        $inputTo = Html::textInput('', $to, ['class' => 'form-control', 'placeholder' => $max]);
+        $inputFrom = Html::textInput('filter-' . $formName . '-from', $from, ['class' => 'form-control', 'placeholder' => $min]);
+        $inputTo = Html::textInput('filter-' . $formName . '-to', $to, ['class' => 'form-control', 'placeholder' => $max]);
         $controls = Html::tag('div', $inputFrom . $inputTo, ['class' => 'filter-controls']);
 
         $options = ['class' => 'filter-item filter-range'];
@@ -312,10 +312,10 @@ class ProductFilter extends Widget
                 $listItems[$v] = $t;
             }
         }
-        $inputList = Html::checkboxList('', $selected, array_replace($selectedItems, $listItems), [
+        $inputList = Html::checkboxList('filter-' . $formName, $selected, array_replace($selectedItems, $listItems), [
             'class' => 'filter-select-items',
-            'item' => function($index, $label, $name, $checked, $value) {
-                $s = Html::checkbox('', $checked, ['value' => $value]);
+            'item' => function($index, $label, $name, $checked, $value) use ($formName) {
+                $s = Html::checkbox('filter-' . $formName . '-' . $index, $checked, ['value' => $value]);
                 $s = Html::tag('label', $s . ' ' . $label);
                 return Html::tag('div', $s);
             },
@@ -385,10 +385,10 @@ class ProductFilter extends Widget
             return '';
         }
         krsort($listItems);
-        $inputList = Html::checkboxList('', $selected, $listItems, [
+        $inputList = Html::checkboxList('filter-' . $formName, $selected, $listItems, [
             'class' => 'filter-select-items',
-            'item' => function($index, $label, $name, $checked, $value) {
-                $s = Html::checkbox('', $checked, ['value' => $value]);
+            'item' => function($index, $label, $name, $checked, $value) use ($formName) {
+                $s = Html::checkbox('filter-' . $formName . '-' . $index, $checked, ['value' => $value]);
                 $s = Html::tag('label', $s . ' ' . $label);
                 return Html::tag('div', $s);
             },
