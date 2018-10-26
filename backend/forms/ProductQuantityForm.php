@@ -139,8 +139,7 @@ class ProductQuantityForm extends Model
                 $item->delete();
             }
             //quantity
-            $object->quantity = array_sum($this->_stores);
-            $object->update(false, ['quantity']);
+            $object->updateQuantity(array_sum($this->_stores));
             
             $transaction->commit();
             $success = true;

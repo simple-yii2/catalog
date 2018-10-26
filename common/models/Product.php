@@ -213,6 +213,18 @@ class Product extends ActiveRecord implements StoredInterface
     }
 
     /**
+     * Update product quantity with availability correction
+     * @param integer $value 
+     * @return boolean
+     */
+    public function updateQuantity($value)
+    {
+        $this->quantity = $value;
+        $this->availability = $value ? self::INSTOCK : self::NOTAVAILABLE;
+        return $this->update(false, ['quantity', 'availability']);
+    }
+
+    /**
      * Parsing html for files in <img> and <a>.
      * @param string $content 
      * @return string[]
