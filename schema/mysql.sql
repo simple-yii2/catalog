@@ -35,7 +35,7 @@ create table if not exists `catalog_category`
 	`alias` varchar(100) default null,
 	`title` varchar(100),
 	`path` text,
-	`productCount` int(10) not null,
+	`productCount` int(10) default null,
 	`activeProductCount` int(10) not null,
 	primary key (`id`),
 	key `alias` (`alias`)
@@ -135,15 +135,15 @@ create table if not exists `catalog_product_recommended`
 	foreign key (`recommended_id`) references `catalog_product` (`id`) on delete cascade on update cascade
 ) engine InnoDB;
 
-
-
 create table if not exists `catalog_store`
 (
 	`id` int(10) not null auto_increment,
-	`type` int(10) not null,
 	`name` varchar(100) not null,
+	`type` int(10) not null,
 	primary key (`id`)
 ) engine InnoDB;
+
+
 
 create table if not exists `catalog_store_product`
 (

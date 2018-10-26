@@ -4,10 +4,9 @@ return [
     'Catalog' => 'Каталог',
     'Currencies' => 'Валюты',
     'Vendors' => 'Производители',
-    // 'Stores' => 'Магазины/склады',
+    'Stores' => 'Магазины (склады)',
     'Categories' => 'Категории',
     'Products/services' => 'Товары/услуги',
-    // 'Create store' => 'Добавить магазин/склад',
     'Common properties' => 'Общие характеристики',
 
     'The value is incorrect.' => 'Значение указано неверно.',
@@ -51,10 +50,10 @@ return [
     // 'Quantity' => 'Остатки',
     // 'Recommended' => 'Рекомендации',
 
-    // 'Sales area' => 'Торговый зал',
-    // 'Pickup point' => 'Пункт выдачи заказов',
-    // 'Sales area and pickup point' => 'Торговый зал и пункт выдачи заказов',
-    // 'Store' => 'Склад',
+    'Sales area' => 'Торговый зал',
+    'Pickup point' => 'Пункт выдачи заказов',
+    'Sales area and pickup point' => 'Торговый зал и пункт выдачи заказов',
+    'Store' => 'Склад',
 
     'Logical' => 'Логический',
     'Integer' => 'Целый',

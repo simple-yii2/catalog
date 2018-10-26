@@ -7,6 +7,7 @@ $title = $model->getObject()->name;
 $this->title = $title . ' | ' . Yii::$app->name;
 
 $this->params['breadcrumbs'] = [
+    Yii::t('catalog', 'Catalog'),
 	['label' => Yii::t('catalog', 'Stores'), 'url' => ['index']],
 	$title,
 ];
