@@ -6,9 +6,6 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use cms\catalog\common\models\Category;
 
-/**
- * Search model
- */
 class CategoryFilter extends Category
 {
 

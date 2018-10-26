@@ -6,9 +6,6 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use cms\catalog\common\models\Product;
 
-/**
- * Search model
- */
 class ProductFilter extends Product {
 
     /**
@@ -28,7 +25,8 @@ class ProductFilter extends Product {
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             ['category_id', 'integer'],
             [['sku', 'name'], 'string'],

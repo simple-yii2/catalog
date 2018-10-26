@@ -24,7 +24,7 @@ $maxDepth = Yii::$app->controller->module->maxCategoryDepth;
 </div>
 
 <?= NestedTreeGrid::widget([
-	'dataProvider' => $filter->getDataProvider(),
+	'dataProvider' => $model->getDataProvider(),
 	'initialNode' => $initial,
 	'moveAction' => ['move'],
 	'rowOptions' => function ($model, $key, $index, $grid) {

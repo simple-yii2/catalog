@@ -6,9 +6,6 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use cms\catalog\common\models\Vendor;
 
-/**
- * Search model
- */
 class VendorFilter extends Vendor
 {
 
@@ -35,7 +32,7 @@ class VendorFilter extends Vendor
 
     /**
      * Search function
-     * @param array|null $config Data provider config
+     * @param array $config Data provider config
      * @return ActiveDataProvider
      */
     public function getDataProvider($config = [])

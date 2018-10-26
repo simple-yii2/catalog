@@ -6,9 +6,6 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use cms\catalog\common\models\Currency;
 
-/**
- * Search model
- */
 class CurrencyFilter extends Currency
 {
 

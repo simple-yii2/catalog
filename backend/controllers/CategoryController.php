@@ -36,11 +36,11 @@ class CategoryController extends Controller
      */
     public function actionIndex($id = null)
     {
-        $filter = new CategoryFilter;
-        $filter->load(Yii::$app->getRequest()->get());
+        $model = new CategoryFilter;
+        $model->load(Yii::$app->getRequest()->get());
 
         return $this->render('index', [
-            'filter' => $filter,
+            'model' => $model,
             'initial' => Category::findOne($id),
         ]);
     }
