@@ -9,11 +9,13 @@ use cms\catalog\common\models\Product;
 use cms\catalog\common\models\Store;
 use cms\catalog\common\models\StoreProduct;
 
-/**
- * Editing form
- */
 class ProductQuantityForm extends Model
 {
+
+    /**
+     * @var array
+     */
+    private $_quantity = [];
 
     /**
      * @var array
@@ -37,10 +39,49 @@ class ProductQuantityForm extends Model
 
         $this->_object = $object;
 
+        //stores
+        $this->_stores = [];
+        foreach (Store::find()->all() as $item) {
+            $this->_stores[$item->id] = $item;
+            $this->_quantity[$item->id] = 0;
+        }
+
+        //quantity
+        foreach ($object->stores as $item) {
+            if (array_key_exists($item->store_id, $this->_quantity)) {
+                $this->_quantity[$item->store_id] = $item->quantity;
+            }
+        }
+
         //attributes
-        parent::__construct(array_replace([
-            'stores' => $object->stores,
-        ], $config));
+        parent::__construct($config);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function __get($name)
+    {
+        if (!preg_match('/quantity(\d+)/', $name, $m)) {
+            return parent::__get($name);
+        }
+
+        return ArrayHelper::getValue($this->_quantity, $m[1]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function __set($name, $value)
+    {
+        if (!preg_match('/quantity(\d+)/', $name, $m)) {
+            return parent::__get($name);
+        }
+
+        $key = $m[1];
+        if (array_key_exists($key, $this->_quantity)) {
+            $this->_quantity[$key] = $value;
+        }
     }
 
     /**
@@ -53,42 +94,23 @@ class ProductQuantityForm extends Model
     }
 
     /**
-     * Stores getter
-     * @return array
+     * @inheritdoc
      */
-    public function getStores()
+    public function attributes()
     {
-        return $this->_stores;
+        return array_map(function($v) {return 'quantity' . $v->id;}, $this->_stores);
     }
 
     /**
-     * Stores setter
-     * @param array $value 
-     * @return void
+     * @inheritdoc
      */
-    public function setStores($value)
+    public function attributeLabels()
     {
-        //tempate
-        $stores = [];
-        foreach (Store::find()->all() as $item) {
-            $stores[$item->id] = 0;
+        $result = [];
+        foreach ($this->_stores as $item) {
+            $result['quantity' . $item->id] = $item->name;
         }
-
-        //quantity
-        $a = [];
-        foreach ($value as $k => $v) {
-            if ($v instanceof StoreProduct) {
-                if (array_key_exists($v->store_id, $stores)) {
-                    $stores[$v->store_id] = $v->quantity;
-                }
-            } else {
-                if (array_key_exists($k, $stores)) {
-                    $stores[$k] = (int) $v;
-                }
-            }
-        }
-
-        $this->_stores = $stores;
+        return $result;
     }
 
     /**
@@ -96,8 +118,12 @@ class ProductQuantityForm extends Model
      */
     public function rules()
     {
+        $attributes = [];
+        foreach ($this->_stores as $item) {
+            $attributes[] = 'quantity' . $item->id;
+        }
         return [
-            ['stores', 'safe'],
+            [$attributes, 'integer', 'min' => 0],
         ];
     }
 
@@ -123,7 +149,7 @@ class ProductQuantityForm extends Model
                 $old[$item->store_id] = $item;
             }
             //insert, update
-            foreach ($this->_stores as $key => $value) {
+            foreach ($this->_quantity as $key => $value) {
                 if (array_key_exists($key, $old)) {
                     $item = $old[$key];
                     $item->quantity = $value;
@@ -139,7 +165,7 @@ class ProductQuantityForm extends Model
                 $item->delete();
             }
             //quantity
-            $object->updateQuantity(array_sum($this->_stores));
+            $object->updateQuantity(array_sum($this->_quantity));
             
             $transaction->commit();
             $success = true;

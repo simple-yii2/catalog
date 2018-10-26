@@ -2,16 +2,6 @@
 
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
-use cms\catalog\common\models\Store;
-
-//store names
-$storeNames = [];
-foreach (Store::find()->all() as $item) {
-    $storeNames[$item->id] = $item->name;
-}
-
-//input name
-$name = Html::getInputName($model, 'stores');
 
 ?>
 <?php $form = ActiveForm::begin([
@@ -20,10 +10,7 @@ $name = Html::getInputName($model, 'stores');
 ]); ?>
 
     <fieldset>
-        <?php foreach ($model->stores as $key => $value) echo $form->field($model, 'stories')->label($storeNames[$key])->textInput([
-            'name' => $name . '[' . $key . ']',
-            'value' => $value,
-        ]) ?>
+        <?php foreach ($model->attributes as $name => $value) echo $form->field($model, $name); ?>
     </fieldset>
 
     <div class="form-group">
