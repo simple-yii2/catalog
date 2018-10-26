@@ -44,7 +44,7 @@ class CategoryForm extends Model
         $this->_object = $object;
 
         //attributes
-        parent::__construct(array_merge([
+        parent::__construct(array_replace([
             'active' => $object->active == 0 ? '0' : '1',
             'title' => $object->title,
             'properties' => array_merge($object->getParentProperties(), $object->properties),
@@ -162,11 +162,12 @@ class CategoryForm extends Model
     /**
      * Save
      * @param Category|null $parent 
+     * @param boolean $runValidation 
      * @return boolean
      */
-    public function save(Category $parent = null)
+    public function save(Category $parent = null, $runValidation = true)
     {
-        if (!$this->validate()) {
+        if ($runValidation && !$this->validate()) {
             return false;
         }
 

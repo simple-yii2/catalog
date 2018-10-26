@@ -169,14 +169,14 @@ class Product extends ActiveRecord implements StoredInterface
         return $this->hasMany(Product::className(), ['id' => 'recommended_id'])->viaTable('catalog_product_recommended', ['product_id' => 'id']);
     }
 
-    // /**
-    //  * Stores quantity relation
-    //  * @return yii\db\ActiveQueryInterface
-    //  */
-    // public function getStores()
-    // {
-    //     return $this->hasMany(StoreProduct::className(), ['product_id' => 'id']);
-    // }
+    /**
+     * Stores quantity relation
+     * @return yii\db\ActiveQueryInterface
+     */
+    public function getStores()
+    {
+        return $this->hasMany(StoreProduct::className(), ['product_id' => 'id']);
+    }
 
     /**
      * Find by alias

@@ -102,6 +102,7 @@ class Module extends BackendModule
 
         $items[] = ['label' => Yii::t('catalog', 'Categories'), 'url' => ['/catalog/category/index']];
         $items[] = ['label' => Yii::t('catalog', 'Products/services'), 'url' => ['/catalog/product/index']];
+        $items[] = ['label' => Yii::t('catalog', 'Product quantity'), 'url' => ['/catalog/quantity/index']];
 
         return [
             'label' => Yii::t('catalog', 'Catalog'),

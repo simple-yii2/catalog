@@ -6,7 +6,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use cms\catalog\common\models\Product;
 
-class ProductFilter extends Product
+class ProductQuantityFilter extends Product
 {
 
     /**
@@ -15,11 +15,8 @@ class ProductFilter extends Product
     public function attributeLabels()
     {
         return [
-            'category_id' => Yii::t('catalog', 'Category'),
-            'sku' => Yii::t('catalog', 'SKU'),
             'name' => Yii::t('catalog', 'Name'),
-            'price' => Yii::t('catalog', 'Price'),
-            'availability' => Yii::t('catalog', 'Availability'),
+            'quantity' => Yii::t('catalog', 'Quantity'),
         ];
     }
 
@@ -29,9 +26,7 @@ class ProductFilter extends Product
     public function rules()
     {
         return [
-            ['category_id', 'integer'],
-            [['sku', 'name'], 'string'],
-            ['availability', 'integer'],
+            ['name', 'string'],
         ];
     }
 
@@ -43,13 +38,11 @@ class ProductFilter extends Product
     public function getDataProvider($config = [])
     {
         $query = self::find();
-        $query->andFilterWhere(['category_id' => $this->category_id]);
-        $query->andFilterWhere(['sku' => $this->sku]);
         $query->andFilterWhere(['or',
+            ['=', 'sku', $this->name],
             ['like', 'name', $this->name],
             ['like', 'model', $this->name],
         ]);
-        $query->andFilterWhere(['availability' => $this->availability]);
 
         $query->orderBy(['category_lft' => SORT_ASC]);
 

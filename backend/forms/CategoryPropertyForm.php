@@ -4,7 +4,6 @@ namespace cms\catalog\backend\forms;
 
 use Yii;
 use yii\base\Model;
-
 use helpers\Translit;
 use cms\catalog\common\models\Category;
 use cms\catalog\common\models\CategoryProperty;

@@ -80,11 +80,12 @@ class StoreForm extends Model
 
     /**
      * Saving object using object attributes
+     * @param boolean $runValidation 
      * @return boolean
      */
-    public function save()
+    public function save($runValidation = true)
     {
-        if (!$this->validate()) {
+        if ($runValidation && !$this->validate()) {
             return false;
         }
 

@@ -7,6 +7,7 @@ return [
     'Stores' => 'Магазины (склады)',
     'Categories' => 'Категории',
     'Products/services' => 'Товары/услуги',
+    'Product quantity' => 'Наличие товаров',
     'Common properties' => 'Общие характеристики',
 
     'The value is incorrect.' => 'Значение указано неверно.',
@@ -47,7 +48,7 @@ return [
     'Height' => 'Высота',
     'Weight' => 'Вес',
     'Availability' => 'Наличие товара',
-    // 'Quantity' => 'Остатки',
+    'Quantity' => 'Количество',
     // 'Recommended' => 'Рекомендации',
 
     'Sales area' => 'Торговый зал',

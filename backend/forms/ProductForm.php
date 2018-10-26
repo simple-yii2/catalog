@@ -14,14 +14,9 @@ use cms\catalog\common\models\Product;
 use cms\catalog\common\models\ProductBarcode;
 use cms\catalog\common\models\ProductImage;
 use cms\catalog\common\models\ProductProperty;
-use cms\catalog\common\models\ProductRecommended;
-use cms\catalog\common\models\Store;
-use cms\catalog\common\models\StoreProduct;
+// use cms\catalog\common\models\ProductRecommended;
 use cms\catalog\common\models\Vendor;
 
-/**
- * Editing form
- */
 class ProductForm extends Model
 {
 
@@ -123,14 +118,9 @@ class ProductForm extends Model
     private $_properties = [];
 
     /**
-     * @var ProductStoreForm[] Stores
-     */
-    private $_stores = [];
-
-    /**
      * @var ProductRecommendedForm[] Recommended
      */
-    private $_recommended = [];
+    // private $_recommended = [];
 
     /**
      * @var Product
@@ -173,7 +163,6 @@ class ProductForm extends Model
             'barcodes' => $object->barcodes,
             'images' => $object->images,
             'properties' => $object->properties,
-            // 'stores' => $object->stores,
             // 'recommended' => $object->recommended,
         ], $config));
     }
@@ -249,27 +238,6 @@ class ProductForm extends Model
 
         $this->SetArrayAttributeWithTemplate('_properties', ProductProperty::className(), ProductPropertyForm::className(), $value, $templates, 'property_id');
     }
-
-    /**
-     * Stores getter
-     * @return ProductStoreForm[]
-     */
-    // public function getStores()
-    // {
-    //     return $this->_stores;
-    // }
-
-    /**
-     * Stores setter
-     * @param StoreProduct[]|array[] $value 
-     * @return void
-     */
-    // public function setStores($value)
-    // {
-    //     $templates = Store::find()->all();
-
-    //     $this->SetArrayAttributeWithTemplate('_stores', StoreProduct::className(), ProductStoreForm::className(), $value, $templates, 'store_id');
-    // }
 
     /**
      * Recommended getter
@@ -427,9 +395,6 @@ class ProductForm extends Model
         $object->modifyDate = gmdate('Y-m-d H:i:s');
         $object->thumb = null;
         $object->imageCount = sizeof($this->_images);
-        // $object->quantity = array_sum(array_map(function($v) {
-        //     return (integer) $v->quantity;
-        // }, $this->getStores()));
 
         Yii::$app->storage->storeObject($object);
 
@@ -446,7 +411,6 @@ class ProductForm extends Model
         $this->saveBarcodes();
         $this->saveImages();
         $this->saveProperties();
-        // $this->saveStores();
         // $this->saveRecommended();
 
         return true;
@@ -535,33 +499,6 @@ class ProductForm extends Model
             $item->delete();
         }
     }
-
-    /**
-     * Save stores
-     * @return void
-     */
-    // private function saveStores()
-    // {
-    //     $object = $this->_object;
-
-    //     $old = [];
-    //     foreach ($object->stores as $item) {
-    //         $old[$item->store_id] = $item;
-    //     }
-
-    //     //insert/update
-    //     foreach ($this->_stores as $model) {
-    //         if (!empty($model->quantity)) {
-    //             $model->save($object, false);
-    //             unset($old[$model->getTemplate()->id]);
-    //         }
-    //     }
-
-    //     //delete
-    //     foreach ($old as $item) {
-    //         $item->delete();
-    //     }
-    // }
 
     /**
      * Save recommended
