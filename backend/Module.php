@@ -96,13 +96,12 @@ class Module extends BackendModule
         if ($this->vendorEnabled) {
             $items[] = ['label' => Yii::t('catalog', 'Vendors'), 'url' => ['/catalog/vendor/index']];
         }
+        $items[] = ['label' => Yii::t('catalog', 'Categories'), 'url' => ['/catalog/category/index']];
+        $items[] = ['label' => Yii::t('catalog', 'Products'), 'url' => ['/catalog/product/index']];
         if ($this->storeEnabled) {
             $items[] = ['label' => Yii::t('catalog', 'Stores'), 'url' => ['/catalog/store/index']];
+            $items[] = ['label' => Yii::t('catalog', 'Product quantity'), 'url' => ['/catalog/quantity/index']];
         }
-
-        $items[] = ['label' => Yii::t('catalog', 'Categories'), 'url' => ['/catalog/category/index']];
-        $items[] = ['label' => Yii::t('catalog', 'Products/services'), 'url' => ['/catalog/product/index']];
-        $items[] = ['label' => Yii::t('catalog', 'Product quantity'), 'url' => ['/catalog/quantity/index']];
 
         return [
             'label' => Yii::t('catalog', 'Catalog'),

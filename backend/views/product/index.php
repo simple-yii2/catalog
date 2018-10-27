@@ -12,7 +12,7 @@ use cms\catalog\common\models\Product;
 
 ProductListAsset::register($this);
 
-$title = Yii::t('catalog', 'Products/services');
+$title = Yii::t('catalog', 'Products');
 
 $this->title = $title . ' | ' . Yii::$app->name;
 

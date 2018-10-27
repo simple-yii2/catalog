@@ -4,9 +4,9 @@ return [
     'Catalog' => 'Каталог',
     'Currencies' => 'Валюты',
     'Vendors' => 'Производители',
-    'Stores' => 'Магазины (склады)',
     'Categories' => 'Категории',
-    'Products/services' => 'Товары/услуги',
+    'Products' => 'Товары (услуги)',
+    'Stores' => 'Магазины (склады)',
     'Product quantity' => 'Наличие товаров',
     'Common properties' => 'Общие характеристики',
 
