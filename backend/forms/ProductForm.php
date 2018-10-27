@@ -325,7 +325,7 @@ class ProductForm extends Model
             ['sku', 'unique', 'targetClass' => Product::className()],
             [['name', 'model', 'countryOfOrigin'], 'string', 'max' => 100],
             ['description', 'string', 'max' => 65535],
-            [['price', 'oldPrice'], 'double'],
+            [['price', 'oldPrice'], 'double', 'min' => 0],
             ['oldPrice', 'compare', 'compareAttribute' => 'price', 'operator' => '>', 'type' => 'number'],
             [['length', 'width', 'height'], 'integer', 'min' => 1],
             ['weight', 'double', 'min' => 0.001],
