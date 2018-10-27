@@ -1,6 +1,7 @@
 <?php
 
 return [
+    //titles
     'Catalog' => 'Каталог',
     'Currencies' => 'Валюты',
     'Vendors' => 'Производители',
@@ -8,11 +9,13 @@ return [
     'Products' => 'Товары (услуги)',
     'Stores' => 'Магазины (склады)',
     'Product quantity' => 'Наличие товаров',
+    'Delivery methods' => 'Способы доставки',
     'Common properties' => 'Общие характеристики',
-
+    //messages
     'The value is incorrect.' => 'Значение указано неверно.',
     'No results matched' => 'Нет результатов, соответствующих',
 
+    //form labels
     'Code' => 'Код',
     'Rate' => 'Курс',
     'Precision' => 'Точность',
@@ -50,25 +53,35 @@ return [
     'Availability' => 'Наличие товара',
     'Quantity' => 'Количество',
     // 'Recommended' => 'Рекомендации',
+    'Days' => 'Дней',
 
-    'Sales area' => 'Торговый зал',
-    'Pickup point' => 'Пункт выдачи заказов',
-    'Sales area and pickup point' => 'Торговый зал и пункт выдачи заказов',
-    'Store' => 'Склад',
-
+    //property type
     'Logical' => 'Логический',
     'Integer' => 'Целый',
     'Decimal' => 'Дробный',
     'Select' => 'Выбор',
     'Multiple' => 'Множественный',
 
+    //availability
     'In stock' => 'В наличии',
     'Under the order' => 'Под заказ',
     'Not available' => 'Нет в наличии',
 
+    //additional properties
     'mm' => 'мм',
     'kg' => 'кг',
     'g' => 'г',
+
+    //store type
+    'Sales area' => 'Торговый зал',
+    'Pickup point' => 'Пункт выдачи заказов',
+    'Sales area and pickup point' => 'Торговый зал и пункт выдачи заказов',
+    'Store' => 'Склад',
+
+    //delivery method types
+    'Pickup' => 'Самовывоз',
+    'Courier' => 'Курьер',
+    'Delivery service' => 'Транспортная компания',
 
     'Yes' => 'Есть',
     'No' => 'Нет',

@@ -153,3 +153,14 @@ create table if not exists `catalog_store_product`
     foreign key (`store_id`) references `catalog_store` (`id`) on delete cascade on update cascade,
     foreign key (`product_id`) references `catalog_product` (`id`) on delete cascade on update cascade
 ) engine InnoDB;
+
+create table if not exists `catalog_delivery`
+(
+    `id` int(10) not null auto_increment,
+    `currency_id` int(10) default null,
+    `name` varchar(100) not null,
+    `price` decimal(10,2) not null,
+    `days` int(10) not null,
+    `_fields` text not null,
+    primary key (`id`)
+) engine InnoDB;
