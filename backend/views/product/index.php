@@ -65,7 +65,7 @@ foreach ($query->all() as $item) {
         [
             'attribute' => 'name',
             'format' => 'html',
-            'content' => function ($model, $key, $index, $column) {
+            'content' => function ($model) {
                 $result = '';
 
                 if (!empty($model->thumb)) {
@@ -81,15 +81,6 @@ foreach ($query->all() as $item) {
                 if (!empty($model->vendor)) {
                     $result .= '&nbsp;' . Html::tag('span', Html::encode($model->vendor), ['class' => 'label label-info']);
                 }
-
-                // if ($model->availability == $model::INSTOCK) {
-                //     $cssClass = 'label label-success';
-                // } elseif ($model->availability == $model::UNDERTHEORDER) {
-                //     $cssClass = 'label label-warning';
-                // } elseif ($model->availability == $model::NOTAVAILABLE) {
-                //     $cssClass = 'label label-danger';
-                // }
-                // $result .= '&nbsp;' . Html::tag('span', Html::encode($model->getAvailabilityName()), ['class' => $cssClass]);
 
                 if ($model->category !== null) {
                     $result .= '<br>' . Html::tag('span', $model->category->path, ['class' => 'text-muted']);

@@ -15,7 +15,9 @@ class ProductQuantityFilter extends Product
     public function attributeLabels()
     {
         return [
+            'sku' => Yii::t('catalog', 'SKU'),
             'name' => Yii::t('catalog', 'Name'),
+            'price' => Yii::t('catalog', 'Price'),
             'quantity' => Yii::t('catalog', 'Quantity'),
         ];
     }
@@ -26,7 +28,7 @@ class ProductQuantityFilter extends Product
     public function rules()
     {
         return [
-            ['name', 'string'],
+            [['sku', 'name'], 'string'],
         ];
     }
 
@@ -38,8 +40,8 @@ class ProductQuantityFilter extends Product
     public function getDataProvider($config = [])
     {
         $query = self::find();
+        $query->andFilterWhere(['sku' => $this->sku]);
         $query->andFilterWhere(['or',
-            ['=', 'sku', $this->name],
             ['like', 'name', $this->name],
             ['like', 'model', $this->name],
         ]);

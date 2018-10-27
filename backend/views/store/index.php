@@ -26,7 +26,6 @@ $typeNames = Store::getTypeNames();
     'dataProvider' => $model->getDataProvider(),
     'filterModel' => $model,
     'summary' => '',
-    'tableOptions' => ['class' => 'table table-condensed'],
     'columns' => [
         'name',
         [
