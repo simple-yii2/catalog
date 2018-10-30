@@ -3,6 +3,7 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use cms\catalog\common\models\Currency;
+use cms\catalog\common\models\Delivery;
 
 //currencies
 $currencies = ['' => ''];
@@ -21,6 +22,7 @@ foreach (Currency::find()->all() as $item) {
         <?= $form->field($model, 'currency_id')->dropDownList($currencies) ?>
         <?= $form->field($model, 'price') ?>
         <?= $form->field($model, 'days') ?>
+        <?= $form->field($model, 'availableFields')->checkboxList(Delivery::getFieldNames()) ?>
     </fieldset>
 
     <div class="form-group">

@@ -2,6 +2,7 @@
 
 namespace cms\catalog\common\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 use cms\catalog\common\helpers\CurrencyHelper;
 
@@ -14,6 +15,28 @@ class Delivery extends ActiveRecord
     public static function tableName()
     {
         return 'catalog_delivery';
+    }
+
+    /**
+     * Filed names
+     * @return array
+     */
+    public static function getFieldNames()
+    {
+        return [
+            'store_id' => Yii::t('catalog', 'Store'),
+            'serviceName' => Yii::t('catalog', 'Service name'),
+            'city' => Yii::t('catalog', 'City'),
+            'street' => Yii::t('catalog', 'Street'),
+            'house' => Yii::t('catalog', 'House'),
+            'apartment' => Yii::t('catalog', 'Apartment'),
+            'entrance' => Yii::t('catalog', 'Entrance'),
+            'entryphone' => Yii::t('catalog', 'Entryphone'),
+            'floor' => Yii::t('catalog', 'Floor'),
+            'recipient' => Yii::t('catalog', 'Recipient'),
+            'phone' => Yii::t('catalog', 'Phone'),
+            'comment' => Yii::t('catalog', 'Comment'),
+        ];
     }
 
     /**
@@ -56,20 +79,7 @@ class Delivery extends ActiveRecord
             return false;
         }
 
-        $fields = array_intersect([
-            'store_id',
-            'serviceName',
-            'city',
-            'street',
-            'house',
-            'apartment',
-            'entrance',
-            'entryphone',
-            'floor',
-            'recipient',
-            'phone',
-            'comment',
-        ], $value);
+        $fields = array_intersect(array_keys(self::getFieldNames()), $value);
 
         $this->_fields = serialize($fields);
     }

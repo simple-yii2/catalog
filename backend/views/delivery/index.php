@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use dkhlystov\grid\GridView;
 use cms\catalog\common\helpers\PriceHelper;
 
-$title = Yii::t('purchase', 'Delivery methods');
+$title = Yii::t('catalog', 'Delivery methods');
 $this->title = $title . ' | ' . Yii::$app->name;
 
 $this->params['breadcrumbs'] = [

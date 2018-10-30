@@ -31,6 +31,11 @@ class DeliveryForm extends Model
     public $days;
 
     /**
+     * @var array
+     */
+    public $availableFields = [];
+
+    /**
      * @var Delivery
      */
     private $_object;
@@ -53,6 +58,7 @@ class DeliveryForm extends Model
             'currency_id' => $object->currency_id,
             'price' => $object->price,
             'days' => $object->days,
+            'availableFields' => $object->availableFields,
         ], $config));
     }
 
@@ -75,6 +81,7 @@ class DeliveryForm extends Model
             'currency_id' => Yii::t('catalog', 'Currency'),
             'price' => Yii::t('catalog', 'Price'),
             'days' => Yii::t('catalog', 'Days'),
+            'availableFields' => Yii::t('catalog', 'Available fields'),
         ];
     }
 
@@ -88,6 +95,7 @@ class DeliveryForm extends Model
             ['currency_id', 'integer'],
             ['price', 'double', 'min' => 0],
             ['days', 'integer', 'min' => 0],
+            ['availableFields', 'each', 'rule' => ['in', 'range' => array_keys(Delivery::getFieldNames())]],
             [['name', 'price', 'days'], 'required'],
         ];
     }
@@ -111,6 +119,7 @@ class DeliveryForm extends Model
         $object->currency_id = $currency === null ? null : $currency->id;
         $object->price = empty($this->price) ? null : (float) $this->price;
         $object->days = (integer) $this->days;
+        $object->availableFields = $this->availableFields;
 
         if (!$object->save(false)) {
             return false;
