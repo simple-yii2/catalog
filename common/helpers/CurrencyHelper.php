@@ -99,7 +99,7 @@ class CurrencyHelper {
      * Calculate amount into application currency
      * @param float $value 
      * @param Currency|null $currency currency of value
-     * @param Currency|null $destCurrency application currency. Application currency used if not set.
+     * @param Currency|null $destCurrency destination currency. Application currency used if not set.
      * @return float
      */
     public static function calc($value, $currency = null, $destCurrency = null)
