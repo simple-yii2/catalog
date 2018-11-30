@@ -1,9 +1,9 @@
 <?php
 
-namespace cms\catalog\common\models;
+namespace cms\catalog\models;
 
 use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
+use dkhlystov\db\ActiveRecord;
 
 class ProductProperty extends ActiveRecord
 {

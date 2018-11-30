@@ -8,7 +8,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use cms\catalog\backend\filters\CurrencyFilter;
 use cms\catalog\backend\forms\CurrencyForm;
-use cms\catalog\common\models\Currency;
+use cms\catalog\models\Currency;
 
 class CurrencyController extends Controller
 {
@@ -46,9 +46,12 @@ class CurrencyController extends Controller
      */
     public function actionCreate()
     {
+        $object = new Currency;
         $model = new CurrencyForm;
 
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->validate()) {
+            $model->assignTo($object);
+            $object->save(false);
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
             return $this->redirect(['index']);
         }
@@ -68,14 +71,17 @@ class CurrencyController extends Controller
             throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
         }
 
-        $model = new CurrencyForm($object);
+        $model = new CurrencyForm;
+        $model->assign($object);
 
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->validate()) {
+            $model->assignTo($object);
+            $object->save(false);
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
             return $this->redirect(['index']);
         }
 
-        return $this->render('update', ['model' => $model]);
+        return $this->render('update', ['model' => $model, 'object' => $object]);
     }
 
     /**

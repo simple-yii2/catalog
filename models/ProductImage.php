@@ -1,14 +1,10 @@
 <?php
 
-namespace cms\catalog\common\models;
+namespace cms\catalog\models;
 
-use yii\db\ActiveRecord;
-
+use dkhlystov\db\ActiveRecord;
 use dkhlystov\storage\components\StoredInterface;
 
-/**
- * Product image active record
- */
 class ProductImage extends ActiveRecord implements StoredInterface
 {
 
@@ -20,16 +16,16 @@ class ProductImage extends ActiveRecord implements StoredInterface
         return 'catalog_product_image';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['file', 'thumb', 'description'], 'string', 'max' => 200],
-            ['title', 'string', 'max' => 100],
-        ];
-    }
+    // /**
+    //  * @inheritdoc
+    //  */
+    // public function rules()
+    // {
+    //     return [
+    //         [['file', 'thumb', 'description'], 'string', 'max' => 200],
+    //         ['title', 'string', 'max' => 100],
+    //     ];
+    // }
 
     /**
      * Return files from attributes

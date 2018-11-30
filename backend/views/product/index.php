@@ -6,29 +6,32 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use dkhlystov\grid\GridView;
 use cms\catalog\backend\assets\ProductListAsset;
-use cms\catalog\common\helpers\PriceHelper;
-use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Product;
+use cms\catalog\helpers\PriceHelper;
+use cms\catalog\models\Category;
+use cms\catalog\models\Product;
 
 ProductListAsset::register($this);
 
-$title = Yii::t('catalog', 'Products');
+$filterModel = $model;
 
+// Title
+$title = Yii::t('catalog', 'Products');
 $this->title = $title . ' | ' . Yii::$app->name;
 
+// Breadcrumbs
 $this->params['breadcrumbs'] = [
     Yii::t('catalog', 'Catalog'),
     $title,
 ];
 
-//create url
+// Create url
 $createUrl = ['create'];
-if (!empty($filter->category_id)) {
-    $createUrl['category_id'] = $filter->category_id;
+if (!empty($model->category_id)) {
+    $createUrl['category_id'] = $model->category_id;
 }
 
-//categories
-$categories = [-1 => '[' . $filter->getAttributeLabel('category_id') . ']'];
+// Categories
+$categories = [-1 => '[' . $model->getAttributeLabel('category_id') . ']'];
 $query = Category::find()->orderBy(['lft' => SORT_ASC]);
 foreach ($query->all() as $item) {
     if ($item->isLeaf()) {
@@ -48,14 +51,14 @@ foreach ($query->all() as $item) {
         'enableClientValidation' => false,
     ]) ?>
         <div class="form-group">
-            <?= Html::dropDownList('category_id', $filter->category_id, $categories, ['class' => 'form-control']) ?>
+            <?= Html::dropDownList('category_id', $model->category_id, $categories, ['class' => 'form-control']) ?>
         </div>
     <?php ActiveForm::end() ?>
 </div>
 
 <?= GridView::widget([
-    'dataProvider' => $filter->getDataProvider(),
-    'filterModel' => $filter,
+    'dataProvider' => $model->getDataProvider(),
+    'filterModel' => $model,
     'summary' => '',
     'rowOptions' => function ($model, $key, $index, $grid) {
         return !$model->active ? ['class' => 'warning'] : [];
@@ -72,7 +75,7 @@ foreach ($query->all() as $item) {
                     $result .= Html::img($model->thumb, ['align' => 'left', 'height' => 40, 'hspace' => 10]);
                 }
 
-                $result .= Html::encode($model->getTitle());
+                $result .= Html::encode($model->name);
 
                 if ($model->imageCount > 0) {
                     $result .= '&nbsp;' . Html::tag('span', '<span class="glyphicon glyphicon-picture"></span>&nbsp;' . $model->imageCount, ['class' => 'badge']);
@@ -93,7 +96,7 @@ foreach ($query->all() as $item) {
             'attribute' => 'price',
             'format' => 'html',
             'value' => function ($model) {
-                return PriceHelper::render('span', $model->price, $model->currency);
+                return $model->price === null ? null : PriceHelper::render('span', $model->price, $model->currency);
             },
         ],
         [
@@ -107,10 +110,10 @@ foreach ($query->all() as $item) {
             'class' => 'yii\grid\ActionColumn',
             'options' => ['style' => 'width: 50px;'],
             'template' => '{update} {delete}',
-            'urlCreator' => function ($action, $model, $key, $index, $column) use ($filter) {
+            'urlCreator' => function ($action, $model, $key, $index, $column) use ($filterModel) {
                 $params = is_array($key) ? $key : ['id' => (string) $key];
-                if (!empty($filter->category_id)) {
-                    $params['category_id'] = $filter->category_id;
+                if (!empty($filterModel->category_id)) {
+                    $params['category_id'] = $filterModel->category_id;
                 }
                 $params[0] = $column->controller ? $column->controller . '/' . $action : $action;
                 return Url::toRoute($params);

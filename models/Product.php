@@ -1,13 +1,13 @@
 <?php
 
-namespace cms\catalog\common\models;
+namespace cms\catalog\models;
 
 use Yii;
-use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use helpers\Translit;
-use cms\catalog\common\helpers\CurrencyHelper;
+use dkhlystov\db\ActiveRecord;
 use dkhlystov\storage\components\StoredInterface;
+use cms\catalog\helpers\CurrencyHelper;
 
 class Product extends ActiveRecord implements StoredInterface
 {
@@ -17,6 +17,9 @@ class Product extends ActiveRecord implements StoredInterface
     const UNDERTHEORDER = 1;
     const NOTAVAILABLE = 2;
 
+    /**
+     * @var array
+     */
     private static $availabilityNames = [
         self::INSTOCK => 'In stock',
         self::UNDERTHEORDER => 'Under the order',
@@ -57,7 +60,7 @@ class Product extends ActiveRecord implements StoredInterface
             return false;
         }
 
-        //price value
+        // Price value
         if ($this->isAttributeChanged('price') || $this->isAttributeChanged('currency_id')) {
             $value = $this->price;
             if ($this->currency !== null) {
@@ -66,6 +69,9 @@ class Product extends ActiveRecord implements StoredInterface
 
             $this->priceValue = $value;
         }
+
+        // Modify date
+        $this->modifyDate = gmdate('Y-m-d H:i:s');
 
         return true;
     }
@@ -104,15 +110,6 @@ class Product extends ActiveRecord implements StoredInterface
     public function getAvailabilityName()
     {
         return ArrayHelper::getValue(self::getAvailabilityNames(), $this->availability, '');
-    }
-
-    /**
-     * Product title from name and model
-     * @return string
-     */
-    public function getTitle()
-    {
-        return trim($this->name . ' ' . $this->model);
     }
 
     /**
@@ -160,14 +157,14 @@ class Product extends ActiveRecord implements StoredInterface
         return $this->hasMany(ProductImage::className(), ['product_id' => 'id']);
     }
 
-    /**
-     * Recommended relation
-     * @return yii\db\ActiveQueryInterface
-     */
-    public function getRecommended()
-    {
-        return $this->hasMany(Product::className(), ['id' => 'recommended_id'])->viaTable('catalog_product_recommended', ['product_id' => 'id']);
-    }
+    // /**
+    //  * Recommended relation
+    //  * @return yii\db\ActiveQueryInterface
+    //  */
+    // public function getRecommended()
+    // {
+    //     return $this->hasMany(Product::className(), ['id' => 'recommended_id'])->viaTable('catalog_product_recommended', ['product_id' => 'id']);
+    // }
 
     /**
      * Stores quantity relation
@@ -193,24 +190,43 @@ class Product extends ActiveRecord implements StoredInterface
         return $model;
     }
 
+    // public static function search($text)
+    // {
+    //     $query = static::find();
+
+    //     // Search by name and model
+    //     $keywords = preg_split('/[\s,]+/', $text, -1, PREG_SPLIT_NO_EMPTY);
+    //     foreach ($keywords as $word) {
+    //         $query->andWhere(['or',
+    //             ['like', 'name', $word],
+    //             ['like', 'model', $word],
+    //         ]);
+    //     }
+
+    //     // Search by SKU
+    //     $query->orWhere(['like', 'sku', $text]);
+
+    //     return $query;
+    // }
+
     /**
      * Making alias from name and id
      * @return void
      */
     public function makeAlias()
     {
-        $this->alias = Translit::t($this->name . ' ' . $this->model . '-' . $this->id);
+        $this->alias = Translit::t($this->name . '-' . $this->id);
     }
 
-    /**
-     * Calc price to destination currency
-     * @param Currency|null $destCurrency destination curency. Application currency used if not set.
-     * @return float
-     */
-    public function calcPrice($destCurrency = null)
-    {
-        return CurrencyHelper::calc($this->price, $this->currency, $destCurrency);
-    }
+    // /**
+    //  * Calc price to destination currency
+    //  * @param Currency|null $destCurrency destination curency. Application currency used if not set.
+    //  * @return float
+    //  */
+    // public function calcPrice($destCurrency = null)
+    // {
+    //     return CurrencyHelper::calc($this->price, $this->currency, $destCurrency);
+    // }
 
     /**
      * Update product quantity with availability correction

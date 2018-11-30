@@ -4,7 +4,7 @@ namespace cms\catalog\backend\filters;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use cms\catalog\common\models\Store;
+use cms\catalog\models\Store;
 
 class StoreFilter extends Store
 {

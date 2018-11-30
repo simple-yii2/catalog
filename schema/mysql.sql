@@ -67,8 +67,7 @@ create table if not exists `catalog_product`
     `active` tinyint(1) default 1,
     `sku` varchar(50) not null,
     `alias` varchar(100) default null,
-    `name` varchar(100) default null,
-    `model` varchar(100) default null,
+    `name` varchar(200) default null,
     `description` text,
     `vendor` varchar(100) default null,
     `price` decimal(10,2) default null,
@@ -125,14 +124,14 @@ create table if not exists `catalog_product_image`
     foreign key (`product_id`) references `catalog_product` (`id`) on delete cascade on update cascade
 ) engine InnoDB;
 
-create table if not exists `catalog_product_recommended`
+create table if not exists `catalog_product_related`
 (
     `id` int(10) not null auto_increment,
     `product_id` int(10) not null,
-    `recommended_id` int(10) not null,
+    `related_id` int(10) not null,
     primary key (`id`),
     foreign key (`product_id`) references `catalog_product` (`id`) on delete cascade on update cascade,
-    foreign key (`recommended_id`) references `catalog_product` (`id`) on delete cascade on update cascade
+    foreign key (`related_id`) references `catalog_product` (`id`) on delete cascade on update cascade
 ) engine InnoDB;
 
 create table if not exists `catalog_store`
@@ -163,4 +162,78 @@ create table if not exists `catalog_delivery`
     `days` int(10) not null,
     `_fields` text not null,
     primary key (`id`)
+) engine InnoDB;
+
+create table if not exists `catalog_order`
+(
+    `id` int(10) not null auto_increment,
+    `number` varchar(20) not null,
+    `issueDate` datetime not null,
+    `paymentTerm` datetime default null,
+    `currency_id` int(10) default null,
+    `discount` int(10) not null,
+    `productAmount` decimal(10,2) not null,
+    `discountAmount` decimal(10,2) not null,
+    `subtotalAmount` decimal(10,2) not null,
+    `deliveryAmount` decimal(10,2) not null,
+    `totalAmount` decimal(10,2) not null,
+    `comment` text,
+    `paymentState` int(10) not null,
+    `paidAmount` decimal(10,2) not null,
+    primary key (`id`)
+) engine InnoDB;
+
+create table if not exists `catalog_order_customer`
+(
+    `id` int(10) not null auto_increment,
+    `order_id` int(10) not null,
+    `user_id` int(10) default null,
+    `name` varchar(100) not null,
+    `phone` varchar(20) not null,
+    `email` varchar(100) not null,
+    primary key (`id`),
+    foreign key (`order_id`) references `catalog_order` (`id`) on delete cascade on update cascade
+) engine InnoDB;
+
+create table if not exists `catalog_order_product`
+(
+    `id` int(10) not null auto_increment,
+    `order_id` int(10) not null,
+    `product_id` int(10) not null,
+    `sku` varchar(50) not null,
+    `name` varchar(200) default null,
+    `count` int(10) not null,
+    `price` decimal(10,2) not null,
+    `amount` decimal(10,2) not null,
+    `discount` int(10) default null,
+    `discountAmount` decimal(10,2) not null,
+    `totalAmount` decimal(10,2) not null,
+    primary key (`id`),
+    foreign key (`order_id`) references `catalog_order` (`id`) on delete cascade on update cascade
+) engine InnoDB;
+
+create table if not exists `catalog_order_delivery`
+(
+    `id` int(10) not null auto_increment,
+    `order_id` int(10) not null,
+    `delivery_class` varchar(200) not null,
+    `name` varchar(100) not null,
+    `price` decimal(10,2) not null,
+    `days` int(10) not null,
+    `_fields` text not null,
+    `store_id` int(10) default null,
+    `serviceName` varchar(100) default null,
+    `city` varchar(100) default null,
+    `street` varchar(100) default null,
+    `house` varchar(10) default null,
+    `apartment` varchar(10) default null,
+    `entrance` varchar(100) default null,
+    `entryphone` varchar(10) default null,
+    `floor` int(10) default null,
+    `recipient` varchar(100) default null,
+    `phone` varchar(20) default null,
+    `trackingCode` varchar(20) default null,
+    primary key (`id`),
+    unique key (`order_id`),
+    foreign key (`order_id`) references `catalog_order` (`id`) on delete cascade on update cascade
 ) engine InnoDB;

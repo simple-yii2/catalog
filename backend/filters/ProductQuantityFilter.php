@@ -4,7 +4,7 @@ namespace cms\catalog\backend\filters;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use cms\catalog\common\models\Product;
+use cms\catalog\models\Product;
 
 class ProductQuantityFilter extends Product
 {

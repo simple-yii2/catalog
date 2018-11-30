@@ -3,13 +3,9 @@
 namespace cms\catalog\backend\forms;
 
 use Yii;
-use yii\base\Model;
-use cms\catalog\common\models\Currency;
+use dkhlystov\forms\Form;
 
-/**
- * Editing form
- */
-class CurrencyForm extends Model
+class CurrencyForm extends Form
 {
 
     /**
@@ -48,44 +44,6 @@ class CurrencyForm extends Model
     public $default;
 
     /**
-     * @var Currency
-     */
-    private $_object;
-
-    /**
-     * @inheritdoc
-     * @param Currency|null $object 
-     */
-    public function __construct(Currency $object = null, $config = [])
-    {
-        if ($object === null) {
-            $object = new Currency;
-        }
-
-        $this->_object = $object;
-
-        //attributes
-        parent::__construct(array_replace([
-            'name' => $object->name,
-            'code' => $object->code,
-            'rate' => $object->rate,
-            'precision' => $object->precision,
-            'prefix' => $object->prefix,
-            'suffix' => $object->suffix,
-            'default' => $object->default == 0 ? '0' : '1',
-        ], $config));
-    }
-
-    /**
-     * Object getter
-     * @return Currency
-     */
-    public function getObject()
-    {
-        return $this->_object;
-    }
-
-    /**
      * @inheritdoc
      */
     public function attributeLabels()
@@ -106,29 +64,35 @@ class CurrencyForm extends Model
      */
     public function rules()
     {
-        return [
+        return array_merge(parent::rules(), [
             ['name', 'string', 'max' => 100],
             [['code', 'prefix', 'suffix'], 'string', 'max' => 10],
             ['rate', 'double', 'min' => 0.01],
             ['precision', 'in', 'range' => [0, 1, 2]],
             ['default', 'boolean'],
             [['name', 'code', 'rate', 'precision'], 'required'],
-        ];
+        ]);
     }
 
     /**
-     * Save
-     * @param boolean $runValidation 
-     * @return boolean
+     * @inheritdoc
      */
-    public function save($runValidation = true)
+    public function assign($object)
     {
-        if ($runValidation && !$this->validate()) {
-            return false;
-        }
+        $this->name = $object->name;
+        $this->code = $object->code;
+        $this->rate = $object->rate;
+        $this->precision = $object->precision;
+        $this->prefix = $object->prefix;
+        $this->suffix = $object->suffix;
+        $this->default = $object->default == 0 ? '0' : '1';
+    }
 
-        $object = $this->_object;
-
+    /**
+     * @inheritdoc
+     */
+    public function assignTo($object)
+    {
         $object->name = $this->name;
         $object->code = $this->code;
         $object->rate = empty($this->rate) ? null : (float) $this->rate;
@@ -136,19 +100,6 @@ class CurrencyForm extends Model
         $object->prefix = $this->prefix;
         $object->suffix = $this->suffix;
         $object->default = $this->default == 0 ? false : true;
-
-        $transaction = $object->db->beginTransaction();
-        try {
-            $success = $object->save(false);
-            if ($success && $object->default) {
-                $object->updateAll(['default' => false], ['<>', 'id', $object->id]);
-            }
-            $transaction->commit();
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-        }
-
-        return $success;
     }
 
 }

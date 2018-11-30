@@ -3,16 +3,21 @@
 namespace cms\catalog\backend\forms;
 
 use Yii;
-use yii\base\Model;
-use helpers\Translit;
-use cms\catalog\common\models\Category;
-use cms\catalog\common\models\CategoryProperty;
+use dkhlystov\forms\Form;
+use cms\catalog\models\CategoryProperty;
 
-/**
- * Category property form
- */
-class CategoryPropertyForm extends Model
+class CategoryPropertyForm extends Form
 {
+
+    /**
+     * @inheritdoc
+     */
+    public $formName = 'CategoryForm[properties][]';
+
+    /**
+     * @var integer|null
+     */
+    public $id;
 
     /**
      * @var string Title
@@ -40,31 +45,9 @@ class CategoryPropertyForm extends Model
     private $_values = [];
 
     /**
-     * @var CategoryProperty
+     * @var bool
      */
-    private $_object;
-
-    /**
-     * @inheritdoc
-     * @param CategoryProperty|null $object 
-     */
-    public function __construct(CategoryProperty $object = null, $config = [])
-    {
-        if ($object === null) {
-            $object = new CategoryProperty;
-        }
-
-        $this->_object = $object;
-
-        //attributes
-        parent::__construct(array_replace([
-            'name' => $object->name,
-            'type' => $object->type,
-            'values' => $object->values,
-            'unit' => $object->unit,
-            'search' => $object->search,
-        ], $config));
-    }
+    private $_readOnly;
 
     /**
      * @inheritdoc
@@ -75,21 +58,12 @@ class CategoryPropertyForm extends Model
     }
 
     /**
-     * Id getter
-     * @return integer|null
-     */
-    public function getId()
-    {
-        return $this->_object->id;
-    }
-
-    /**
      * Read-only getter
      * @return boolean
      */
     public function getReadOnly()
     {
-        return $this->_object->readOnly;
+        return $this->_readOnly;
     }
 
     /**
@@ -108,11 +82,7 @@ class CategoryPropertyForm extends Model
      */
     public function setValues($value)
     {
-        if (is_array($value)) {
-            $this->_values = $value;
-        } else {
-            $this->_values = [];
-        }
+        $this->_values = is_array($value) ? $value : [];
     }
 
     /**
@@ -134,35 +104,36 @@ class CategoryPropertyForm extends Model
      */
     public function rules()
     {
-        return [
+        return array_merge(parent::rules(), [
+            ['id', 'integer'],
             ['name', 'string', 'max' => 50],
             ['type', 'in', 'range' => CategoryProperty::getTypes()],
             ['values', 'safe'],
             ['unit', 'string', 'max' => 10],
             ['search', 'boolean'],
             ['name', 'required'],
-        ];
+        ]);
     }
 
     /**
-     * Save
-     * @param Category $category 
-     * @param boolean $runValidation 
-     * @return boolean
+     * @inheritdoc
      */
-    public function save(Category $category, $runValidation = true)
+    public function assign($object)
     {
-        if ($this->_object->readOnly) {
-            return false;
-        }
+        $this->id = $object->id;
+        $this->name = $object->name;
+        $this->type = $object->type;
+        $this->values = $object->values;
+        $this->unit = $object->unit;
+        $this->search = $object->search;
+        $this->_readOnly = $object->readOnly;
+    }
 
-        if ($runValidation && !$this->validate()) {
-            return false;
-        }
-
-        $object = $this->_object;
-
-        $object->category_id = $category->id;
+    /**
+     * @inheritdoc
+     */
+    public function assignTo($object)
+    {
         $object->name = $this->name;
         $object->type = $this->type;
         $object->values = $this->values;
@@ -170,12 +141,6 @@ class CategoryPropertyForm extends Model
         $object->search = $this->search;
 
         $object->makeAlias();
-
-        if (!$object->save(false)) {
-            return false;
-        }
-
-        return true;
     }
 
 }

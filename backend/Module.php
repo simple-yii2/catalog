@@ -4,9 +4,9 @@ namespace cms\catalog\backend;
 
 use Yii;
 use cms\components\BackendModule;
-use cms\catalog\common\helpers\CurrencyHelper;
-use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Delivery;
+use cms\catalog\helpers\CurrencyHelper;
+use cms\catalog\models\Category;
+use cms\catalog\delivery\Pickup;
 
 class Module extends BackendModule
 {
@@ -62,6 +62,21 @@ class Module extends BackendModule
     public $maxCategoryDepth = null;
 
     /**
+     * @var array
+     */
+    public $delivery;
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct($id, $parent = null, $config = [])
+    {
+        parent::__construct($id, $parent, array_replace([
+            'delivery' => ['pickup' => Pickup::className()],
+        ], $config));
+    }
+
+    /**
      * @inheritdoc
      */
     protected static function cmsDatabase()
@@ -72,41 +87,6 @@ class Module extends BackendModule
         if (Category::find()->roots()->count() == 0) {
             $root = new Category(['title' => 'Root']);
             $root->makeRoot();
-        }
-
-        //Default delivery methods
-        if (Delivery::find()->count() == 0) {
-            $currency_id = CurrencyHelper::getApplicationCurrencyId();
-
-            //pickup
-            $item = new Delivery([
-                'currency_id' => $currency_id,
-                'name' => Yii::t('catalog', 'Pickup'),
-                'price' => 0,
-                'days' => 0,
-                'availableFields' => ['store_id', 'comment'],
-            ]);
-            $item->save(false);
-
-            //courier
-            $item = new Delivery([
-                'currency_id' => $currency_id,
-                'name' => Yii::t('catalog', 'Courier'),
-                'price' => 0,
-                'days' => 1,
-                'availableFields' => ['street', 'house', 'apartment', 'entrance', 'entryphone', 'floor', 'recipient', 'phone', 'comment'],
-            ]);
-            $item->save(false);
-
-            //delivery service
-            $item = new Delivery([
-                'currency_id' => $currency_id,
-                'name' => Yii::t('catalog', 'Delivery service'),
-                'price' => 0,
-                'days' => 1,
-                'availableFields' => ['serviceName', 'city', 'street', 'house', 'apartment', 'recipient', 'phone', 'comment'],
-            ]);
-            $item->save(false);
         }
     }
 
@@ -147,6 +127,7 @@ class Module extends BackendModule
         }
         if ($this->purchaseEnabled) {
             $items[] = ['label' => Yii::t('catalog', 'Delivery methods'), 'url' => ['/catalog/delivery/index']];
+            $items[] = ['label' => Yii::t('catalog', 'Orders'), 'url' => ['/catalog/order/index']];
         }
 
         return [

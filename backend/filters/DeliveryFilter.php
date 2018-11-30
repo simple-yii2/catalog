@@ -4,7 +4,7 @@ namespace cms\catalog\backend\filters;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use cms\catalog\common\models\Delivery;
+use cms\catalog\models\Delivery;
 
 class DeliveryFilter extends Delivery
 {

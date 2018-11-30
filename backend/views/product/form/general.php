@@ -1,10 +1,11 @@
 <?php
 
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use cms\catalog\backend\forms\ProductBarcodeForm;
-use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Vendor;
+use cms\catalog\models\Category;
+use cms\catalog\models\Vendor;
 use dkhlystov\uploadimage\widgets\UploadImages;
 use dkhlystov\widgets\Chosen;
 
@@ -48,40 +49,45 @@ foreach ($query->all() as $item) {
 }
 
 ?>
-<fieldset>
-    <?= $form->field($model, 'active')->checkbox() ?>
-    <?= $form->field($model, 'images')->label($model->getAttributeLabel('images') . $imageSize)->widget(UploadImages::className(), [
-        'fileKey' => 'file',
-        'thumbKey' => 'thumb',
-        'thumbWidth' => $thumbWidth,
-        'thumbHeight' => $thumbHeight,
-        'data' => function($item) {
-            return [
-                'id' => $item['id'],
-            ];
-        },
-    ]) ?>
-    <?= $form->field($model, 'category_id')->widget(Chosen::className(), [
-        'items' => $categories,
-        'placeholder' => ' ',
-        'noResultText' => Yii::t('catalog', 'No results matched'),
-    ]) ?>
-    <?= $form->field($model, 'sku') ?>
-    <?= $form->field($model, 'name') ?>
-    <?= $form->field($model, 'model') ?>
-    <?= $form->field($model, 'description')->widget(\vova07\imperavi\Widget::className(), ['settings' => $settings]) ?>
-    <?php if (Yii::$app->controller->module->vendorEnabled) echo $form->field($model, 'vendor_id')->widget(Chosen::className(), [
-        'items' => $vendors,
-        'placeholder' => ' ',
-        'noResultText' => Yii::t('catalog', 'No results matched'),
-    ]) ?>
-    <?= $form->field($model, 'countryOfOrigin') ?>
-    <?php if (Yii::$app->controller->module->barcodeEnabled) echo $form->field($model, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
-        'itemClass' => ProductBarcodeForm::className(),
-        'columns' => [
-            'barcode',
-        ],
-        'addLabel' => Yii::t('cms', 'Add'),
-        'removeLabel' => Yii::t('cms', 'Remove'),
-    ]) ?>
-</fieldset>
+
+<?= $form->field($model, 'active')->checkbox() ?>
+<?= $form->field($model, 'images')->label($model->getAttributeLabel('images') . $imageSize)->widget(UploadImages::className(), [
+    'fileKey' => 'file',
+    'thumbKey' => 'thumb',
+    'thumbWidth' => $thumbWidth,
+    'thumbHeight' => $thumbHeight,
+    'data' => function($item) {
+        return [
+            'id' => $item['id'],
+        ];
+    },
+]) ?>
+<?= $form->field($model, 'category_id')->widget(Chosen::className(), [
+    'items' => $categories,
+    'placeholder' => ' ',
+    'noResultText' => Yii::t('catalog', 'No results matched'),
+]) ?>
+<?= $form->field($model, 'sku') ?>
+<?= $form->field($model, 'name') ?>
+<?= $form->field($model, 'description')->widget(\vova07\imperavi\Widget::className(), ['settings' => $settings]) ?>
+<?php if (Yii::$app->controller->module->vendorEnabled) echo $form->field($model, 'vendor_id')->widget(Chosen::className(), [
+    'items' => $vendors,
+    'placeholder' => ' ',
+    'noResultText' => Yii::t('catalog', 'No results matched'),
+]) ?>
+<?= $form->field($model, 'countryOfOrigin') ?>
+<?php if (Yii::$app->controller->module->barcodeEnabled) echo $form->field($model, 'barcodes')->widget('dkhlystov\widgets\ArrayInput', [
+    'itemClass' => ProductBarcodeForm::className(),
+    'columns' => [
+        ['attribute' => 'barcode', 'template' => function ($model) {
+            return  Html::activeHiddenInput($model, 'id') . '{input}';
+        }],
+        // [
+        //     'attribute' => 'id',
+        //     'contentOptions' => ['class' => 'hidden'],
+        // ],
+        // 'barcode',
+    ],
+    'addLabel' => Yii::t('cms', 'Add'),
+    'removeLabel' => Yii::t('cms', 'Remove'),
+]) ?>

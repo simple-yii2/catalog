@@ -4,7 +4,7 @@
 
 use yii\helpers\Html;
 use cms\catalog\backend\forms\CategoryPropertyForm;
-use cms\catalog\common\models\CategoryProperty;
+use cms\catalog\models\CategoryProperty;
 
 $typeNames = CategoryProperty::getTypeNames();
 $typesWithValues = CategoryProperty::getTypesWithValues();
@@ -54,7 +54,7 @@ return [
         'data-types-with-values' => $typesWithValues,
         'data-modal-title' => Yii::t('catalog', 'Values'),
         'data-modal-add' => Yii::t('cms', 'Add'),
-        'data-modal-ok' => Yii::t('catalog', 'OK'),
+        'data-modal-ok' => Yii::t('cms', 'OK'),
         'data-modal-cancel' => Yii::t('cms', 'Cancel'),
     ],
 ];

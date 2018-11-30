@@ -8,7 +8,6 @@ $tabFields = [
     'properties' => ['category_id', 'properties[]', 'length', 'width', 'height', 'weight'],
     'purchase' => ['currency_id', 'price', 'oldPrice'],
     // 'recommended' => ['recommended[]'],
-    // 'quantity' => ['stores[]'],
 ];
 
 //active tab (if there are errors, make tab with first error active)
@@ -53,13 +52,6 @@ $tabs[] = [
 //     'content' => $this->render('recommended', ['form' => $form, 'form' => $form]),
 //     'active' => $active == 'recommended',
 // ];
-// if (Yii::$app->controller->module->storeEnabled) {
-//     $tabs[] = [
-//         'label' => Yii::t('catalog', 'Quantity'),
-//         'content' => $this->render('quantity', ['form' => $form, 'form' => $form]),
-//         'active' => $active == 'quantity',
-//     ];
-// }
 
 //render
 echo Tabs::widget(['items' => $tabs]);

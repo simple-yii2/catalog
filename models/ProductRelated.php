@@ -1,10 +1,10 @@
 <?php
 
-namespace cms\catalog\common\models;
+namespace cms\catalog\models;
 
-use yii\db\ActiveRecord;
+use dkhlystov\db\ActiveRecord;
 
-class ProductRecommended extends ActiveRecord
+class ProductRelated extends ActiveRecord
 {
 
     /**

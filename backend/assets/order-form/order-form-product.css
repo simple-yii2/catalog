@@ -1,0 +1,25 @@
+#product-list tbody > tr:last-child {
+    display: none;
+}
+
+#product-list th {
+    white-space: normal;
+}
+#product-list tbody td > span {
+    white-space: nowrap;
+}
+#product-list tbody td {
+    padding: 4px;
+    vertical-align: middle;
+}
+#product-list tbody td input {
+    padding: 6px;
+}
+#product-list .t-amount {
+    width: 100px;
+}
+#product-list .p-amount,
+#product-list .p-discountamount,
+#product-list .p-totalamount {
+    padding: 0 4px;
+}

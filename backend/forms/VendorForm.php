@@ -3,13 +3,9 @@
 namespace cms\catalog\backend\forms;
 
 use Yii;
-use yii\base\Model;
-use cms\catalog\common\models\Vendor;
+use dkhlystov\forms\Form;
 
-/**
- * Editing form
- */
-class VendorForm extends Model
+class VendorForm extends Form
 {
 
     /**
@@ -38,45 +34,6 @@ class VendorForm extends Model
     public $thumb;
 
     /**
-     * @var Vendor
-     */
-    private $_object;
-
-    /**
-     * @inheritdoc
-     * @param Vendor|null $object 
-     */
-    public function __construct(Vendor $object = null, $config = [])
-    {
-        if ($object === null) {
-            $object = new Vendor;
-        }
-
-        $this->_object = $object;
-
-        //file caching
-        Yii::$app->storage->cacheObject($object);
-
-        //attributes
-        parent::__construct(array_replace([
-            'name' => $object->name,
-            'description' => $object->description,
-            'url' => $object->url,
-            'file' => $object->file,
-            'thumb' => $object->thumb,
-        ], $config));
-    }
-
-    /**
-     * Object getter
-     * @return Vendor
-     */
-    public function getObject()
-    {
-        return $this->_object;
-    }
-
-    /**
      * @inheritdoc
      */
     public function attributeLabels()
@@ -94,28 +51,35 @@ class VendorForm extends Model
      */
     public function rules()
     {
-        return [
+        return array_merge(parent::rules(), [
             ['name', 'string', 'max' => 100],
             ['description', 'string', 'max' => 3000],
             ['url', 'string', 'max' => 200],
             [['file', 'thumb'], 'string'],
             ['name', 'required'],
-        ];
+        ]);
     }
 
     /**
-     * Saving object using object attributes
-     * @param boolean $runValidation 
-     * @return boolean
+     * @inheritdoc
      */
-    public function save($runValidation = true)
+    public function assign($object)
     {
-        if ($runValidation && !$this->validate()) {
-            return false;
-        }
+        // File caching
+        Yii::$app->storage->cacheObject($object);
 
-        $object = $this->_object;
+        $this->name = $object->name;
+        $this->description = $object->description;
+        $this->url = $object->url;
+        $this->file = $object->file;
+        $this->thumb = $object->thumb;
+    }
 
+    /**
+     * @inheritdoc
+     */
+    public function assignTo($object)
+    {
         $object->name = $this->name;
         $object->description = $this->description;
         $object->url = $this->url;
@@ -124,14 +88,8 @@ class VendorForm extends Model
 
         $object->makeAlias();
 
-        //files
+        // Files
         Yii::$app->storage->storeObject($object);
-
-        if (!$object->save(false)) {
-            return false;
-        }
-
-        return true;
     }
 
 }

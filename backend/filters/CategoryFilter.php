@@ -4,7 +4,7 @@ namespace cms\catalog\backend\filters;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use cms\catalog\common\models\Category;
+use cms\catalog\models\Category;
 
 class CategoryFilter extends Category
 {

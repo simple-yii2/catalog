@@ -3,52 +3,25 @@
 namespace cms\catalog\backend\forms;
 
 use Yii;
-use yii\base\Model;
-use cms\catalog\common\models\Product;
-use cms\catalog\common\models\ProductBarcode;
+use dkhlystov\forms\Form;
 
-/**
- * Product barcode form
- */
-class ProductBarcodeForm extends Model
+class ProductBarcodeForm extends Form
 {
+
+    /**
+     * @inheritdoc
+     */
+    public $formName = 'ProductForm[barcodes][]';
+
+    /**
+     * @var integer
+     */
+    public $id;
 
     /**
      * @var string Barcode
      */
     public $barcode;
-
-    /**
-     * @var ProductBarcode
-     */
-    private $_object;
-
-    /**
-     * @inheritdoc
-     * @param ProductBarcode|null $object 
-     */
-    public function __construct(ProductBarcode $object = null, $config = [])
-    {
-        if ($object === null) {
-            $object = new ProductBarcode;
-        }
-
-        $this->_object = $object;
-
-        //attributes
-        parent::__construct(array_replace([
-            'barcode' => $object->barcode,
-        ], $config));
-    }
-
-    /**
-     * Object getter
-     * @return ProductBarcode
-     */
-    public function getObject()
-    {
-        return $this->_object;
-    }
 
     /**
      * @inheritdoc
@@ -65,34 +38,28 @@ class ProductBarcodeForm extends Model
      */
     public function rules()
     {
-        return [
+        return array_merge(parent::rules(), [
+            ['id', 'integer'],
             ['barcode', 'string', 'max' => 50],
             ['barcode', 'required'],
-        ];
+        ]);
     }
 
     /**
-     * Save
-     * @param Product $product 
-     * @param boolean $runValidation 
-     * @return boolean
+     * @inheritdoc
      */
-    public function save(Product $product, $runValidation = true)
+    public function assign($object)
     {
-        if ($runValidation && !$this->validate()) {
-            return false;
-        }
+        $this->id = $object->id;
+        $this->barcode = $object->barcode;
+    }
 
-        $object = $this->_object;
-
-        $object->product_id = $product->id;
+    /**
+     * @inheritdoc
+     */
+    public function assignTo($object)
+    {
         $object->barcode = $this->barcode;
-
-        if (!$object->save(false)) {
-            return false;
-        }
-
-        return true;
     }
 
 }

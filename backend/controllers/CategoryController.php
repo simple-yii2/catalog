@@ -8,8 +8,8 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use cms\catalog\backend\filters\CategoryFilter;
 use cms\catalog\backend\forms\CategoryForm;
-use cms\catalog\common\models\Category;
-use cms\catalog\common\models\Product;
+use cms\catalog\models\Category;
+use cms\catalog\models\Product;
 
 class CategoryController extends Controller
 {
@@ -40,7 +40,7 @@ class CategoryController extends Controller
         $model->load(Yii::$app->getRequest()->get());
 
         return $this->render('index', [
-            'model' => $model,
+            'model' => $model, 
             'initial' => Category::findOne($id),
         ]);
     }
@@ -66,17 +66,22 @@ class CategoryController extends Controller
             throw new BadRequestHttpException(Yii::t('cms', 'Operation not permitted.'));
         }
 
-        $model = new CategoryForm(null, [
+        $object = new Category;
+        $model = new CategoryForm([
             'properties' => array_map(function ($v) {
                 $v->readOnly = true;
                 return $v;
             }, array_merge($parent->getParentProperties(), $parent->properties)),
         ]);
 
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->save($parent)) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->validate()) {
+            $model->assignTo($object);
+            $object->appendTo($parent, false);
+            $object->makeAliasAndPath($parent);
+            $object->saveWithRelated(false, ['properties']);
             $this->updateProducts();
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
-            return $this->redirect(['index', 'id' => $model->getObject()->id]);
+            return $this->redirect(['index', 'id' => $object->id]);
         }
 
         return $this->render('create', [
@@ -98,15 +103,20 @@ class CategoryController extends Controller
             throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
         }
 
-        $model = new CategoryForm($object);
+        $model = new CategoryForm;
+        $model->assign($object);
 
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->validate()) {
+            $model->assignTo($object);
+            $object->saveWithRelated(false, ['properties']);
+            $object->updateAliasAndPath();
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
-            return $this->redirect(['index', 'id' => $model->getObject()->id]);
+            return $this->redirect(['index', 'id' => $object->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'object' => $object,
             'id' => $object->id,
             'parents' => $object->parents()->all(),
         ]);
@@ -192,9 +202,13 @@ class CategoryController extends Controller
      */
     public function actionProperties()
     {
-        $model = new CategoryForm(Category::find()->roots()->one());
+        $object = Category::find()->roots()->one();
+        $model = new CategoryForm;
+        $model->assign($object);
 
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->validate()) {
+            $model->assignTo($object);
+            $object->saveWithRelated(false, ['properties']);
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
             return $this->redirect(['index']);
         }

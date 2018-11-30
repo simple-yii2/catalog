@@ -1,7 +1,7 @@
 <?php
 
-use cms\catalog\common\models\Currency;
-use cms\catalog\common\models\Product;
+use cms\catalog\models\Currency;
+use cms\catalog\models\Product;
 
 //currencies
 $currencies = ['' => ''];

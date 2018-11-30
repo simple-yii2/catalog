@@ -1,14 +1,13 @@
 <?php
 
-namespace cms\catalog\common\models;
+namespace cms\catalog\models;
 
 use Yii;
 use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
-
 use helpers\Translit;
 use creocoder\nestedsets\NestedSetsBehavior;
 use creocoder\nestedsets\NestedSetsQueryBehavior;
+use dkhlystov\db\ActiveRecord;
 
 class Category extends ActiveRecord
 {
@@ -75,8 +74,9 @@ class Category extends ActiveRecord
      */
     public function getParents()
     {
-        if ($this->_parents !== null)
+        if ($this->_parents !== null) {
             return $this->_parents;
+        }
 
         return $this->_parents = $this->parents()->all();
     }
@@ -106,8 +106,9 @@ class Category extends ActiveRecord
      */
     public static function findByAlias($alias) {
         $model = static::findOne(['alias' => $alias]);
-        if ($model === null)
+        if ($model === null) {
             $model = static::findOne(['id' => $alias]);
+        }
 
         return $model;
     }
@@ -145,8 +146,9 @@ class Category extends ActiveRecord
             return;
         }
 
-        if ($parent === null)
+        if ($parent === null) {
             $parent = $this->parents(1)->one();
+        }
 
         $alias = '';
         $path = '';
@@ -156,10 +158,12 @@ class Category extends ActiveRecord
             $path = $parent->path;
         }
 
-        if (!empty($alias))
+        if (!empty($alias)) {
             $alias .= self::ALIAS_SEPARATOR;
-        if (!empty($path))
+        }
+        if (!empty($path)) {
             $path .= self::PATH_SEPARATOR;
+        }
 
         $this->alias = $alias . Translit::t($this->title);
         $this->path = $path . $this->title;
@@ -175,11 +179,13 @@ class Category extends ActiveRecord
         $this->makeAliasAndPath($parent);
         $this->update(false, ['alias', 'path']);
 
-        if ($this->isLeaf())
+        if ($this->isLeaf()) {
             return;
+        }
 
-        foreach ($this->children(1)->all() as $object)
+        foreach ($this->children(1)->all() as $object) {
             $object->updateAliasAndPath($this);
+        }
     }
 
     /**

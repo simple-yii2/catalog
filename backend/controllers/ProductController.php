@@ -9,7 +9,7 @@ use yii\helpers\Json;
 use yii\web\Controller;
 use cms\catalog\backend\filters\ProductFilter;
 use cms\catalog\backend\forms\ProductForm;
-use cms\catalog\common\models\Product;
+use cms\catalog\models\Product;
 use cms\catalog\common\models\Settings;
 
 class ProductController extends Controller
@@ -55,13 +55,15 @@ class ProductController extends Controller
         }
         $category_id = $request->get('category_id');
 
-        $filter = new ProductFilter;
+        $model = new ProductFilter;
         if ($category_id != -1) {
-            $filter->category_id = $category_id;
+            $model->category_id = $category_id;
         }
-        $filter->load($request->get());
+        $model->load($request->get());
 
-        return $this->render('index', ['filter' => $filter]);
+        return $this->render('index', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -71,15 +73,21 @@ class ProductController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->getRequest();
-        $model = new ProductForm(null, ['category_id' => $request->get('category_id')]);
 
-        if ($model->load($request->post()) && $model->save()) {
-            $model->getObject()->category->updateProductCount();
+        $object = new Product;
+        $model = new ProductForm(['category_id' => $request->get('category_id')]);
+
+        if ($model->load($request->post()) && $model->validate()) {
+            $model->assignTo($object);
+            $object->saveWithRelated(false, ['images', 'barcodes']);
+            $object->category->updateProductCount();
             Yii::$app->session->setFlash('success', Yii::t('cms', 'Changes saved successfully.'));
-            return $this->redirect(['index', 'category_id' => $model->getObject()->category_id]);
+            return $this->redirect(['index', 'category_id' => $object->category_id]);
         }
 
-        return $this->render('create', ['model' => $model]);
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -96,9 +104,12 @@ class ProductController extends Controller
 
         $category = $object->category;
 
-        $model = new ProductForm($object);
+        $model = new ProductForm;
+        $model->assign($object);
 
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->validate()) {
+            $model->assignTo($object);
+            $object->saveWithRelated(false, ['images', 'barcodes']);
             $object->category->updateProductCount();
             if ($category->id != $object->category->id) {
                 $category->updateProductCount();
@@ -107,125 +118,128 @@ class ProductController extends Controller
             return $this->redirect(['index', 'category_id' => $object->category_id]);
         }
 
-        return $this->render('update', ['model' => $model]);
-    }
-
-    /**
-     * Delete
-     * @param integer $id
-     * @return string
-     */
-    public function actionDelete($id)
-    {
-        $object = Product::findOne($id);
-        if ($object === null) {
-            throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
-        }
-
-        //barcodes
-        foreach ($object->barcodes as $item) {
-            $item->delete();
-        }
-
-        //properties
-        foreach ($object->properties as $item) {
-            $item->delete();
-        }
-
-        //images
-        foreach ($object->images as $item) {
-            Yii::$app->storage->removeObject($item);
-            $item->delete();
-        }
-
-        //recommended
-        foreach ($object->recommended as $item) {
-            $item->delete();
-        }
-
-        //store quantity
-        foreach ($object->stores as $item) {
-            $item->delete();
-        }
-
-        //product
-        $category = $object->category;
-        if ($object->delete()) {
-            $category->updateProductCount();
-            Yii::$app->session->setFlash('success', Yii::t('cms', 'Item deleted successfully.'));
-        }
-
-        $url = ['index'];
-        $category_id = Yii::$app->getRequest()->get('category_id');
-        if ($category_id) {
-            $url['category_id'] = $category_id;
-        }
-        return $this->redirect($url);
-    }
-
-    /**
-     * Properties update needed when category is changed
-     * @param integer|null $id
-     * @return string
-     */
-    public function actionProperties($id = null)
-    {
-        $model = new ProductForm(Product::findOne($id));
-
-        $model->load(Yii::$app->getRequest()->post());
-
-        return $this->renderAjax('form', [
+        return $this->render('update', [
             'model' => $model,
+            'object' => $object,
         ]);
     }
 
-    /**
-     * Product autocomplete
-     * @return string
-     */
-    public function actionRecommendedProduct()
-    {
-        $query = Product::find()
-            ->andFilterWhere(['like', 'name', Yii::$app->getRequest()->get('term')])
-            ->orderBy(['name' => SORT_ASC])
-            ->limit(10);
+    // /**
+    //  * Delete
+    //  * @param integer $id
+    //  * @return string
+    //  */
+    // public function actionDelete($id)
+    // {
+    //     $object = Product::findOne($id);
+    //     if ($object === null) {
+    //         throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
+    //     }
 
-        $items = [];
-        foreach ($query->all() as $object) {
-            $items[] = [
-                'id' => $object->id,
-                'label' => $object->name,
-            ];
-        }
+    //     //barcodes
+    //     foreach ($object->barcodes as $item) {
+    //         $item->delete();
+    //     }
 
-        return Json::encode($items);
-    }
+    //     //properties
+    //     foreach ($object->properties as $item) {
+    //         $item->delete();
+    //     }
 
-    /**
-     * Add recommended and render it
-     * @param integer $id 
-     * @param integer $recommended_id 
-     * @return string
-     */
-    public function actionRecommendedAdd($id, $recommended_id)
-    {
-        $object = Product::findOne($id);
-        if ($object === null) {
-            throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
-        }
+    //     //images
+    //     foreach ($object->images as $item) {
+    //         Yii::$app->storage->removeObject($item);
+    //         $item->delete();
+    //     }
 
-        $item = Product::findOne($recommended_id);
-        if ($item === null) {
-            throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
-        }
+    //     //recommended
+    //     foreach ($object->recommended as $item) {
+    //         $item->delete();
+    //     }
 
-        $model = new ProductForm($object);
-        $model->recommended = [$item];
+    //     //store quantity
+    //     foreach ($object->stores as $item) {
+    //         $item->delete();
+    //     }
 
-        return Json::encode([
-            'content' => $this->renderAjax('form', ['model' => $model]),
-        ]);
-    }
+    //     //product
+    //     $category = $object->category;
+    //     if ($object->delete()) {
+    //         $category->updateProductCount();
+    //         Yii::$app->session->setFlash('success', Yii::t('cms', 'Item deleted successfully.'));
+    //     }
+
+    //     $url = ['index'];
+    //     $category_id = Yii::$app->getRequest()->get('category_id');
+    //     if ($category_id) {
+    //         $url['category_id'] = $category_id;
+    //     }
+    //     return $this->redirect($url);
+    // }
+
+    // /**
+    //  * Properties update needed when category is changed
+    //  * @param integer|null $id
+    //  * @return string
+    //  */
+    // public function actionProperties($id = null)
+    // {
+    //     $model = new ProductForm(Product::findOne($id));
+
+    //     $model->load(Yii::$app->getRequest()->post());
+
+    //     return $this->renderAjax('form', [
+    //         'model' => $model,
+    //     ]);
+    // }
+
+    // /**
+    //  * Product autocomplete
+    //  * @return string
+    //  */
+    // public function actionRecommendedProduct()
+    // {
+    //     $query = Product::find()
+    //         ->andFilterWhere(['like', 'name', Yii::$app->getRequest()->get('term')])
+    //         ->orderBy(['name' => SORT_ASC])
+    //         ->limit(10);
+
+    //     $items = [];
+    //     foreach ($query->all() as $object) {
+    //         $items[] = [
+    //             'id' => $object->id,
+    //             'label' => $object->name,
+    //         ];
+    //     }
+
+    //     return Json::encode($items);
+    // }
+
+    // /**
+    //  * Add recommended and render it
+    //  * @param integer $id 
+    //  * @param integer $recommended_id 
+    //  * @return string
+    //  */
+    // public function actionRecommendedAdd($id, $recommended_id)
+    // {
+    //     $object = Product::findOne($id);
+    //     if ($object === null) {
+    //         throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
+    //     }
+
+    //     $item = Product::findOne($recommended_id);
+    //     if ($item === null) {
+    //         throw new BadRequestHttpException(Yii::t('cms', 'Item not found.'));
+    //     }
+
+    //     $model = new ProductForm($object);
+    //     $model->recommended = [$item];
+
+    //     return Json::encode([
+    //         'content' => $this->renderAjax('form', ['model' => $model]),
+    //     ]);
+    // }
 
     /**
      * Image upload

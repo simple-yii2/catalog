@@ -4,7 +4,7 @@ namespace cms\catalog\backend\filters;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use cms\catalog\common\models\Vendor;
+use cms\catalog\models\Vendor;
 
 class VendorFilter extends Vendor
 {

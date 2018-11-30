@@ -21,6 +21,7 @@
         "dkhlystov/yii2-uploadimage": "*",
         "dkhlystov/yii2-chosen": "*",
         "dkhlystov/yii2-lightbox": "*",
+        "dkhlystov/yii2-datepicker": "*",
         "vova07/yii2-imperavi-widget": "^2.0"
     },
     "autoload": {

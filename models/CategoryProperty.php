@@ -1,9 +1,9 @@
 <?php
 
-namespace cms\catalog\common\models;
+namespace cms\catalog\models;
 
 use Yii;
-use yii\db\ActiveRecord;
+use dkhlystov\db\ActiveRecord;
 use helpers\Translit;
 
 class CategoryProperty extends ActiveRecord

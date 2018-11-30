@@ -17,7 +17,7 @@ if ($category_id = Yii::$app->getRequest()->get('category_id')) {
     'layout' => 'horizontal',
     'enableClientValidation' => false,
     'options' => [
-        'data-properties-url' => Url::toRoute(['properties', 'id' => $model->getObject()->id]),
+        'data-properties-url' => Url::toRoute(['properties', 'id' => $model->id]),
     ],
 ]); ?>
 
